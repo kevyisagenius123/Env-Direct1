@@ -1,0 +1,425 @@
+/* Green Atlas Magazine - Editorial Design System */
+
+/* Typography Enhancements */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+.magazine-container {
+  font-family: 'Source Serif Pro', ui-serif, serif;
+  line-height: 1.6;
+}
+
+.magazine-headline {
+  font-family: 'Playfair Display', ui-serif, serif;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+.magazine-byline {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.magazine-body {
+  font-family: 'Source Serif Pro', ui-serif, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.magazine-meta {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Editorial Design Elements */
+.editorial-dropcap::first-letter {
+  float: left;
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  line-height: 0.8;
+  margin: 0.2rem 0.5rem 0 0;
+  font-weight: 700;
+  color: #10b981; /* emerald-500 */
+}
+
+.editorial-pullquote {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.3;
+  color: #f8fafc; /* slate-50 */
+  margin: 2rem 0;
+  padding: 2rem;
+  border-left: 4px solid #10b981; /* emerald-500 */
+  background: rgba(15, 23, 42, 0.6); /* slate-900/60 */
+  backdrop-filter: blur(8px);
+  border-radius: 0 1rem 1rem 0;
+}
+
+.editorial-pullquote::before {
+  content: '"';
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 4rem;
+  color: #10b981;
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+}
+
+.editorial-pullquote::after {
+  content: '"';
+  position: absolute;
+  bottom: -1rem;
+  right: 1rem;
+  font-size: 4rem;
+  color: #10b981;
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+}
+
+/* Reading Experience Enhancements */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  transform-origin: left;
+  z-index: 1000;
+}
+
+.magazine-section-break {
+  position: relative;
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.magazine-section-break::before {
+  content: '◆ ◆ ◆';
+  color: #10b981;
+  font-size: 1.2rem;
+  letter-spacing: 1rem;
+}
+
+/* Immersive Scroll Effects */
+.parallax-element {
+  will-change: transform;
+}
+
+.story-chapter {
+  scroll-margin-top: 5rem;
+  position: relative;
+}
+
+.story-chapter::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, #10b981, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.story-chapter.active::before {
+  opacity: 1;
+}
+
+/* Author Byline Enhancements */
+.author-cluster {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.author-avatar-group {
+  display: flex;
+  margin-right: 0.5rem;
+}
+
+.author-avatar-group img {
+  border: 2px solid #10b981;
+  margin-left: -0.5rem;
+  transition: transform 0.2s ease, z-index 0.2s ease;
+}
+
+.author-avatar-group img:hover {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.author-attribution {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
+}
+
+.author-location {
+  font-style: italic;
+  color: #64748b; /* slate-500 */
+}
+
+/* Interactive Elements */
+.story-interaction-bar {
+  position: sticky;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.9); /* slate-900/90 */
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.3); /* emerald-500/30 */
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.story-interaction-bar button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.story-interaction-bar button:hover {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+/* Magazine Grid Layouts */
+.magazine-masonry {
+  columns: 1;
+  column-gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .magazine-masonry {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .magazine-masonry {
+    columns: 3;
+  }
+}
+
+.magazine-masonry-item {
+  break-inside: avoid;
+  margin-bottom: 2rem;
+}
+
+/* Photo Essay Layouts */
+.photo-essay-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.photo-essay-grid.layout-hero {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.photo-essay-grid.layout-hero .hero-image {
+  grid-row: 1 / 3;
+}
+
+.photo-essay-grid.layout-mosaic {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.photo-essay-grid img {
+  border-radius: 0.75rem;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* Field Notes Styling */
+.field-note {
+  position: relative;
+  background: rgba(254, 243, 199, 0.1); /* amber-100/10 */
+  border: 1px solid rgba(245, 158, 11, 0.3); /* amber-500/30 */
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Source Serif Pro', serif;
+  font-style: italic;
+}
+
+.field-note::before {
+  content: '📝';
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  background: #0f172a; /* slate-900 */
+  padding: 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.field-note-author {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f59e0b; /* amber-500 */
+  margin-top: 1rem;
+  font-style: normal;
+}
+
+/* Data Visualization Integration */
+.story-data-embed {
+  background: rgba(15, 23, 42, 0.6); /* slate-900/60 */
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin: 2rem 0;
+  backdrop-filter: blur(8px);
+}
+
+.story-data-embed h4 {
+  font-family: 'Playfair Display', serif;
+  color: #10b981;
+  margin-bottom: 1rem;
+}
+
+/* Audio Player Integration */
+.story-audio-player {
+  position: relative;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  backdrop-filter: blur(12px);
+}
+
+.audio-waveform {
+  height: 3rem;
+  background: linear-gradient(90deg, #10b981, #059669, #047857);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.audio-waveform::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: audioProgress 4s infinite ease-in-out;
+}
+
+@keyframes audioProgress {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(300%); }
+}
+
+/* Magazine Navigation */
+.magazine-navigation {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+}
+
+.magazine-navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.magazine-navigation li {
+  margin: 0.5rem 0;
+}
+
+.magazine-navigation a {
+  display: block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: rgba(100, 116, 139, 0.5); /* slate-500/50 */
+  transition: all 0.3s ease;
+}
+
+.magazine-navigation a.active,
+.magazine-navigation a:hover {
+  background: #10b981;
+  transform: scale(1.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .magazine-headline {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  
+  .editorial-dropcap::first-letter {
+    font-size: 3rem;
+    margin-right: 0.3rem;
+  }
+  
+  .editorial-pullquote {
+    font-size: 1.25rem;
+    padding: 1.5rem;
+  }
+  
+  .story-interaction-bar {
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+  }
+  
+  .magazine-navigation {
+    display: none;
+  }
+}
+
+/* Print Styles for Magazine */
+@media print {
+  .magazine-container {
+    color: #000;
+    background: #fff;
+  }
+  
+  .magazine-headline {
+    color: #000;
+    font-size: 2rem;
+  }
+  
+  .story-interaction-bar,
+  .magazine-navigation,
+  .reading-progress {
+    display: none;
+  }
+  
+  .editorial-pullquote {
+    background: none;
+    border-left: 4px solid #000;
+    color: #000;
+  }
+} 
