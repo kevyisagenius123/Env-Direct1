@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: green-atlas-frontend
+    env: static
+    rootDir: env-direct-frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: Env-Direct-Backend
+          property: url
+  - type: web
+    name: Env-Direct-Backend
+    env: java
+    rootDir: backend
+    buildCommand: "mvn clean install"
+    startCommand: "java -jar target/backend-0.0.1-SNAPSHOT.jar"
+    envVars:
+      - key: JAVA_VERSION
+        value: 21
+      - key: SPRING_DATASOURCE_URL
+        fromService:
+          type: psql
+          name: my-app-database
+          property: internalConnectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromService:
+          type: psql
+          name: my-app-database
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromService:
+          type: psql
+          name: my-app-database
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: validate
+      - key: SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES
+        value: true
+      - key: JWT_SECRET
+        generateValue: true # This will generate a secure secret value on first deploy 
