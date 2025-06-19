@@ -62,8 +62,8 @@ const PredictionsSection = () => {
     } catch (e) {
       console.error("Failed to fetch predictions:", e);
       setError("Failed to load predictions data.");
-      // Fallback to mock data
-      setPredictions(mockPredictions);
+      // Fallback to empty array if fetch fails
+      setPredictions([]);
     }
     setIsLoading(false);
   };
