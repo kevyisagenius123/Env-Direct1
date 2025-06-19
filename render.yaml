@@ -26,7 +26,4 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: Env-Direct-Backend
-          property: url 
+        value: https://env-direct-backend.onrender.com 
