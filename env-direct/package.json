@@ -42,6 +42,7 @@
     "react-spring": "^10.0.1",
     "recharts": "^2.15.3",
     "resium": "^1.19.0-beta.1",
+    "shpjs": "^6.1.0",
     "swiper": "^11.2.8",
     "three": "^0.167.0",
     "vite-plugin-cesium": "^1.2.23",
