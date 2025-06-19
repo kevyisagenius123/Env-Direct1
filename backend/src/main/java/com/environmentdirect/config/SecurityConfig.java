@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/comments/**").permitAll()
                 .requestMatchers("/api/rankings/**").permitAll()
                 .requestMatchers("/api/projects/**").permitAll()
-                .requestMatchers("/api/training/**").permitAll()
+                .requestMatchers("/api/training-courses/**").permitAll()
                 .requestMatchers("/api/reports/submit").permitAll()
                 .requestMatchers("/api/service-requests/submit").permitAll()
                 .requestMatchers("/api/email/**").permitAll()
@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/live-data/**").permitAll()
                 .requestMatchers("/api/banner/**").permitAll()
                 .requestMatchers("/api/predictions/**").permitAll()
+                .requestMatchers("/api/predict/**").permitAll()
                 .anyRequest().authenticated()
             );
 

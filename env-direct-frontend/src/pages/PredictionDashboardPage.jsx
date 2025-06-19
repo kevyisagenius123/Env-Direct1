@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Spinner from '../components/Spinner';
 import EcoSitePressureCard from '../components/EcoSitePressureCard';
 import FloodRiskCard from '../components/FloodRiskCard';
-const API_URL = import.meta.env.VITE_API_URL;
+import { createApiUrl } from '../utils/apiUtils';
 
 const PredictionDashboardPage = () => {
   const [ecoTourismPredictions, setEcoTourismPredictions] = useState([]);
@@ -23,8 +23,8 @@ const PredictionDashboardPage = () => {
       setError(null);
       try {
         const [ecoTourismResponse, floodRiskResponse] = await Promise.all([
-          fetch(`${API_URL}/api/predict/eco-tourism/pressure/all`),
-          fetch(`${API_URL}/api/predict/flood-risk/all`)
+          fetch(createApiUrl('/api/predict/eco-tourism/pressure/all')),
+          fetch(createApiUrl('/api/predict/flood-risk/all'))
         ]);
 
         if (!ecoTourismResponse.ok) {
