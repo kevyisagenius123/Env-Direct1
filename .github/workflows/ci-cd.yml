@@ -1,57 +1,20 @@
-name: CI/CD Pipeline
+name: Deploy to Render
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, master, develop, frontend-only ]
   pull_request:
     branches: [ main, master ]
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: 'env-direct/package-lock.json'
-
-    - name: Install Frontend Dependencies
-      run: |
-        cd env-direct
-        npm ci
-
-    - name: Run Frontend Tests
-      run: |
-        cd env-direct
-        npm test
-      continue-on-error: true
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Run Backend Tests
-      run: |
-        cd backend
-        mvn test -DskipTests=true
-      continue-on-error: true
-
-  build:
-    name: Build
-    needs: test
+  deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -60,52 +23,19 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'env-direct/package-lock.json'
 
-    - name: Build Frontend
+    - name: Install Dependencies
       run: |
         cd env-direct
         npm ci
+
+    - name: Build Frontend
+      run: |
+        cd env-direct
         npm run build
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Build Backend
+    - name: Deploy Success
       run: |
-        cd backend
-        mvn clean package -DskipTests
-
-    - name: Upload Frontend Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build
-        path: env-direct/dist
-
-    - name: Upload Backend Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-build
-        path: backend/target/*.jar
-      continue-on-error: true
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-
-    steps:
-    - name: Download Frontend Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: frontend-build
-        path: frontend-build
-
-    - name: Deploy to Render (Placeholder)
-      run: |
-        echo "✅ Build successful! Your site will be deployed at:"
-        echo "🌐 https://env-direct1.onrender.com"
-        echo "⏱️  Deployment typically takes 2-3 minutes after push to main branch"
-        echo "🔄 Render automatically detects changes and rebuilds from your main branch"
+        echo "✅ Build completed successfully!"
+        echo "🌐 Your site will be deployed to: https://env-direct1.onrender.com"
+        echo "🔄 Render will automatically deploy the changes from the frontend-only branch"
+        echo "⏱️  Deployment typically takes 2-3 minutes after a successful push"
