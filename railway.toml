@@ -5,3 +5,10 @@ name = "backend"
 builder = "docker" # Explicitly use the Docker builder
 rootDir = "./backend"
 # Railway will automatically use the Dockerfile in this directory. 
+
+[services.variables]
+SPRING_DATASOURCE_URL = "jdbc:postgresql://${{Postgres.host}}:${{Postgres.port}}/${{Postgres.database}}"
+SPRING_DATASOURCE_USERNAME = "${{Postgres.user}}"
+SPRING_DATASOURCE_PASSWORD = "${{Postgres.password}}"
+SPRING_JPA_HIBERNATE_DDL_AUTO = "update"
+JWT_SECRET = "${{generate(64)}}" # Generates a secure, random 64-character string 
