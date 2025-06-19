@@ -109,7 +109,7 @@ public class ArticleController {
      * @return The created article with PENDING_APPROVAL status
      */
     @PostMapping("/submit")
-    @PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()") // Temporarily removed
     public ResponseEntity<ArticleResponseDto> submitArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
         // Get the authenticated user
         User user = getAuthenticatedUser();
