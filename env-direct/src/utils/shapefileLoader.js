@@ -123,15 +123,7 @@ export const shapefileConfig = [
     fillOpacity: 0.6,
     description: 'Road Network'
   },
-  {
-    name: 'National Trail',
-    path: '/geojson/National_Trail.json',
-    color: '#FF4500',
-    fillColor: '#FF6347',
-    weight: 2,
-    fillOpacity: 0.5,
-    description: 'National Hiking Trail'
-  },
+
   {
     name: 'Parishes',
     path: '/geojson/parishp.json',
