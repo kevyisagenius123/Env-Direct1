@@ -24,6 +24,10 @@ services:
     repo: https://github.com/kevyisagenius123/Env-Direct.git
     buildCommand: "npm install && npm run build"
     staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_URL
         value: https://env-direct-backend.onrender.com 
