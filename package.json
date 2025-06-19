@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Environment Direct - Climate Intelligence Platform",
   "scripts": {
-    "build": "cd env-direct-frontend && npm install && npm run build",
+    "build": "cd env-direct-frontend && npm install && npm run build && cd .. && node -e \"const fs=require('fs'),path=require('path'); if(fs.existsSync('dist')){fs.rmSync('dist',{recursive:true,force:true})}; fs.cpSync('env-direct-frontend/dist','dist',{recursive:true});\"",
     "start": "cd env-direct-frontend && npm run preview",
     "dev": "cd env-direct-frontend && npm run dev",
     "test": "cd env-direct-frontend && npm run test"
