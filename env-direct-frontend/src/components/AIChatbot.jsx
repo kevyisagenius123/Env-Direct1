@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpenIcon, 
@@ -19,9 +19,16 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ClockIcon,
-  FireIcon
+  FireIcon,
+  ChatBubbleLeftRightIcon, 
+  XMarkIcon, 
+  PaperAirplaneIcon,
+  ChevronDownIcon,
+  SparklesIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import './AIChatbot.css';
+import { createApiUrl } from '../utils/apiUtils';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -354,11 +361,23 @@ const EditorialAssistant = () => {
   }, [autonomousMode]);
 
   // Fetch articles and start monitoring
+  const fetchArticles = useCallback(async () => {
+    try {
+      const response = await fetch(createApiUrl('/api/articles'));
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      setArticles(data.content || data || []);
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+      setArticles([]); // Fallback to empty array
+    }
+  }, []);
+
   useEffect(() => {
     fetchArticles();
     const interval = setInterval(updateEnvironmentalData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchArticles]);
 
   const performAutonomousActivity = () => {
     const activities = [
@@ -427,18 +446,6 @@ const EditorialAssistant = () => {
     setAutonomousActivities(prev => [activity, ...prev.slice(0, 9)]);
 
     return await simulateWebSearch(searchTerm);
-  };
-
-  const fetchArticles = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/articles`);
-      if (response.ok) {
-        const articlesData = await response.json();
-        setArticles(articlesData);
-      }
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-    }
   };
 
   const updateEnvironmentalData = () => {
@@ -625,16 +632,18 @@ I'll proactively notify you when these conditions are met.`;
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      const response = await fetch(`${API_URL}/api/chat`, {
+      const response = await fetch(createApiUrl('/api/chat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           message: messageText,
-          context: currentContext,
-          articlesCount: articles.length,
-          environmentalData: environmentalData,
+          context: articles.slice(0, 5).map(article => ({
+            title: article.title,
+            summary: article.summary,
+            categories: article.categories?.map(cat => cat.name) || []
+          })),
           autonomousMode: autonomousMode,
           webSearchEnabled: true
         }),

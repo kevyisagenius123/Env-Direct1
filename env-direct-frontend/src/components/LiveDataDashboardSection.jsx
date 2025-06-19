@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Spinner from './Spinner';
+import { createApiUrl } from '../utils/apiUtils';
 
 // Placeholder icons - consider using a library like react-icons or custom SVGs
 const MetricIcon = ({ IconComponent, colorClass }) => (
@@ -89,8 +90,6 @@ const LiveDataDashboardSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
   // Animation variants
   const sectionTitleVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -113,7 +112,7 @@ const LiveDataDashboardSection = () => {
   const fetchDashboardData = async () => {
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/api/live-data`);
+      const response = await fetch(createApiUrl('/api/live-data'));
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       setMetricsData(data);

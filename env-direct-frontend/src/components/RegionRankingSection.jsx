@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion'; // Import motion
+import { createApiUrl } from '../utils/apiUtils';
 
 // Placeholder data - REMOVED as API should be the source of truth
 // const rankingData = [ ... ]; 
@@ -35,6 +36,7 @@ const RegionRankingSection = () => {
   const [rankings, setRankings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("overall");
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -57,26 +59,22 @@ const RegionRankingSection = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
   };
 
-  useEffect(() => {
-    const fetchRankings = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_URL}/api/rankings`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
-        }
-        const data = await response.json();
-        console.log("Fetched Rankings Data:", data); // DEBUGGING: Log fetched data
-        setRankings(data);
-      } catch (e) {
-        console.error("Failed to fetch rankings:", e);
-        setError("Failed to load regional rankings. " + e.message);
-        setRankings([]); // Clear rankings on error to prevent rendering stale/partial data
-      }
-      setIsLoading(false);
-    };
+  const fetchRankings = async () => {
+    try {
+      const response = await fetch(createApiUrl('/api/rankings'));
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      setRankings(data);
+    } catch (e) {
+      console.error("Failed to fetch rankings:", e);
+      setError("Failed to load rankings data.");
+      // Fallback to mock data
+      setRankings(mockRankings);
+    }
+    setIsLoading(false);
+  };
 
+  useEffect(() => {
     fetchRankings();
   }, []);
 

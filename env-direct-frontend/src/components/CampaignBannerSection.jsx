@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FaTimes } from 'react-icons/fa';
+import { createApiUrl } from '../utils/apiUtils';
 
 const CampaignBannerSection = () => {
   const [bannerData, setBannerData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -27,28 +30,21 @@ const CampaignBannerSection = () => {
     },
   };
 
+  const fetchCampaignBanner = async () => {
+    try {
+      const response = await fetch(createApiUrl('/api/banner'));
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      setBannerData(data);
+      setIsVisible(true);
+    } catch (e) {
+      console.error("Failed to fetch campaign banner:", e);
+      setError("Failed to load campaign banner.");
+    }
+  };
+
   useEffect(() => {
-    const fetchBannerData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_URL}/api/banner`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
-        // Check if response is okay AND has content
-        if (response.status === 204) { // No Content
-            console.warn("Campaign banner API returned 204 No Content");
-            setBannerData({}); // Set to an empty object to indicate successful fetch but no data
-        } else {
-            const data = await response.json();
-            setBannerData(data);
-        }
-      } catch (e) {
-        console.error("Failed to fetch campaign banner:", e);
-        setError("Failed to load campaign information. " + e.message);
-      }
-      setIsLoading(false);
-    };
-    fetchBannerData();
+    fetchCampaignBanner();
   }, []);
 
   // Render loading state
