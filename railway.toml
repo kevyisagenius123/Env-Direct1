@@ -1,0 +1,12 @@
+# Configures the build and deployment for services in this monorepo.
+
+[[services]]
+name = "frontend"
+rootDir = "./env-direct-frontend"
+buildCommand = "npm install && npm run build"
+startCommand = "npx -y http-server-spa dist" # Serves the static site and handles SPA routing
+
+[[services]]
+name = "backend"
+rootDir = "./backend"
+# Railway will automatically use the Dockerfile in this directory. 
