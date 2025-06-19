@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/rankings/**").permitAll()
                 .requestMatchers("/api/projects/**").permitAll()
                 .requestMatchers("/api/training-courses/**").permitAll()
-                .requestMatchers("/api/reports/submit").permitAll()
+                .requestMatchers("/api/reports/**").permitAll()
                 .requestMatchers("/api/service-requests/submit").permitAll()
                 .requestMatchers("/api/email/**").permitAll()
                 .requestMatchers("/api/password/**").permitAll()

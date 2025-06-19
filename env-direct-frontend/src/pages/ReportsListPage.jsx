@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // For linking to individual report details later
 import axios from 'axios'; // Import axios
+import { createApiUrl } from '../utils/apiUtils';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -53,7 +54,7 @@ const ReportsListPage = () => {
     const fetchReports = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/api/reports`);
+        const response = await axios.get(createApiUrl('/api/reports'));
         setReports(response.data);
         setError(null);
       } catch (err) {
@@ -112,7 +113,7 @@ const ReportsListPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {report.imageUrl ? (
                         <img 
-                          src={`http://localhost:8080/api/reports/images/${report.imageUrl}`}
+                          src={createApiUrl(`/api/reports/images/${report.imageUrl}`)}
                           alt={`Report ${report.id}`}
                           className="h-[40px] w-[40px] rounded-md object-cover" // Basic thumbnail styling
                           onError={(e) => { e.target.style.display = 'none'; }} // Hide if image fails to load
