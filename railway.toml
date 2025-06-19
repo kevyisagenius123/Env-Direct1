@@ -1,8 +1,12 @@
 # Configures the build and deployment for the backend service.
 
+[build]
+# Force the build to use Docker across all services defined here.
+builder = "docker"
+
 [[services]]
 name = "backend"
-builder = "docker" # Explicitly use the Docker builder
+# The root directory for this service, relative to the repo root.
 rootDir = "./backend"
 # Railway will automatically use the Dockerfile in this directory. 
 
