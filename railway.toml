@@ -2,5 +2,6 @@
 
 [[services]]
 name = "backend"
+builder = "docker" # Explicitly use the Docker builder
 rootDir = "./backend"
 # Railway will automatically use the Dockerfile in this directory. 
