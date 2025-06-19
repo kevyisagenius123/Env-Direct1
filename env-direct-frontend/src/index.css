@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Environment Direct 2.0 Base Styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply antialiased;
+  }
+  
+  body {
+    @apply font-sans bg-mygreen-light text-mygreen-dark leading-relaxed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Dark mode styles */
+  .dark body {
+    @apply bg-mygreen-darker text-mygreen-light;
+  }
+  
+  /* Enhanced scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-mygreen-lighter dark:bg-mygreen-dark;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-envGreen-500 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-envGreen-600;
+  }
+  
+  /* Selection styling */
+  ::selection {
+    @apply bg-envGreen-200 text-envGreen-900;
+  }
+  
+  .dark ::selection {
+    @apply bg-envGreen-800 text-envGreen-100;
+  }
+}
+
+/* Environment Direct 2.0 Component Classes */
+@layer components {
+  /* Professional card styling */
+  .env-card {
+    @apply bg-white dark:bg-mygreen-darker rounded-xl shadow-env dark:shadow-lg border border-mygreen-lighter dark:border-mygreen-dark backdrop-blur-sm;
+  }
+  
+  .env-card-hover {
+    @apply env-card transition-all duration-300 hover:shadow-xl hover:shadow-env dark:hover:shadow-2xl hover:-translate-y-1;
+  }
+  
+  /* Button styles */
+  .env-btn-primary {
+    @apply bg-envGreen-600 hover:bg-envGreen-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 shadow-env hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .env-btn-secondary {
+    @apply bg-seaBlue-600 hover:bg-seaBlue-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 shadow-sea hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .env-btn-outline {
+    @apply border-2 border-envGreen-600 text-envGreen-600 hover:bg-envGreen-600 hover:text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Broadcast/Newsroom styling */
+  .broadcast-gradient {
+    @apply bg-gradient-to-br from-lavaGrey-900 via-lavaGrey-800 to-lavaGrey-900;
+  }
+  
+  .newsroom-header {
+    @apply bg-newsroom-dark text-white shadow-broadcast backdrop-blur-lg;
+  }
+  
+  /* Dashboard panel styling */
+  .dashboard-panel {
+    @apply env-card p-6 h-full flex flex-col;
+  }
+  
+  .dashboard-metric {
+    @apply text-3xl font-bold text-envGreen-600 dark:text-envGreen-400 animate-pulse-slow;
+  }
+  
+  /* Alert styling */
+  .alert-high {
+    @apply bg-coralRed-50 border-l-4 border-coralRed-500 text-coralRed-800 dark:bg-coralRed-900/20 dark:text-coralRed-200;
+  }
+  
+  .alert-medium {
+    @apply bg-sandGold-50 border-l-4 border-sandGold-500 text-sandGold-800 dark:bg-sandGold-900/20 dark:text-sandGold-200;
+  }
+  
+  .alert-low {
+    @apply bg-envGreen-50 border-l-4 border-envGreen-500 text-envGreen-800 dark:bg-envGreen-900/20 dark:text-envGreen-200;
+  }
+  
+  /* Typography enhancements */
+  .env-heading {
+    @apply font-display font-bold text-lavaGrey-900 dark:text-skyAsh-100 leading-tight;
+  }
+  
+  .env-subheading {
+    @apply font-display font-semibold text-lavaGrey-700 dark:text-skyAsh-300;
+  }
+  
+  .env-body {
+    @apply font-sans text-lavaGrey-600 dark:text-skyAsh-400 leading-relaxed;
+  }
+  
+  /* Interactive elements */
+  .env-interactive {
+    @apply transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95;
+  }
+  
+  /* Loading states */
+  .env-skeleton {
+    @apply animate-pulse bg-skyAsh-300 dark:bg-lavaGrey-700 rounded;
+  }
+  
+  /* Glassmorphism effects */
+  .env-glass {
+    @apply bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/10;
+  }
+  
+  /* Professional navigation */
+  .env-nav {
+    @apply bg-white/90 dark:bg-lavaGrey-900/90 backdrop-blur-lg border-b border-skyAsh-200 dark:border-lavaGrey-700 sticky top-0 z-50;
+  }
+  
+  /* Hero section styling */
+  .env-hero {
+    @apply bg-dominica-hero text-white relative overflow-hidden;
+  }
+  
+  .env-hero::before {
+    content: '';
+    @apply absolute inset-0 bg-black/20;
+  }
+}
+
+/* Environment Direct 2.0 Utility Classes */
+@layer utilities {
+  /* Animation utilities */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Text gradients */
+  .text-gradient-env {
+    @apply bg-gradient-to-r from-envGreen-600 to-seaBlue-600 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-sandGold-500 to-sandGold-300 bg-clip-text text-transparent;
+  }
+  
+  /* Border gradients */
+  .border-gradient-env {
+    background: linear-gradient(white, white) padding-box, 
+                linear-gradient(45deg, theme('colors.envGreen.500'), theme('colors.seaBlue.500')) border-box;
+    border: 2px solid transparent;
+  }
+  
+  /* Professional shadows */
+  .shadow-professional {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Responsive text sizing */
+  .text-responsive-xs { @apply text-sm lg:text-base; }
+  .text-responsive-sm { @apply text-base lg:text-lg; }
+  .text-responsive-md { @apply text-lg lg:text-xl; }
+  .text-responsive-lg { @apply text-xl lg:text-2xl; }
+  .text-responsive-xl { @apply text-2xl lg:text-4xl; }
+}
+
+/* Print styles for professional reports */
+@media print {
+  .env-card {
+    @apply shadow-none border border-gray-300;
+  }
+  
+  .env-nav,
+  .env-hero,
+  button {
+    @apply hidden;
+  }
+  
+  * {
+    @apply text-black bg-white;
+  }
+}
