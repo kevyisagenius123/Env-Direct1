@@ -1,5 +1,60 @@
 // Shapefile loader for Dominica GeoJSON data
 // Loads converted GeoJSON files from shapefiles
+import proj4 from 'proj4';
+
+// Define coordinate systems for Dominica
+// UTM Zone 20N (EPSG:32620) - likely projection used in the shapefiles
+const UTM_20N = '+proj=utm +zone=20 +datum=WGS84 +units=m +no_defs';
+// WGS84 (EPSG:4326) - what Leaflet expects
+const WGS84 = '+proj=longlat +datum=WGS84 +no_defs';
+
+// Function to transform coordinates from UTM to WGS84
+const transformCoordinates = (coordinates) => {
+  if (!coordinates || coordinates.length === 0) return coordinates;
+  
+  // Handle different geometry types
+  if (typeof coordinates[0] === 'number') {
+    // Single coordinate pair [x, y]
+    const [lng, lat] = proj4(UTM_20N, WGS84, coordinates);
+    return [lng, lat];
+  } else if (Array.isArray(coordinates[0])) {
+    // Array of coordinate pairs [[x1, y1], [x2, y2], ...]
+    return coordinates.map(coord => {
+      if (typeof coord[0] === 'number') {
+        const [lng, lat] = proj4(UTM_20N, WGS84, coord);
+        return [lng, lat];
+      } else {
+        // Nested array (like for polygons with holes)
+        return transformCoordinates(coord);
+      }
+    });
+  }
+  
+  return coordinates;
+};
+
+// Function to transform GeoJSON geometry
+const transformGeometry = (geometry) => {
+  if (!geometry || !geometry.coordinates) return geometry;
+  
+  return {
+    ...geometry,
+    coordinates: transformCoordinates(geometry.coordinates)
+  };
+};
+
+// Function to transform entire GeoJSON
+const transformGeoJSON = (geojson) => {
+  if (!geojson || !geojson.features) return geojson;
+  
+  return {
+    ...geojson,
+    features: geojson.features.map(feature => ({
+      ...feature,
+      geometry: transformGeometry(feature.geometry)
+    }))
+  };
+};
 
 // Shapefile configuration for Dominica data - Updated with actual converted files
 export const shapefileConfig = [
@@ -62,32 +117,32 @@ export const shapefileConfig = [
   {
     name: 'Roads',
     path: '/geojson/mroadsv.json',
-    color: '#696969',
-    fillColor: '#A9A9A9',
-    weight: 3,
-    fillOpacity: 0.7,
+    color: '#8B4513',
+    fillColor: '#D2691E',
+    weight: 1,
+    fillOpacity: 0.6,
     description: 'Road Network'
   },
   {
     name: 'National Trail',
     path: '/geojson/National_Trail.json',
-    color: '#8B4513',
-    fillColor: '#D2691E',
-    weight: 3,
-    fillOpacity: 0.6,
-    description: 'Waitukubuli National Trail'
+    color: '#FF4500',
+    fillColor: '#FF6347',
+    weight: 2,
+    fillOpacity: 0.5,
+    description: 'National Hiking Trail'
   },
   {
-    name: 'Flood Risk',
-    path: '/geojson/Flood_final.json',
-    color: '#FF0000',
-    fillColor: '#FF6B6B',
-    weight: 1,
-    fillOpacity: 0.5,
-    description: 'Flood Risk Zones'
+    name: 'Parishes',
+    path: '/geojson/parishp.json',
+    color: '#800080',
+    fillColor: '#DDA0DD',
+    weight: 2,
+    fillOpacity: 0.3,
+    description: 'Parish Boundaries'
   }
-  // Note: Landslide_Susceptibility.json is 432MB - too large for web use
-  // Consider simplifying this file or loading it separately
+  // Note: Large layers like Flood Risk (7.2MB) and Landslide Susceptibility (432MB) 
+  // are still disabled as they may cause performance issues in browsers
 ];
 
 // Mock GeoJSON data for Dominica (fallback if real GeoJSON files not available)
@@ -126,23 +181,31 @@ export const loadShapefile = async (shapefilePath) => {
     
     // Try to load the real GeoJSON file
     const response = await fetch(shapefilePath);
+    
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
     const geojson = await response.json();
-    console.log(`✅ Successfully loaded real GeoJSON: ${shapefilePath}`);
-    console.log(`📊 Features: ${geojson.features?.length || 0}, File size: ~${Math.round(JSON.stringify(geojson).length / 1024)}KB`);
-    return geojson;
+    console.log(`✅ Successfully loaded ${shapefilePath} (${geojson.features?.length || 0} features)`);
+    
+    // Transform coordinates from UTM to WGS84 for Leaflet
+    console.log(`🔄 Transforming coordinates from UTM to WGS84 for ${shapefilePath}`);
+    const transformedGeoJSON = transformGeoJSON(geojson);
+    console.log(`✅ Coordinate transformation complete for ${shapefilePath}`);
+    
+    return transformedGeoJSON;
     
   } catch (error) {
-    console.warn(`⚠️ Could not load ${shapefilePath}, using mock data:`, error.message);
+    console.error(`❌ Failed to load ${shapefilePath}:`, error.message);
     
     // Return mock data for coastline only
     if (shapefilePath.includes('coast')) {
+      console.log(`🔄 Using mock coastline data for ${shapefilePath}`);
       return mockDominicaGeoJSON.coast;
     } else {
       // For other layers, return empty collection if file not found
+      console.log(`📄 Returning empty collection for ${shapefilePath}`);
       return {
         type: "FeatureCollection",
         features: []

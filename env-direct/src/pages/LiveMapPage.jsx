@@ -103,26 +103,26 @@ const kmzFiles = shapefileConfig;
 // Custom Legend Component
 const MapLegend = () => {
   return (
-    <div className="leaflet-bottom leaflet-right">
-      <div className="leaflet-control leaflet-bar p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-90">
+    <div className="leaflet-bottom leaflet-left">
+      <div className="leaflet-control leaflet-bar p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-90 ml-2 mb-2">
         <h4 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">Dominica Map Layers</h4>
         <div className="space-y-2">
           {/* Shapefile Layers */}
           <div className="mb-3">
             <h5 className="font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Geographic Layers</h5>
-            {kmzFiles.map((layer) => (
+          {kmzFiles.map((layer) => (
               <div key={layer.name} className="flex items-center mb-1">
-                <div 
-                  className="w-6 h-6 mr-2" 
-                  style={{ 
-                    backgroundColor: layer.fillColor, 
-                    border: `2px solid ${layer.color}`,
-                    opacity: layer.fillOpacity
-                  }}
-                ></div>
-                <span className="text-sm text-gray-700 dark:text-gray-300">{layer.name}</span>
-              </div>
-            ))}
+              <div 
+                className="w-6 h-6 mr-2" 
+                style={{ 
+                  backgroundColor: layer.fillColor, 
+                  border: `2px solid ${layer.color}`,
+                  opacity: layer.fillOpacity
+                }}
+              ></div>
+              <span className="text-sm text-gray-700 dark:text-gray-300">{layer.name}</span>
+            </div>
+          ))}
           </div>
 
           {/* Risk Markers */}
@@ -241,19 +241,51 @@ const LiveMapPageImpl = () => {
   const mapDisplayContainerRef = useRef(null);
 
   // Filter data based on search term - memoize for performance
-  const filteredFloodRiskData = React.useMemo(() =>
-    floodRiskData.filter(risk =>
-      risk?.regionName?.toLowerCase().includes(searchTerm?.toLowerCase() || '') || false
-    ),
-    [floodRiskData, searchTerm]
-  );
+  const filteredFloodRiskData = React.useMemo(() => {
+    console.log('🔍 Filtering floodRiskData:', { 
+      totalItems: floodRiskData.length, 
+      searchTerm: searchTerm,
+      searchTermLength: searchTerm?.length 
+    });
+    
+    // If no search term, return all data
+    if (!searchTerm || searchTerm.trim() === '') {
+      console.log('🔍 No search term, returning all flood risk data');
+      return floodRiskData;
+    }
+    
+    const filtered = floodRiskData.filter(risk => {
+      const matches = risk?.regionName?.toLowerCase().includes(searchTerm.toLowerCase());
+      console.log(`🔍 ${risk?.regionName} matches "${searchTerm}": ${matches}`);
+      return matches;
+    });
+    
+    console.log('🔍 Filtered flood risk data:', filtered.length, 'items');
+    return filtered;
+  }, [floodRiskData, searchTerm]);
 
-  const filteredEcoTourismData = React.useMemo(() =>
-    ecoTourismData.filter(site =>
-      site?.siteName?.toLowerCase().includes(searchTerm?.toLowerCase() || '') || false
-    ),
-    [ecoTourismData, searchTerm]
-  );
+  const filteredEcoTourismData = React.useMemo(() => {
+    console.log('🔍 Filtering ecoTourismData:', { 
+      totalItems: ecoTourismData.length, 
+      searchTerm: searchTerm,
+      searchTermLength: searchTerm?.length 
+    });
+    
+    // If no search term, return all data
+    if (!searchTerm || searchTerm.trim() === '') {
+      console.log('🔍 No search term, returning all eco-tourism data');
+      return ecoTourismData;
+    }
+    
+    const filtered = ecoTourismData.filter(site => {
+      const matches = site?.siteName?.toLowerCase().includes(searchTerm.toLowerCase());
+      console.log(`🔍 ${site?.siteName} matches "${searchTerm}": ${matches}`);
+      return matches;
+    });
+    
+    console.log('🔍 Filtered eco-tourism data:', filtered.length, 'items');
+    return filtered;
+  }, [ecoTourismData, searchTerm]);
 
   // Handle search input change - memoize for performance
   const handleSearchChange = React.useCallback((e) => {
@@ -334,6 +366,67 @@ const LiveMapPageImpl = () => {
       ...generateHeatmapData('climate', [15.5, -61.45], 0.1) // Northwestern area
     ];
   }, []);
+
+  // Memoized GeoJSON layers to prevent infinite re-renders
+  const memoizedGeoJSONLayers = useMemo(() => {
+    console.log(`🗺️ Rendering ${geojsonData.length} GeoJSON layers with memoization`);
+    if (geojsonData.length === 0) {
+      console.log('🗺️ No GeoJSON data available for rendering');
+      return [];
+    }
+        const layers = geojsonData.map((layer, index) => {
+      if (!layer.data || !layer.data.features || layer.data.features.length === 0) {
+        console.warn(`⚠️ Skipping layer ${layer.name} - no valid data`);
+        return null;
+      }
+      
+      console.log(`🗺️ Creating layer ${layer.name} with ${layer.data.features.length} features, checked: ${index === 0}`);
+
+      // Create stable style function with better visibility
+      const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080'];
+      const layerColor = colors[index % colors.length];
+      const layerStyle = {
+        color: layerColor,
+        fillColor: layerColor,
+        weight: 3, // Increased weight for better visibility
+        opacity: 1.0, // Full opacity for borders
+        fillOpacity: 0.3, // Increased fill opacity for better visibility
+        interactive: true // Ensure they can still be clicked for popups
+      };
+      
+      return (
+        <LayersControl.Overlay key={`${layer.name}-${index}`} name={layer.name} checked={index === 0}>
+          <GeoJSON 
+            key={`geojson-${layer.name}-${layer.data.features.length}`}
+            data={layer.data} 
+            style={() => layerStyle}
+            onEachFeature={(feature, leafletLayer) => {
+              // Set lower z-index for GeoJSON layers
+              if (leafletLayer.setZIndexOffset) {
+                leafletLayer.setZIndexOffset(-1000);
+              }
+              
+              // Add popup if feature has properties
+              if (feature.properties) {
+                const popupContent = Object.entries(feature.properties)
+                  .filter(([key, value]) => value != null && value !== '')
+                  .slice(0, 5) // Limit to first 5 properties to avoid huge popups
+                  .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                  .join('<br>');
+                
+                if (popupContent) {
+                  leafletLayer.bindPopup(`<div><strong>${layer.name}</strong><br>${popupContent}</div>`);
+                }
+              }
+            }}
+          />
+        </LayersControl.Overlay>
+      );
+    }).filter(layer => layer !== null);
+    
+    console.log(`🗺️ Memoized layers created: ${layers.length} valid layers`);
+    return layers;
+  }, [geojsonData]);
 
   // Mock data for flood risk when API fails
   const mockFloodRiskData = [
@@ -601,6 +694,7 @@ const LiveMapPageImpl = () => {
       try {
         console.log('Loading Dominica shapefiles...');
         const loadedLayers = await loadAllShapefiles();
+        console.log('Raw loaded layers:', loadedLayers);
         
         // Convert to the format expected by the map
         const allGeojson = loadedLayers
@@ -611,20 +705,62 @@ const LiveMapPageImpl = () => {
             config: layer
           }));
 
-        console.log(`Successfully loaded ${allGeojson.length} shapefile layers`);
+        console.log(`Successfully loaded ${allGeojson.length} shapefile layers:`, allGeojson);
+        console.log('GeoJSON data details:', allGeojson.map(layer => ({
+          name: layer.name,
+          featureCount: layer.data?.features?.length,
+          dataType: layer.data?.type,
+          hasGeometry: layer.data?.features?.[0]?.geometry ? true : false
+        })));
+        
         setGeojsonData(allGeojson);
+        console.log('✅ GeoJSON data set in state:', allGeojson.length, 'layers');
+        
+        // Fit map bounds to show all loaded layers
+        if (mapInstance && allGeojson.length > 0) {
+          try {
+            // Calculate bounds from all features
+            let bounds = null;
+            allGeojson.forEach(layer => {
+              if (layer.data && layer.data.features) {
+                layer.data.features.forEach(feature => {
+                  if (feature.geometry) {
+                    const featureBounds = L.geoJSON(feature).getBounds();
+                    if (bounds) {
+                      bounds.extend(featureBounds);
+                    } else {
+                      bounds = featureBounds;
+                    }
+                  }
+                });
+              }
+            });
+            
+            if (bounds && bounds.isValid()) {
+              console.log('📍 Fitting map to layer bounds:', bounds);
+              mapInstance.fitBounds(bounds, { padding: [20, 20] });
+            } else {
+              console.log('📍 No valid bounds found, using default Dominica center');
+              mapInstance.setView(dominicaCenter, isMobile ? 9 : 10);
+            }
+          } catch (error) {
+            console.error('Error fitting bounds:', error);
+            mapInstance.setView(dominicaCenter, isMobile ? 9 : 10);
+          }
+        }
         
         // Show errors for failed layers
         const failedLayers = loadedLayers.filter(layer => !layer.loaded);
         if (failedLayers.length > 0) {
           const errorMessage = `Failed to load: ${failedLayers.map(l => l.name).join(', ')}`;
+          console.warn('Failed layers:', failedLayers);
           setError(errorMessage);
         }
-        
-      } catch (err) {
+
+        } catch (err) {
         console.error('Error loading shapefiles:', err);
         setError(`Failed to load shapefile data: ${err.message}`);
-      }
+        }
       
       setLoading(false);
     };
@@ -634,46 +770,49 @@ const LiveMapPageImpl = () => {
     // Fetch environmental data
     fetchFloodRiskData();
     fetchEcoTourismData();
+    
+    // Debug: Log initial data state
+    console.log('🔍 Initial data state check:');
+    console.log('- floodRiskData:', floodRiskData);
+    console.log('- ecoTourismData:', ecoTourismData);
+    console.log('- geojsonData:', geojsonData);
   }, []);
 
-  // Effect for dynamic height calculation - simplified to prevent infinite scrolling issues
+  // Effect for dynamic height calculation - improved to prevent display issues
   useEffect(() => {
-    // Use a fixed height approach instead of dynamic calculation to prevent layout shifts
-    const setFixedMapHeight = () => {
+    const setMapHeight = () => {
       if (mapDisplayContainerRef.current) {
-        // Set a fixed height based on viewport size
-        // This prevents continuous recalculation that might cause infinite scrolling
+        // Calculate height based on viewport size
         const viewportHeight = window.innerHeight;
         const headerHeight = isMobile ? 80 : 100; // Approximate header height
-        const fixedHeight = viewportHeight - headerHeight - 40; // 40px for padding/margins
+        const calculatedHeight = viewportHeight - headerHeight - 40; // 40px for padding/margins
 
-        // Ensure minimum height
-        const finalHeight = Math.max(fixedHeight, 400);
+        // Ensure minimum height and set a reasonable maximum
+        const finalHeight = Math.max(Math.min(calculatedHeight, 800), 400);
         mapDisplayContainerRef.current.style.height = `${finalHeight}px`;
 
-        // Invalidate map size once after setting height
+        // Invalidate map size after setting height
         if (mapInstance) {
-          // Use setTimeout to ensure the height change has been applied
-          setTimeout(() => {
+          // Use requestAnimationFrame to ensure the height change has been applied
+          requestAnimationFrame(() => {
             if (mapInstance) {
               mapInstance.invalidateSize();
-
               // Force center on Dominica after resize
               mapInstance.setView(dominicaCenter, isMobile ? 8 : 9, {
                 animate: false
               });
             }
-          }, 100);
+          });
         }
       }
     };
 
-    // Set height immediately
-    setFixedMapHeight();
+    // Set height immediately on mount and when dependencies change
+    setMapHeight();
 
     // Add resize listener with debounce
     const handleResize = debounce(() => {
-      setFixedMapHeight();
+      setMapHeight();
     }, 250);
 
     window.addEventListener('resize', handleResize);
@@ -683,9 +822,24 @@ const LiveMapPageImpl = () => {
     };
   }, [isMobile, mapInstance]);
 
-  // Loading and error states
-  if (loading || dataLoading) return <p className="text-center p-8">Loading map data...</p>;
-  if (!geojsonData.length) return <p className="text-center p-8">No map data to display.</p>;
+  // Effect to ensure map is properly initialized on mount
+  useEffect(() => {
+    if (mapInstance && mapDisplayContainerRef.current) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        mapInstance.invalidateSize();
+        mapInstance.setView(dominicaCenter, isMobile ? 8 : 9, {
+          animate: false
+        });
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [mapInstance, isMobile]);
+
+  // Loading and error states - Only block if still loading, not if GeoJSON failed
+  if (loading && geojsonData.length === 0) return <p className="text-center p-8">Loading map data...</p>;
+  // Don't block rendering if GeoJSON failed - markers and heatmaps can still work
 
   // Show error as a notification instead of replacing the entire page
   const ErrorNotification = () => {
@@ -810,6 +964,17 @@ const LiveMapPageImpl = () => {
     );
   };
 
+  // Debug: Log data state before rendering
+  console.log('🗺️ Rendering map with data:');
+  console.log('- floodRiskData length:', floodRiskData.length);
+  console.log('- ecoTourismData length:', ecoTourismData.length);
+  console.log('- filteredFloodRiskData length:', filteredFloodRiskData.length);
+  console.log('- filteredEcoTourismData length:', filteredEcoTourismData.length);
+  console.log('- geojsonData length:', geojsonData.length);
+  console.log('- showHeatmaps:', showHeatmaps);
+  console.log('- loading:', loading);
+  console.log('- dataLoading:', dataLoading);
+
   // Wrap the render in a try-catch block to catch any rendering errors
   try {
     return (
@@ -821,119 +986,106 @@ const LiveMapPageImpl = () => {
           Live Environmental Data Map
         </h1>
 
-        <div className="mb-1 flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center" ref={controlsContainerRef}>
-          <div className="relative w-full md:w-64">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg mb-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search Filter */}
+            <div className="flex-1">
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Search Locations
+              </label>
             <input
               type="text"
-              placeholder="Search regions or sites..."
+                id="search"
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              aria-label="Search regions or sites"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                aria-label="Clear search"
-              >
-                ×
-              </button>
-            )}
+                placeholder="Search regions, tourism sites..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
           </div>
 
+            {/* Time Filter */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Time Period
+              </label>
           <div className="flex gap-2">
+                {['current', 'historical', 'future'].map((filter) => (
             <button
-              onClick={() => handleTimeFilterChange('current')}
-              className={`px-3 py-1 rounded-lg ${
-                timeFilter === 'current' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-              }`}
-              aria-pressed={timeFilter === 'current'}
-            >
-              Current
+                    key={filter}
+                    onClick={() => handleTimeFilterChange(filter)}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      timeFilter === filter
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500'
+                    }`}
+                  >
+                    {filter.charAt(0).toUpperCase() + filter.slice(1)}
             </button>
-            <button
-              onClick={() => handleTimeFilterChange('historical')}
-              className={`px-3 py-1 rounded-lg ${
-                timeFilter === 'historical' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-              }`}
-              aria-pressed={timeFilter === 'historical'}
-            >
-              Historical
-            </button>
-            <button
-              onClick={() => handleTimeFilterChange('future')}
-              className={`px-3 py-1 rounded-lg ${
-                timeFilter === 'future' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-              }`}
-              aria-pressed={timeFilter === 'future'}
-            >
-              Future Predictions
-            </button>
+                ))}
+              </div>
           </div>
 
-          <div className="flex gap-2 mt-2 md:mt-0">
-            <button
-              onClick={handleHeatmapToggle}
-              className={`px-3 py-1 rounded-lg ${
-                showHeatmaps
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-              }`}
-              aria-pressed={showHeatmaps}
-            >
-              {showHeatmaps ? 'Hide Heatmaps' : 'Show Heatmaps'}
-            </button>
-
+            {/* Heatmap Controls */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Heatmap Overlays
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={showHeatmaps}
+                    onChange={handleHeatmapToggle}
+                    className="mr-2"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Show Heatmaps</span>
+                </label>
             {showHeatmaps && (
-              <div className="flex gap-1">
-                <button
-                  onClick={() => handleHeatmapChange('population')}
-                  className={`px-2 py-1 text-xs rounded-lg ${
-                    activeHeatmap === 'population' 
-                      ? 'bg-purple-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                  }`}
-                  aria-pressed={activeHeatmap === 'population'}
-                >
-                  Population
-                </button>
-                <button
-                  onClick={() => handleHeatmapChange('pollution')}
-                  className={`px-2 py-1 text-xs rounded-lg ${
-                    activeHeatmap === 'pollution' 
-                      ? 'bg-red-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                  }`}
-                  aria-pressed={activeHeatmap === 'pollution'}
-                >
-                  Pollution
-                </button>
-                <button
-                  onClick={() => handleHeatmapChange('climate')}
-                  className={`px-2 py-1 text-xs rounded-lg ${
-                    activeHeatmap === 'climate' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                  }`}
-                  aria-pressed={activeHeatmap === 'climate'}
-                >
-                  Climate Impact
-                </button>
+                  <select
+                    value={activeHeatmap}
+                    onChange={(e) => handleHeatmapChange(e.target.value)}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  >
+                    <option value="population">Population Density</option>
+                    <option value="pollution">Pollution Levels</option>
+                    <option value="climate">Climate Impact</option>
+                  </select>
+                )}
               </div>
+            </div>
+
+            {/* Layer Status */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Map Layers
+              </label>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                {loading ? (
+                  <span className="text-blue-600">Loading layers...</span>
+                ) : (
+                  <span className="text-green-600">
+                    {geojsonData.length} layers loaded
+                    {geojsonData.length > 0 && (
+                      <div className="text-xs mt-1">
+                        {geojsonData.map(layer => 
+                          `${layer.name} (${layer.data?.features?.length || 0})`
+                        ).join(', ')}
+              </div>
+                    )}
+                  </span>
+                )}
+                {error && (
+                  <div className="text-red-600 text-xs mt-1">{error}</div>
             )}
+              </div>
+            </div>
           </div>
         </div>
 
         <div 
           className="relative overflow-hidden bg-gray-100 dark:bg-gray-800 p-1 rounded-xl shadow-2xl"
           ref={mapDisplayContainerRef}
+          style={{ height: '600px', minHeight: '400px' }}
         >
           <MapContainer 
             center={dominicaCenter} 
@@ -964,28 +1116,9 @@ const LiveMapPageImpl = () => {
                 />
               </LayersControl.BaseLayer>
 
-              {/* GeoJSON Layers - Now using actual Dominica shapefiles */}
-              {geojsonData.map((layer, index) => (
-                layer.data && (
-                  <LayersControl.Overlay key={`${layer.name}-${index}`} name={layer.name} checked>
-                    <GeoJSON 
-                      data={layer.data} 
-                      style={(feature) => getLayerStyle(feature, layer.config)}
-                      onEachFeature={(feature, leafletLayer) => {
-                        onFeatureClick(feature, leafletLayer);
-                        
-                        // Add layer name to feature properties for identification
-                        if (feature.properties) {
-                          feature.properties.layerName = layer.name;
-                          feature.properties.description = layer.config?.description || `${layer.name} layer`;
-                        }
-                      }}
-                    />
-                  </LayersControl.Overlay>
-                )
-              ))}
 
-              {/* Marker Overlays - RE-ENABLING Flood Risk and Eco-Tourism */}
+
+              {/* Marker Overlays - MOVED TO TOP for better visibility */}
               {/* Flood Risk Markers */}
               <LayersControl.Overlay name="Flood Risk Areas" checked>
                 <LayerGroup>
@@ -994,6 +1127,7 @@ const LiveMapPageImpl = () => {
                       key={`flood-${index}`}
                       position={getRegionCoordinates(risk.regionName)}
                       icon={FloodIcon}
+                      zIndexOffset={1000} // Ensure markers appear on top
                       eventHandlers={{
                         click: () => {
                           setSelectedFeature({
@@ -1027,6 +1161,7 @@ const LiveMapPageImpl = () => {
                       key={`tourism-${index}`}
                       position={getTourismCoordinates(site.siteId)}
                       icon={TourismIcon}
+                      zIndexOffset={1000} // Ensure markers appear on top
                       eventHandlers={{
                         click: () => {
                           setSelectedFeature({
@@ -1049,9 +1184,12 @@ const LiveMapPageImpl = () => {
                   ))}
                 </LayerGroup>
               </LayersControl.Overlay>
+
+              {/* GeoJSON Layers - MOVED BELOW markers and made unchecked by default */}
+              {memoizedGeoJSONLayers}
             </LayersControl>
 
-            {/* Heatmap Layers */}
+            {/* Heatmap Layers - Rendered on top with high z-index */}
             {showHeatmaps && (
               <LayerGroup>
                 {activeHeatmap === 'population' && populationData.map((point, index) => (
@@ -1061,9 +1199,12 @@ const LiveMapPageImpl = () => {
                     radius={15 * point.intensity + 5}
                     pathOptions={{
                       fillColor: '#8b5cf6', // Purple
-                      fillOpacity: 0.5 * point.intensity,
-                      stroke: false
+                      fillOpacity: 0.6 * point.intensity, // Increased opacity for better visibility
+                      stroke: true,
+                      color: '#7c3aed',
+                      weight: 1
                     }}
+                    zIndexOffset={2000} // High z-index to appear on top
                   >
                     <Tooltip>
                       <div>
@@ -1081,9 +1222,12 @@ const LiveMapPageImpl = () => {
                     radius={15 * point.intensity + 5}
                     pathOptions={{
                       fillColor: '#ef4444', // Red
-                      fillOpacity: 0.5 * point.intensity,
-                      stroke: false
+                      fillOpacity: 0.6 * point.intensity, // Increased opacity for better visibility
+                      stroke: true,
+                      color: '#dc2626',
+                      weight: 1
                     }}
+                    zIndexOffset={2000} // High z-index to appear on top
                   >
                     <Tooltip>
                       <div>
@@ -1101,9 +1245,12 @@ const LiveMapPageImpl = () => {
                     radius={15 * point.intensity + 5}
                     pathOptions={{
                       fillColor: '#f97316', // Orange
-                      fillOpacity: 0.5 * point.intensity,
-                      stroke: false
+                      fillOpacity: 0.6 * point.intensity, // Increased opacity for better visibility
+                      stroke: true,
+                      color: '#ea580c',
+                      weight: 1
                     }}
+                    zIndexOffset={2000} // High z-index to appear on top
                   >
                     <Tooltip>
                       <div>
