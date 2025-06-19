@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Spinner from '../components/Spinner';
 import EcoSitePressureCard from '../components/EcoSitePressureCard';
 import FloodRiskCard from '../components/FloodRiskCard';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 const PredictionDashboardPage = () => {
   const [ecoTourismPredictions, setEcoTourismPredictions] = useState([]);

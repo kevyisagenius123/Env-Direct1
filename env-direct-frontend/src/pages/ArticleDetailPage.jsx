@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import authService from '../services/authService';
 import ArticleEnhancer from '../components/interactive/ArticleEnhancer';
 import mockArticleService from '../services/mockArticleService';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 // Helper to format date (optional)
 const formatDate = (dateString) => {

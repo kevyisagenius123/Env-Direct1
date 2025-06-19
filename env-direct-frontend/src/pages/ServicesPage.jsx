@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 const services = [
     { title: 'Environmental Impact Assessments (EIA)', description: 'Comprehensive EIAs for new projects and developments.' },

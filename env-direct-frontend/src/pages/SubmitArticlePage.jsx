@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx'; // Import the custom hook
 import authService from '../services/authService';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 const SubmitArticlePage = () => {
   // const { currentUser } = useContext(AuthContext); // Old way

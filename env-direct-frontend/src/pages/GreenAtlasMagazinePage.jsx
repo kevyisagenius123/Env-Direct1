@@ -57,7 +57,7 @@ import {
 } from '../components/magazine/CompletedFeatures';
 
 // Import services - now use real API instead of mock
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 const GreenAtlasMagazinePage = () => {
   const containerRef = useRef(null);
