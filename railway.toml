@@ -6,6 +6,7 @@ builder = "docker"
 
 [[services]]
 name = "backend"
+builder = "dockerfile"
 # The root directory for this service, relative to the repo root.
 rootDir = "./backend"
 # Railway will automatically use the Dockerfile in this directory. 
