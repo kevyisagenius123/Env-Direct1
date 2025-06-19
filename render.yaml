@@ -15,10 +15,8 @@ services:
           property: url
   - type: web
     name: Env-Direct-Backend
-    env: java
+    env: docker
     rootDir: backend
-    buildCommand: "mvn clean install"
-    startCommand: "java -jar target/backend-0.0.1-SNAPSHOT.jar"
     envVars:
       - key: JAVA_VERSION
         value: 21
@@ -26,7 +24,7 @@ services:
         fromService:
           type: psql
           name: my-app-database
-          property: internalConnectionString
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromService:
           type: psql
