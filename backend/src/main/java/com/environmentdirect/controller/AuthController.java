@@ -4,17 +4,14 @@ import com.environmentdirect.dto.AuthResponseDto;
 import com.environmentdirect.dto.LoginRequestDto;
 import com.environmentdirect.dto.UserRegistrationDto;
 import com.environmentdirect.model.User;
-import com.environmentdirect.security.JwtUtil;
 import com.environmentdirect.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,16 +25,11 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
+    private UserService userService;
 
     /**
      * Register a new user.
@@ -46,7 +38,7 @@ public class AuthController {
      * @return ResponseEntity with success message or error
      */
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
         try {
             User user = userService.registerUser(registrationDto);
 
@@ -75,41 +67,21 @@ public class AuthController {
      * @return ResponseEntity with JWT token and user information or error
      */
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDto loginRequest) {
-        try {
-            // Authenticate user
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
-            );
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDto loginRequestDto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDto.username(), loginRequestDto.password()));
 
-            // Get user details
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        // Get user details from authentication
+        org.springframework.security.core.userdetails.User userDetails = 
+                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        
+        // Fetch the actual user entity from database
+        User user = userService.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Generate JWT token
-            String token = jwtUtil.generateToken(userDetails);
-
-            // Get user from database to get roles
-            User user = userService.findByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new IllegalStateException("User not found after authentication"));
-
-            // Create response with token and user information
-            AuthResponseDto authResponse = new AuthResponseDto(
-                    token,
-                    user.getUsername(),
-                    user.getRoles()
-            );
-
-            return ResponseEntity.ok(authResponse);
-        } catch (BadCredentialsException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Invalid username or password");
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-        } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "An error occurred during authentication");
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+        // Since we've removed JWT, we'll just return a dummy token and user info.
+        return ResponseEntity.ok(new AuthResponseDto("dummy-token", user.getUsername(), user.getRoles()));
     }
 }

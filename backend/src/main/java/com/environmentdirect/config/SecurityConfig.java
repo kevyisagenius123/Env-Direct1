@@ -1,22 +1,18 @@
 package com.environmentdirect.config;
 
-import com.environmentdirect.security.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 
@@ -27,24 +23,32 @@ import java.util.Arrays;
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     /**
-     * Password encoder bean for hashing passwords.
+     * Security filter chain bean for configuring security.
      * 
-     * @return BCryptPasswordEncoder instance
+     * @param http the HttpSecurity to configure
+     * @return SecurityFilterChain instance
+     * @throws Exception if an error occurs
      */
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**", "/api/articles/**", "/api/categories/**", "/api/tags/**", "/api/comments/**", "/api/rankings/**", "/api/projects/**", "/api/training/**", "/api/reports/submit", "/api/service-requests/submit", "/api/email/**", "/api/password/**").permitAll()
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
     }
 
     /**
@@ -60,6 +64,16 @@ public class SecurityConfig {
     }
 
     /**
+     * Password encoder bean for hashing passwords.
+     * 
+     * @return BCryptPasswordEncoder instance
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
      * CORS configuration source bean for configuring CORS.
      * 
      * @return CorsConfigurationSource instance
@@ -67,71 +81,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173",
-            "http://localhost:3000",
-            "https://environment-direct.vercel.app",
-            "https://env-direct.vercel.app",
-            "https://environment-direct-frontend.vercel.app",
-            "https://environment-direct.netlify.app",
-            "https://env-direct.netlify.app",
-            "https://environment-direct-frontend.netlify.app",
-            "https://wonderful-boba-48e576.netlify.app",
-            "https://env-direct.onrender.com",
-            "https://environment-direct-backend.up.railway.app",
-            "https://triumphant-expression-production.up.railway.app",
-            "https://env-direct-production.up.railway.app"
-        ));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://env-direct-frontend.onrender.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    /**
-     * Security filter chain bean for configuring security.
-     * 
-     * @param http the HttpSecurity to configure
-     * @return SecurityFilterChain instance
-     * @throws Exception if an error occurs
-     */
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/projects/**").permitAll()
-                .requestMatchers("/api/service-requests/**").permitAll()
-                .requestMatchers("/api/training-courses/**").permitAll()
-                .requestMatchers("/api/articles/**").permitAll()
-                .requestMatchers("/api/categories/**").permitAll()
-                .requestMatchers("/api/tags/**").permitAll()
-                .requestMatchers("/api/chat/**").permitAll()
-                .requestMatchers("/api/live-data").permitAll()
-                .requestMatchers("/api/rankings").permitAll()
-                .requestMatchers("/api/predictions").permitAll()
-                .requestMatchers("/api/banner").permitAll()
-                .requestMatchers("/api/dashboard/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/reports", "/api/reports/**").permitAll()
-                .requestMatchers("/api/predict/**").permitAll()
-                // Protected endpoints
-                .anyRequest().authenticated()
-            );
-
-        // Allow frames for H2 console
-        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
-
-        // Add JWT authentication filter before UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
     }
 }
