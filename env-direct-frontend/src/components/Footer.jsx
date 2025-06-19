@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.png';
 
 // Example Social Media Icons (replace with actual SVGs or an icon library if preferred)
 const FacebookIcon = ({ className = "w-6 h-6" }) => (
@@ -30,8 +31,11 @@ const Footer = () => {
   return (
     <footer className="bg-mygreen-dark text-white pt-12 pb-8 px-4 sm:px-6 lg:px-8 dark:bg-env-gray-darker">
       <div className="container mx-auto text-center">
-        <div className="mb-6">
-          <p className="text-lg font-semibold">Environment Direct</p>
+        <div className="mb-6 flex flex-col items-center">
+          <div className="flex items-center space-x-3 mb-2">
+            <img src={logo} alt="Environment Direct Logo" className="h-12 w-auto object-contain" />
+            <p className="text-lg font-semibold">Environment Direct</p>
+          </div>
           <p className="text-sm text-mygreen-lighter opacity-90 mt-1">
             Leading the way in environmental solutions and awareness in Dominica.
           </p>
