@@ -168,12 +168,6 @@ public class ArticleController {
         return ResponseEntity.ok(dtoPage);
     }
 
-    // DEBUG: Simple test endpoint
-    @GetMapping("/test")
-    public ResponseEntity<String> testArticles() {
-        return ResponseEntity.ok("Articles endpoint test successful!");
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable Long id, /*@Valid*/ @RequestBody ArticleRequestDto articleRequestDto) {
         Article articleData = new Article( // Create a temporary Article object to pass data
