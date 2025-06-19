@@ -1,4 +1,4 @@
-const API_URL = '/api/auth';
+const API_URL = 'https://env-backend-a73f7074660a.herokuapp.com/api/auth';
 
 const register = async (username, email, password) => {
   const response = await fetch(`${API_URL}/register`, {
