@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaTimes } from 'react-icons/fa';
-import { createApiUrl } from '../utils/apiUtils';
 
 const CampaignBannerSection = () => {
   const [bannerData, setBannerData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   // Animation variants
   const contentWrapperVariants = {
@@ -30,27 +27,34 @@ const CampaignBannerSection = () => {
     },
   };
 
-  const fetchCampaignBanner = async () => {
-    try {
-      const response = await fetch(createApiUrl('/api/banner'));
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      setBannerData(data);
-      setIsVisible(true);
-    } catch (e) {
-      console.error("Failed to fetch campaign banner:", e);
-      setError("Failed to load campaign banner.");
-    }
-  };
-
   useEffect(() => {
-    fetchCampaignBanner();
+    const fetchBannerData = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_URL}/api/banner`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        // Check if response is okay AND has content
+        if (response.status === 204) { // No Content
+            console.warn("Campaign banner API returned 204 No Content");
+            setBannerData({}); // Set to an empty object to indicate successful fetch but no data
+        } else {
+            const data = await response.json();
+            setBannerData(data);
+        }
+      } catch (e) {
+        console.error("Failed to fetch campaign banner:", e);
+        setError("Failed to load campaign information. " + e.message);
+      }
+      setIsLoading(false);
+    };
+    fetchBannerData();
   }, []);
 
   // Render loading state
   if (isLoading) {
     return (
-      <section className="py-16 md:py-24 bg-mygreen dark:bg-mygreen-dark text-white text-center">
+      <section className="py-16 md:py-24 bg-envGreen-700 dark:bg-envGreen-800 text-white text-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-xl">Loading campaign details...</p>
         </div>
@@ -61,7 +65,7 @@ const CampaignBannerSection = () => {
   // Render error state if no banner data is available to render a fallback
   if (error && (!bannerData || Object.keys(bannerData).length === 0)) {
     return (
-      <section className="py-16 md:py-24 bg-mygreen dark:bg-mygreen-dark text-center">
+      <section className="py-16 md:py-24 bg-envGreen-700 dark:bg-envGreen-800 text-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-xl text-red-300">{error}</p>
             <p className="text-sm text-gray-300 mt-2">Please check the API or network connection.</p>
@@ -87,7 +91,7 @@ const CampaignBannerSection = () => {
 
   return (
     <motion.section
-      className={`py-20 md:py-28 bg-mygreen dark:bg-mygreen-dark ${textColor} relative overflow-hidden`}
+      className={`py-20 md:py-28 bg-envGreen-700 dark:bg-envGreen-800 ${textColor} relative overflow-hidden`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         {!isLoading && (
@@ -112,7 +116,7 @@ const CampaignBannerSection = () => {
             <motion.div variants={itemVariants}>
               <Link
                 to={ctaLink}
-                className={`inline-block bg-white hover:bg-gray-100 text-mygreen-dark dark:bg-mygreen-light dark:hover:bg-mygreen dark:text-mygreen-dark font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-mygreen-light focus:ring-opacity-50`}
+                className={`inline-block bg-white hover:bg-gray-100 text-envGreen-700 dark:text-envGreen-800 font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50`}
               >
                 {ctaText}
               </Link>

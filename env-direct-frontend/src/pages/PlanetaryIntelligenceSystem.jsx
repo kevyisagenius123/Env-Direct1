@@ -42,7 +42,7 @@ const PlanetaryIntelligenceSystem = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('https://env-backend-a73f7074660a.herokuapp.com/api/articles');
+        const response = await fetch('http://localhost:8080/api/articles');
         if (response.ok) {
           const data = await response.json();
           const approvedArticles = data.filter(article => article.approvalStatus === 'APPROVED');

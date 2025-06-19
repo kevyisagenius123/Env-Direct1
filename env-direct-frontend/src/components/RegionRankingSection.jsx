@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion'; // Import motion
-import { createApiUrl } from '../utils/apiUtils';
 
 // Placeholder data - REMOVED as API should be the source of truth
 // const rankingData = [ ... ]; 
@@ -36,9 +35,8 @@ const RegionRankingSection = () => {
   const [rankings, setRankings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("overall");
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   // Animation variants
   const sectionTitleVariants = {
@@ -59,22 +57,26 @@ const RegionRankingSection = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
   };
 
-  const fetchRankings = async () => {
-    try {
-      const response = await fetch(createApiUrl('/api/rankings'));
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      setRankings(data);
-    } catch (e) {
-      console.error("Failed to fetch rankings:", e);
-      setError("Failed to load rankings data.");
-      // Fallback to mock data
-      setRankings(mockRankings);
-    }
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchRankings = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_URL}/api/rankings`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched Rankings Data:", data); // DEBUGGING: Log fetched data
+        setRankings(data);
+      } catch (e) {
+        console.error("Failed to fetch rankings:", e);
+        setError("Failed to load regional rankings. " + e.message);
+        setRankings([]); // Clear rankings on error to prevent rendering stale/partial data
+      }
+      setIsLoading(false);
+    };
+
     fetchRankings();
   }, []);
 
@@ -123,7 +125,7 @@ const RegionRankingSection = () => {
   }
 
   return (
-    <section className="py-12 md:py-20 bg-mygreen dark:bg-mygreen-dark overflow-hidden">
+    <section className="py-12 md:py-20 bg-envGreen-700 dark:bg-envGreen-800 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12 md:mb-16"
@@ -144,7 +146,7 @@ const RegionRankingSection = () => {
           <div className="text-center mt-8">
             <a 
               href="/dominica-rankings-details" 
-              className="text-mygreen-light hover:text-white dark:text-mygreen-light dark:hover:text-white font-medium transition-colors"
+              className="text-white/80 hover:text-white font-medium transition-colors"
             >
               View Full Parish Rankings & Methodology
             </a>

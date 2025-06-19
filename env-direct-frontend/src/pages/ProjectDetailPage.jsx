@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { createApiUrl } from '../utils/apiUtils';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProjectDetailPage = () => {
     const { projectId } = useParams();
@@ -10,10 +11,10 @@ const ProjectDetailPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchProject = async () => {
+        const fetchProjectDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(createApiUrl(`/api/projects/${projectId}`));
+                const response = await fetch(`${API_URL}/api/projects/${projectId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch project details');
                 }
@@ -25,7 +26,7 @@ const ProjectDetailPage = () => {
             setIsLoading(false);
         };
 
-        fetchProject();
+        fetchProjectDetails();
     }, [projectId]);
 
     if (isLoading) {

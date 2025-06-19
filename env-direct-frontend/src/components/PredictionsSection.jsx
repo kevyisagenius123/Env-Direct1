@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { createApiUrl } from '../utils/apiUtils';
 
 // Placeholder icons - consider react-icons or custom SVGs for more specific visuals
 const AlertIcon = ({ className = "w-8 h-8" }) => (
@@ -26,7 +25,7 @@ const PredictionsSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   // Animation variants
   const sectionTitleVariants = {
@@ -47,28 +46,27 @@ const PredictionsSection = () => {
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
-  const fetchPredictions = async () => {
-    try {
-      const response = await fetch(createApiUrl('/api/predictions'));
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      const processedData = data.map(item => ({
-        ...item,
-        // Ensure iconName from API matches keys in iconMap (e.g., "alert", "chart")
-        // Ensure colorTheme from API has at least a 'text' property for the icon
-        iconComponent: iconMap[item.iconName?.toLowerCase()] || AlertIcon, 
-      }));
-      setPredictions(processedData);
-    } catch (e) {
-      console.error("Failed to fetch predictions:", e);
-      setError("Failed to load predictions data.");
-      // Fallback to empty array if fetch fails
-      setPredictions([]);
-    }
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPredictions = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_URL}/api/predictions`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        const processedData = data.map(item => ({
+          ...item,
+          // Ensure iconName from API matches keys in iconMap (e.g., "alert", "chart")
+          // Ensure colorTheme from API has at least a 'text' property for the icon
+          iconComponent: iconMap[item.iconName?.toLowerCase()] || AlertIcon, 
+        }));
+        setPredictions(processedData);
+      } catch (e) {
+        console.error("Failed to fetch predictions:", e);
+        setError("Failed to load environmental predictions. Please try again later.");
+      }
+      setIsLoading(false);
+    };
     fetchPredictions();
   }, []);
 
@@ -130,7 +128,7 @@ const PredictionsSection = () => {
   }
 
   return (
-    <section className="py-12 md:py-20 bg-mygreen dark:bg-mygreen-dark overflow-hidden">
+    <section className="py-12 md:py-20 bg-envGreen-700 dark:bg-envGreen-800 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12 md:mb-16"
@@ -151,7 +149,7 @@ const PredictionsSection = () => {
           <div className="text-center mt-12">
             <a 
                 href="/dominica-forecasts-details"
-                className="text-mygreen-light hover:text-white dark:text-mygreen-light dark:hover:text-white font-medium transition-colors"
+                className="text-white/80 hover:text-white font-medium transition-colors"
             >
                 View All Forecasts & Advisory Details
             </a>

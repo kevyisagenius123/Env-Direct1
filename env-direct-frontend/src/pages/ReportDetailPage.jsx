@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { createApiUrl } from '../utils/apiUtils';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ReportDetailPage = () => {
-  const { reportId } = useParams(); // Get reportId from URL parameters
+  const { reportId } = useParams(); // Get reportId from URL
   const [report, setReport] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReport = async () => {
+    const fetchReportDetails = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(createApiUrl(`/api/reports/${reportId}`));
+        const response = await axios.get(`${API_URL}/api/reports/${reportId}`);
         setReport(response.data);
         setError(null);
       } catch (err) {
-        console.error("Error fetching report:", err);
-        setError(err.message || 'Failed to fetch report details.');
+        console.error(`Error fetching report details for ID ${reportId}:`, err);
+        setError(err.message || `Failed to fetch report (ID: ${reportId}).`);
         setReport(null);
       }
       setIsLoading(false);
     };
 
     if (reportId) {
-      fetchReport();
+      fetchReportDetails();
     }
-  }, [reportId]);
+  }, [reportId]); // Re-run effect if reportId changes
 
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center"><p className="text-gray-700 text-xl">Loading report details...</p></div>;
@@ -106,7 +107,7 @@ const ReportDetailPage = () => {
                   <h2 className="text-sm font-medium text-gray-500">Image</h2>
                   {/* Construct the full URL for the image */}
                   <img 
-                    src={createApiUrl(`/api/reports/images/${report.imageUrl}`)}
+                    src={`${API_URL}/api/reports/images/${report.imageUrl}`}
                     alt={`Report ${report.id}`}
                     className="mt-2 rounded-lg shadow-md max-w-full h-auto" 
                     style={{maxHeight: '400px'}}

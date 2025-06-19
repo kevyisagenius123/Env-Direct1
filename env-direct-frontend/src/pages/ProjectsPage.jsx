@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { createApiUrl } from '../utils/apiUtils';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -12,7 +13,7 @@ const ProjectsPage = () => {
     const fetchProjects = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(createApiUrl('/api/projects'));
+        const response = await fetch(`${API_URL}/api/projects`);
         if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }

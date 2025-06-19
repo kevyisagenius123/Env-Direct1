@@ -6,7 +6,6 @@ import { kml } from '@tmcw/togeojson';
 import L from 'leaflet';
 import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
-import { createApiUrl } from '../utils/apiUtils';
 
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -365,7 +364,7 @@ const LiveMapPageImpl = () => {
   const fetchFloodRiskData = async () => {
     try {
       setDataLoading(true);
-      const response = await axios.get(createApiUrl('/api/predict/flood-risk/all'));
+      const response = await axios.get('/api/predict/flood-risk/all');
       if (response.data) {
         setFloodRiskData(response.data);
       }
@@ -416,7 +415,7 @@ const LiveMapPageImpl = () => {
   const fetchEcoTourismData = async () => {
     try {
       setDataLoading(true);
-      const response = await axios.get(createApiUrl('/api/predict/eco-tourism/pressure/all'));
+      const response = await axios.get('/api/predict/eco-tourism/pressure/all');
       if (response.data) {
         setEcoTourismData(response.data);
       }
@@ -477,7 +476,7 @@ const LiveMapPageImpl = () => {
   const fetchHistoricalComparison = async (id, type) => {
     try {
       setDataLoading(true);
-      const response = await axios.get(createApiUrl(`/api/predict/historical-comparison?id=${id}&type=${type}`));
+      const response = await axios.get(`/api/predict/historical-comparison?id=${id}&type=${type}`);
       if (response.data) {
         setSelectedFeature({ id, type, data: response.data });
       }

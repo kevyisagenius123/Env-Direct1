@@ -38,8 +38,6 @@ import {
   ExclamationTriangleIcon,
   RadioIcon
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-import { createApiUrl } from '../utils/apiUtils';
 
 // Import enhanced magazine components
 import AIDigest from '../components/magazine/AIDigest';
@@ -252,7 +250,7 @@ Every story in this edition has been verified through multiple sources, cross-re
         setIsLoading(true);
         
         // Fetch articles
-        const articlesResponse = await fetch(createApiUrl('/api/articles?size=10&sort=createdAt,desc'));
+        const articlesResponse = await fetch(`${API_URL}/api/articles?size=10&sort=createdAt,desc`);
         if (!articlesResponse.ok) {
           throw new Error('Failed to fetch articles');
         }
@@ -265,7 +263,7 @@ Every story in this edition has been verified through multiple sources, cross-re
         }
         
         // Fetch categories
-        const categoriesResponse = await fetch(createApiUrl('/api/categories'));
+        const categoriesResponse = await fetch(`${API_URL}/api/categories`);
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json();
           setCategories(categoriesData || []);

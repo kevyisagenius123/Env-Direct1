@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { createApiUrl } from '../utils/apiUtils';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const TrainingPage = () => {
   const [courses, setCourses] = useState([]);
@@ -12,7 +13,7 @@ const TrainingPage = () => {
     const fetchCourses = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(createApiUrl('/api/training-courses'));
+        const response = await fetch(`${API_URL}/api/training-courses`);
         if (!response.ok) {
           throw new Error('Failed to fetch training courses');
         }

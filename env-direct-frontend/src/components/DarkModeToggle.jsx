@@ -17,46 +17,67 @@ const DarkModeToggle = ({ isScrolled }) => {
     }
   }, [isDarkMode]);
 
-  // Determine icon color based on dark mode and whether navbar is scrolled or over hero
+  // Determine icon color based on dark mode and navbar state
   let iconColorClass = '';
-  let moonOutlineColorClass = 'stroke-mygreen'; // For the green outline
+  let moonOutlineColorClass = 'stroke-envGreen-600 dark:stroke-envGreen-400';
 
   if (isDarkMode) {
-    iconColorClass = isScrolled ? 'text-yellow-400' : 'text-yellow-400'; // Stays yellow in dark mode
+    iconColorClass = 'text-sandGold-400'; // Yellow in dark mode
   } else {
-    iconColorClass = isScrolled ? 'text-gray-700' : 'text-mygreen-dark'; // Changed from text-white to text-mygreen-dark when not scrolled for better visibility on light hero
-    // If not scrolled (on hero), the iconColorClass is now text-mygreen-dark.
-    // The outline will be 'stroke-mygreen'. This should provide good contrast.
-    // If scrolled, iconColorClass is text-gray-700, outline is stroke-mygreen.
+    iconColorClass = isScrolled 
+      ? 'text-lavaGrey-700' 
+      : 'text-lavaGrey-900'; // Dark color for visibility on light hero
   }
 
   return (
     <button
       onClick={() => setIsDarkMode(!isDarkMode)}
-      className={`p-2 rounded-md transition-colors focus:outline-none focus:ring-2 ${isScrolled ? 'hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-env-green-dark dark:focus:ring-env-green-light' : 'hover:bg-white/20 focus:ring-white/50'}`}
+      className={`p-2 rounded-md transition-colors focus:outline-none focus:ring-2 ${
+        isScrolled 
+          ? 'hover:bg-skyAsh-200 dark:hover:bg-lavaGrey-700 focus:ring-envGreen-600 dark:focus:ring-envGreen-400' 
+          : 'hover:bg-white/20 dark:hover:bg-black/20 focus:ring-white/50 dark:focus:ring-envGreen-400'
+      }`}
       aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDarkMode ? (
-        <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${iconColorClass}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.66-15.66l-.707.707M4.04 19.96l-.707.707M21 12h-1M4 12H3m15.66 8.66l-.707-.707M4.04 4.04l-.707-.707" />
+        // Sun icon for dark mode (to switch to light)
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className={`h-6 w-6 ${iconColorClass}`} 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={2} 
+            d="M12 3v1m0 16v1m8.66-15.66l-.707.707M4.04 19.96l-.707.707M21 12h-1M4 12H3m15.66 8.66l-.707-.707M4.04 4.04l-.707-.707" 
+          />
         </svg>
       ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6`} fill="none" viewBox="0 0 24 24">
+        // Moon icon for light mode (to switch to dark)
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-6 w-6" 
+          fill="none" 
+          viewBox="0 0 24 24"
+        >
           {/* Green Outline Path */}
           <path 
             className={moonOutlineColorClass}
             strokeLinecap="round" 
             strokeLinejoin="round" 
-            strokeWidth={2.5} // Slightly thicker for outline effect
+            strokeWidth={2.5}
             d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
           />
-          {/* Original Moon Path - will be drawn on top */}
+          {/* Moon Body Path */}
           <path 
-            className={iconColorClass} // Uses the determined color for the moon body
-            stroke="currentColor" // Make sure this inherits the color from className
+            className={iconColorClass}
+            stroke="currentColor"
             strokeLinecap="round" 
             strokeLinejoin="round" 
-            strokeWidth={1.5} // Slightly thinner than original if outline is present, or keep at 2 if only one path.
+            strokeWidth={1.5}
             d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
           />
         </svg>

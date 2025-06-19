@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Spinner from '../components/Spinner';
 import axios from 'axios';
-import { createApiUrl } from '../utils/apiUtils';
 
 const AnalyticsDashboardPage = () => {
   const [historicalData, setHistoricalData] = useState({});
@@ -19,10 +18,10 @@ const AnalyticsDashboardPage = () => {
       setError(null);
       try {
         // Fetch flood risk historical data for the selected region
-        const floodRiskResponse = await axios.get(createApiUrl(`/api/predict/historical-comparison?id=${selectedRegion}&type=flood-risk`));
+        const floodRiskResponse = await axios.get(`/api/predict/historical-comparison?id=${selectedRegion}&type=flood-risk`);
 
         // Fetch eco-tourism historical data for the selected site
-        const ecoTourismResponse = await axios.get(createApiUrl(`/api/predict/historical-comparison?id=${selectedSite}&type=eco-tourism`));
+        const ecoTourismResponse = await axios.get(`/api/predict/historical-comparison?id=${selectedSite}&type=eco-tourism`);
 
         setHistoricalData({
           floodRisk: floodRiskResponse.data,
