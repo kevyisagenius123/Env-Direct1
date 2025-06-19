@@ -42,8 +42,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
            "LEFT JOIN a.categories c " +
            "LEFT JOIN a.tags t " +
            "WHERE (:searchTerm IS NULL OR " +
-           "      LOWER(a.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "      LOWER(a.summary) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) " +
+           "      a.title LIKE CONCAT('%', :searchTerm, '%') OR " +
+           "      a.summary LIKE CONCAT('%', :searchTerm, '%')) " +
            "AND (:categoryName IS NULL OR c.name = :categoryName) " +
            "AND (:tagName IS NULL OR t.name = :tagName) " +
            "AND (:approvalStatus IS NULL OR a.approvalStatus = :approvalStatus)")
