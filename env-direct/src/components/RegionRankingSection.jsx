@@ -36,7 +36,7 @@ const RegionRankingSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   // Animation variants
   const sectionTitleVariants = {
@@ -125,7 +125,7 @@ const RegionRankingSection = () => {
   }
 
   return (
-    <section className="py-12 md:py-20 bg-mygreen dark:bg-mygreen-dark overflow-hidden">
+    <section className="py-12 md:py-20 bg-envGreen-700 dark:bg-envGreen-800 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12 md:mb-16"
@@ -146,7 +146,7 @@ const RegionRankingSection = () => {
           <div className="text-center mt-8">
             <a 
               href="/dominica-rankings-details" 
-              className="text-mygreen-light hover:text-white dark:text-mygreen-light dark:hover:text-white font-medium transition-colors"
+              className="text-white/80 hover:text-white font-medium transition-colors"
             >
               View Full Parish Rankings & Methodology
             </a>

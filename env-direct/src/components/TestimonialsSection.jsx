@@ -28,9 +28,9 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="bg-white dark:bg-env-gray-darker py-12 md:py-20">
+    <section className="bg-envGreen-700 dark:bg-envGreen-800 py-12 md:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-mygreen-dark dark:text-white mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
           What Our Partners Say
         </h2>
         <Swiper
@@ -45,20 +45,47 @@ const TestimonialsSection = () => {
           }}
           navigation={true}
           modules={[Autoplay, Pagination, Navigation]}
-          className="mySwiper"
+          className="mySwiper testimonials-swiper"
         >
           {testimonials.map((testimonial, index) => (
             <SwiperSlide key={index}>
               <div className="max-w-3xl mx-auto text-center p-8">
-                <img src={testimonial.avatar} alt={testimonial.name} className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-mygreen-light" />
-                <p className="text-lg italic text-gray-700 dark:text-gray-300 mb-6">"{testimonial.quote}"</p>
-                <p className="font-semibold text-mygreen-dark dark:text-mygreen-light">{testimonial.name}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.title}</p>
+                <img src={testimonial.avatar} alt={testimonial.name} className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white/30" />
+                <p className="text-lg italic text-white/90 mb-6">"{testimonial.quote}"</p>
+                <p className="font-semibold text-white">{testimonial.name}</p>
+                <p className="text-sm text-white/70">{testimonial.title}</p>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
+      
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .testimonials-swiper .swiper-button-next,
+          .testimonials-swiper .swiper-button-prev {
+            color: white !important;
+          }
+          
+          .testimonials-swiper .swiper-button-next:after,
+          .testimonials-swiper .swiper-button-prev:after {
+            font-size: 20px;
+          }
+          
+          .testimonials-swiper .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.5) !important;
+          }
+          
+          .testimonials-swiper .swiper-pagination-bullet-active {
+            background: white !important;
+          }
+          
+          .testimonials-swiper .swiper-button-next.swiper-button-disabled,
+          .testimonials-swiper .swiper-button-prev.swiper-button-disabled {
+            opacity: 0.3;
+          }
+        `
+      }} />
     </section>
   );
 };

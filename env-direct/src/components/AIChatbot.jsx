@@ -23,7 +23,7 @@ import {
 } from '@heroicons/react/24/outline';
 import './AIChatbot.css';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 // Enhanced Editorial Assistant Icon with autonomous thinking animation
 const EditorialIcon = ({ isAnalyzing = false, isThinking = false, autonomousMode = false }) => (

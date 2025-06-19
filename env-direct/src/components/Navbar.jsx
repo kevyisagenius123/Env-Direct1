@@ -130,8 +130,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse" onClick={closeMenu}>
-            <img src={logo} alt="Environment Direct Logo" className="h-10 w-auto object-contain" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap text-[var(--premium-green)]">Environment Direct</span>
+            <img src={logo} alt="Environment Direct Logo" className="h-8 w-8" />
+            <span className={`self-center text-2xl font-semibold whitespace-nowrap transition-colors ${
+              isScrolled 
+                ? 'text-envGreen-600 dark:text-envGreen-400' 
+                : 'text-white filter drop-shadow-[0_1px_1px_rgba(0,0,0,0.6)]'
+            }`}>Environment Direct</span>
           </Link>
 
           <div className="hidden lg:flex items-center">

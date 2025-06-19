@@ -7,7 +7,7 @@ const CampaignBannerSection = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
   // Animation variants
   const contentWrapperVariants = {
@@ -54,7 +54,7 @@ const CampaignBannerSection = () => {
   // Render loading state
   if (isLoading) {
     return (
-      <section className="py-16 md:py-24 bg-mygreen dark:bg-mygreen-dark text-white text-center">
+      <section className="py-16 md:py-24 bg-envGreen-700 dark:bg-envGreen-800 text-white text-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-xl">Loading campaign details...</p>
         </div>
@@ -65,7 +65,7 @@ const CampaignBannerSection = () => {
   // Render error state if no banner data is available to render a fallback
   if (error && (!bannerData || Object.keys(bannerData).length === 0)) {
     return (
-      <section className="py-16 md:py-24 bg-mygreen dark:bg-mygreen-dark text-center">
+      <section className="py-16 md:py-24 bg-envGreen-700 dark:bg-envGreen-800 text-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-xl text-red-300">{error}</p>
             <p className="text-sm text-gray-300 mt-2">Please check the API or network connection.</p>
@@ -91,7 +91,7 @@ const CampaignBannerSection = () => {
 
   return (
     <motion.section
-      className={`py-20 md:py-28 bg-mygreen dark:bg-mygreen-dark ${textColor} relative overflow-hidden`}
+      className={`py-20 md:py-28 bg-envGreen-700 dark:bg-envGreen-800 ${textColor} relative overflow-hidden`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         {!isLoading && (
@@ -116,7 +116,7 @@ const CampaignBannerSection = () => {
             <motion.div variants={itemVariants}>
               <Link
                 to={ctaLink}
-                className={`inline-block bg-white hover:bg-gray-100 text-mygreen-dark dark:bg-mygreen-light dark:hover:bg-mygreen dark:text-mygreen-dark font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-mygreen-light focus:ring-opacity-50`}
+                className={`inline-block bg-white hover:bg-gray-100 text-envGreen-700 dark:text-envGreen-800 font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50`}
               >
                 {ctaText}
               </Link>
