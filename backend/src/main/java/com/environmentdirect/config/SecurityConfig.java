@@ -44,20 +44,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/health").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/articles", "/api/articles/**").permitAll()
-                .requestMatchers("/api/categories/**").permitAll()
-                .requestMatchers("/api/tags/**").permitAll()
-                .requestMatchers("/api/comments/**").permitAll()
-                .requestMatchers("/api/rankings/**").permitAll()
-                .requestMatchers("/api/projects/**").permitAll()
-                .requestMatchers("/api/training/**").permitAll()
-                .requestMatchers("/api/reports/submit").permitAll()
-                .requestMatchers("/api/service-requests/submit").permitAll()
-                .requestMatchers("/api/email/**").permitAll()
-                .requestMatchers("/api/password/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
 
         return http.build();
