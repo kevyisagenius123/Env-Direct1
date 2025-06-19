@@ -1,41 +1,16 @@
 {
-  "version": 2,
-  "name": "environment-direct",
-  "builds": [
-    {
-      "src": "env-direct/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://environment-direct-backend.up.railway.app/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/env-direct/dist/$1"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!api).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "env": {
     "VITE_API_URL": "https://environment-direct-backend.up.railway.app"
-  },
-  "build": {
-    "env": {
-      "VITE_API_URL": "https://environment-direct-backend.up.railway.app"
-    }
-  },
-  "installCommand": "cd env-direct && npm install",
-  "buildCommand": "cd env-direct && npm run build",
-  "outputDirectory": "env-direct/dist",
-  "framework": "vite"
+  }
 } 

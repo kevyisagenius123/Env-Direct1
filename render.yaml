@@ -1,43 +1,32 @@
+databases:
+  - name: my-app-database
+    databaseName: my_app_database_khpl
+    user: my_app_database_khpl_user
+
 services:
-  - type: web
-    name: green-atlas-frontend
-    env: static
-    rootDir: env-direct-frontend
-    buildCommand: "npm install && npm run build"
-    staticPublishPath: dist
-    envVars:
-      - key: NODE_VERSION
-        value: 18
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: Env-Direct-Backend
-          property: url
   - type: web
     name: Env-Direct-Backend
     env: docker
     rootDir: backend
+    repo: https://github.com/kevyisagenius123/Env-Direct.git
     envVars:
-      - key: JAVA_VERSION
-        value: 21
       - key: SPRING_DATASOURCE_URL
-        fromService:
-          type: psql
+        fromDatabase:
           name: my-app-database
           property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromService:
-          type: psql
-          name: my-app-database
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromService:
-          type: psql
-          name: my-app-database
-          property: password
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: validate
-      - key: SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES
-        value: true
       - key: JWT_SECRET
-        generateValue: true # This will generate a secure secret value on first deploy 
+        generateValue: true
+
+  - type: web
+    name: green-atlas-frontend
+    env: static
+    rootDir: env-direct-frontend
+    repo: https://github.com/kevyisagenius123/Env-Direct.git
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: Env-Direct-Backend
+          property: url 
