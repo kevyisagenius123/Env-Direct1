@@ -1,7 +1,7 @@
 // Shapefile loader for Dominica GeoJSON data
 // Loads converted GeoJSON files from shapefiles
 
-// Shapefile configuration for Dominica data
+// Shapefile configuration for Dominica data - Updated with actual converted files
 export const shapefileConfig = [
   {
     name: 'Coast',
@@ -14,28 +14,35 @@ export const shapefileConfig = [
     description: 'Dominica Coastline'
   },
   {
-    name: 'Parishes',
-    path: '/geojson/parishes.geojson',
-    fallbackPath: '/Kevy_Shapefiles-20250619T204234Z-1-001/Kevy_Shapefiles/parishp.shp',
+    name: 'Constituencies',
+    path: '/geojson/Constituency.json',
     color: '#8B4513',
     fillColor: '#CD853F',
     weight: 1,
     fillOpacity: 0.2,
-    description: 'Parish Boundaries'
+    description: 'Electoral Constituencies'
   },
   {
-    name: 'Protected Areas',
-    path: '/geojson/protected_areas.geojson',
-    fallbackPath: '/Kevy_Shapefiles-20250619T204234Z-1-001/Kevy_Shapefiles/prtareap.shp',
-    color: '#228B22',
-    fillColor: '#90EE90',
-    weight: 2,
+    name: 'Communities',
+    path: '/geojson/Community.json',
+    color: '#9370DB',
+    fillColor: '#DDA0DD',
+    weight: 1,
+    fillOpacity: 0.3,
+    description: 'Local Communities'
+  },
+  {
+    name: 'Settlements',
+    path: '/geojson/Dominica_Settlements.json',
+    color: '#FF6347',
+    fillColor: '#FFA07A',
+    weight: 1,
     fillOpacity: 0.4,
-    description: 'Protected Conservation Areas'
+    description: 'Settlement Areas'
   },
   {
     name: 'Watersheds',
-    path: '/geojson/watersheds.geojson',
+    path: '/geojson/Dominica_Watershed.json',
     fallbackPath: '/Kevy_Shapefiles-20250619T204234Z-1-001/Kevy_Shapefiles/Dominica_watershed/Dominica_Watershed.shp',
     color: '#00BFFF',
     fillColor: '#87CEEB',
@@ -44,15 +51,43 @@ export const shapefileConfig = [
     description: 'Water Catchment Areas'
   },
   {
-    name: 'Landslide Risk',
-    path: '/geojson/landslide_risk.geojson',
-    fallbackPath: '/Kevy_Shapefiles-20250619T204234Z-1-001/Kevy_Shapefiles/CHARIM_Hazards/Landslide_Susceptibility.shp',
-    color: '#FF4500',
-    fillColor: '#FFA500',
+    name: 'Forestry Zones',
+    path: '/geojson/Forestry_Zones.json',
+    color: '#228B22',
+    fillColor: '#90EE90',
+    weight: 2,
+    fillOpacity: 0.4,
+    description: 'Forest Management Areas'
+  },
+  {
+    name: 'Roads',
+    path: '/geojson/mroadsv.json',
+    color: '#696969',
+    fillColor: '#A9A9A9',
+    weight: 3,
+    fillOpacity: 0.7,
+    description: 'Road Network'
+  },
+  {
+    name: 'National Trail',
+    path: '/geojson/National_Trail.json',
+    color: '#8B4513',
+    fillColor: '#D2691E',
+    weight: 3,
+    fillOpacity: 0.6,
+    description: 'Waitukubuli National Trail'
+  },
+  {
+    name: 'Flood Risk',
+    path: '/geojson/Flood_final.json',
+    color: '#FF0000',
+    fillColor: '#FF6B6B',
     weight: 1,
     fillOpacity: 0.5,
-    description: 'Landslide Susceptibility Zones'
+    description: 'Flood Risk Zones'
   }
+  // Note: Landslide_Susceptibility.json is 432MB - too large for web use
+  // Consider simplifying this file or loading it separately
 ];
 
 // Mock GeoJSON data for Dominica (fallback if real GeoJSON files not available)
@@ -81,112 +116,6 @@ const mockDominicaGeoJSON = {
         }
       }
     ]
-  },
-  parishes: {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {
-          name: "St. George Parish",
-          population: 25000
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.390, 15.300], [-61.350, 15.300], [-61.350, 15.250],
-            [-61.390, 15.250], [-61.390, 15.300]
-          ]]
-        }
-      },
-      {
-        type: "Feature",
-        properties: {
-          name: "St. John Parish",
-          population: 15000
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.390, 15.400], [-61.350, 15.400], [-61.350, 15.350],
-            [-61.390, 15.350], [-61.390, 15.400]
-          ]]
-        }
-      }
-    ]
-  },
-  protectedAreas: {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {
-          name: "Morne Trois Pitons National Park",
-          type: "National Park",
-          established: 1975
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.360, 15.320], [-61.320, 15.320], [-61.320, 15.280],
-            [-61.360, 15.280], [-61.360, 15.320]
-          ]]
-        }
-      }
-    ]
-  },
-  watersheds: {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {
-          name: "Northern Watershed",
-          area: "125 sq km"
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.400, 15.500], [-61.330, 15.500], [-61.330, 15.420],
-            [-61.400, 15.420], [-61.400, 15.500]
-          ]]
-        }
-      },
-      {
-        type: "Feature",
-        properties: {
-          name: "Southern Watershed",
-          area: "98 sq km"
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.400, 15.280], [-61.330, 15.280], [-61.330, 15.200],
-            [-61.400, 15.200], [-61.400, 15.280]
-          ]]
-        }
-      }
-    ]
-  },
-  landslideRisk: {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        properties: {
-          name: "High Risk Zone",
-          risk_level: "High",
-          area: "45 sq km"
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [[
-            [-61.370, 15.380], [-61.340, 15.380], [-61.340, 15.340],
-            [-61.370, 15.340], [-61.370, 15.380]
-          ]]
-        }
-      }
-    ]
   }
 };
 
@@ -203,42 +132,20 @@ export const loadShapefile = async (shapefilePath) => {
     
     const geojson = await response.json();
     console.log(`✅ Successfully loaded real GeoJSON: ${shapefilePath}`);
+    console.log(`📊 Features: ${geojson.features?.length || 0}, File size: ~${Math.round(JSON.stringify(geojson).length / 1024)}KB`);
     return geojson;
     
   } catch (error) {
     console.warn(`⚠️ Could not load ${shapefilePath}, using mock data:`, error.message);
     
-    // Return appropriate mock data based on path
+    // Return mock data for coastline only
     if (shapefilePath.includes('coast')) {
       return mockDominicaGeoJSON.coast;
-    } else if (shapefilePath.includes('parishes')) {
-      return mockDominicaGeoJSON.parishes;
-    } else if (shapefilePath.includes('protected_areas')) {
-      return mockDominicaGeoJSON.protectedAreas;
-    } else if (shapefilePath.includes('watersheds')) {
-      return mockDominicaGeoJSON.watersheds;
-    } else if (shapefilePath.includes('landslide_risk')) {
-      return mockDominicaGeoJSON.landslideRisk;
     } else {
-      // Default polygon for unknown paths
+      // For other layers, return empty collection if file not found
       return {
         type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {
-              name: "Sample Area",
-              description: "Placeholder data - convert your shapefiles to GeoJSON"
-            },
-            geometry: {
-              type: "Polygon",
-              coordinates: [[
-                [-61.380, 15.350], [-61.340, 15.350], [-61.340, 15.310],
-                [-61.380, 15.310], [-61.380, 15.350]
-              ]]
-            }
-          }
-        ]
+        features: []
       };
     }
   }
@@ -249,19 +156,31 @@ export const loadAllShapefiles = async () => {
   const loadedLayers = [];
   
   console.log('🗺️ Loading Dominica geographic data...');
+  console.log(`📁 Attempting to load ${shapefileConfig.length} layers`);
   
   for (const config of shapefileConfig) {
     try {
       console.log(`📊 Loading: ${config.name}`);
       const geojson = await loadShapefile(config.path);
       
-      loadedLayers.push({
-        ...config,
-        data: geojson,
-        loaded: true
-      });
-      
-      console.log(`✅ ${config.name}: ${geojson.features?.length || 0} features loaded`);
+      const featureCount = geojson.features?.length || 0;
+      if (featureCount > 0) {
+        loadedLayers.push({
+          ...config,
+          data: geojson,
+          loaded: true,
+          featureCount
+        });
+        console.log(`✅ ${config.name}: ${featureCount} features loaded`);
+      } else {
+        console.log(`⚠️ ${config.name}: No features found`);
+        loadedLayers.push({
+          ...config,
+          data: null,
+          loaded: false,
+          error: 'No features in file'
+        });
+      }
     } catch (error) {
       console.error(`❌ Failed to load ${config.name}:`, error);
       loadedLayers.push({
@@ -274,7 +193,10 @@ export const loadAllShapefiles = async () => {
   }
   
   const successCount = loadedLayers.filter(l => l.loaded).length;
-  console.log(`🎉 Loaded ${successCount}/${shapefileConfig.length} geographic layers`);
+  const totalFeatures = loadedLayers.reduce((sum, l) => sum + (l.featureCount || 0), 0);
+  
+  console.log(`🎉 Successfully loaded ${successCount}/${shapefileConfig.length} layers`);
+  console.log(`📊 Total features: ${totalFeatures}`);
   
   return loadedLayers;
 };
