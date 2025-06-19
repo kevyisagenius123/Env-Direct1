@@ -1,3 +1,37 @@
+# Environment Direct - Frontend
+
+A modern React application for environmental monitoring and awareness in Dominica.
+
+## Features
+
+- Interactive map with Dominica geographic layers
+- Real-time environmental data visualization
+- Flood risk assessment
+- Eco-tourism pressure monitoring
+- Climate intelligence dashboard
+- Environmental articles and magazine
+
+## Deployment
+
+Last updated: 2024-12-19 16:30 UTC - Force deployment with coordinate transformation fixes
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Technologies
+
+- React 18
+- Vite
+- Tailwind CSS
+- Leaflet Maps
+- React Router
+- Axios
+- Proj4 (coordinate transformation)
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
