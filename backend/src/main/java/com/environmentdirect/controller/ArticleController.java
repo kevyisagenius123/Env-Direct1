@@ -156,16 +156,14 @@ public class ArticleController {
      * @return Page of articles matching the criteria
      */
     @GetMapping
-    public ResponseEntity<Page<ArticleResponseDto>> getAllArticles(
+    public ResponseEntity<String> getAllArticles(
         @PageableDefault(size = 10, sort = "createdAt") Pageable pageable,
         @RequestParam(required = false) String categoryName,
         @RequestParam(required = false) String tagName,
         @RequestParam(required = false) String search) {
 
-        // Use the combined filtering method that handles all parameters together
-        Page<Article> articlePage = articleService.findArticlesWithFilters(search, categoryName, tagName, pageable);
-        Page<ArticleResponseDto> dtoPage = articlePage.map(this::convertToDto);
-        return ResponseEntity.ok(dtoPage);
+        // Simplified response for debugging
+        return ResponseEntity.ok("Simple response from getAllArticles method");
     }
 
     // DEBUG: Simple test endpoint
