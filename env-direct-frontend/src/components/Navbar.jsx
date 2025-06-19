@@ -3,8 +3,9 @@ import { Link, useNavigate, NavLink as RouterNavLink } from 'react-router-dom';
 import DarkModeToggle from './DarkModeToggle';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext.jsx';
-import { FaLeaf, FaBars, FaTimes, FaUserCircle, FaChevronDown } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUserCircle, FaChevronDown } from 'react-icons/fa';
 import { Menu, Transition } from '@headlessui/react';
+import logo from '../assets/logo.png';
 
 // Custom NavLink for Desktop - applies specific styling based on isScrolled and isActive
 const NavLink = ({ to, children, onClick, isScrolled, className: extraClassName, isSpecial }) => {
@@ -129,7 +130,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse" onClick={closeMenu}>
-            <FaLeaf className="h-8 w-8 text-[var(--premium-green)]" />
+            <img src={logo} alt="Environment Direct Logo" className="h-8 w-8" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap text-[var(--premium-green)]">Environment Direct</span>
           </Link>
 
