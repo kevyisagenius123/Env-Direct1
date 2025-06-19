@@ -6,6 +6,7 @@ import { kml } from '@tmcw/togeojson';
 import L from 'leaflet';
 import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
+import { loadAllShapefiles, shapefileConfig, getShapefileStyle } from '../utils/shapefileLoader';
 
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -96,35 +97,37 @@ const SetMapView = ({ center, zoom }) => {
   return null;
 };
 
-// Map layer configuration
-const kmzFiles = [
-  { name: 'Coast', path: '/Coast.kmz', color: '#0077be', fillColor: '#0077be', weight: 2, fillOpacity: 0.2 },
-  { name: 'Soils', path: '/Soils.kmz', color: '#8B4513', fillColor: '#CD853F', weight: 1, fillOpacity: 0.3 },
-  { name: 'Rivers', path: '/Rivers.kmz', color: '#00BFFF', fillColor: '#00BFFF', weight: 2, fillOpacity: 0.5 },
-  { name: 'Roads', path: '/Roads.kmz', color: '#696969', fillColor: '#A9A9A9', weight: 3, fillOpacity: 0.7 },
-];
+// Map layer configuration - Using actual Dominica shapefiles
+const kmzFiles = shapefileConfig;
 
 // Custom Legend Component
 const MapLegend = () => {
   return (
     <div className="leaflet-bottom leaflet-right">
       <div className="leaflet-control leaflet-bar p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-90">
-        <h4 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">Map Legend</h4>
+        <h4 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">Dominica Map Layers</h4>
         <div className="space-y-2">
-          {kmzFiles.map((layer) => (
-            <div key={layer.name} className="flex items-center">
-              <div 
-                className="w-6 h-6 mr-2" 
-                style={{ 
-                  backgroundColor: layer.fillColor, 
-                  border: `2px solid ${layer.color}`,
-                  opacity: layer.fillOpacity
-                }}
-              ></div>
-              <span className="text-sm text-gray-700 dark:text-gray-300">{layer.name}</span>
-            </div>
-          ))}
+          {/* Shapefile Layers */}
+          <div className="mb-3">
+            <h5 className="font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Geographic Layers</h5>
+            {kmzFiles.map((layer) => (
+              <div key={layer.name} className="flex items-center mb-1">
+                <div 
+                  className="w-6 h-6 mr-2" 
+                  style={{ 
+                    backgroundColor: layer.fillColor, 
+                    border: `2px solid ${layer.color}`,
+                    opacity: layer.fillOpacity
+                  }}
+                ></div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{layer.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Risk Markers */}
           <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <h5 className="font-semibold text-sm mb-1 text-gray-700 dark:text-gray-300">Risk Assessment</h5>
             <div className="flex items-center">
               <div className="w-6 h-6 mr-2 rounded-full bg-red-500"></div>
               <span className="text-sm text-gray-700 dark:text-gray-300">High Flood Risk</span>
@@ -492,17 +495,23 @@ const LiveMapPageImpl = () => {
   };
 
   // Custom styling function for GeoJSON layers
-  const getLayerStyle = (feature) => {
-    const layerName = feature.properties?.layerName;
-    const layerConfig = kmzFiles.find(layer => layer.name === layerName);
-
+  const getLayerStyle = (feature, layerConfig) => {
+    // Use provided layer configuration first
     if (layerConfig) {
+      return getShapefileStyle(layerConfig);
+    }
+
+    // Fallback to finding config by layer name
+    const layerName = feature.properties?.layerName;
+    const foundConfig = kmzFiles.find(layer => layer.name === layerName);
+
+    if (foundConfig) {
       return {
-        color: layerConfig.color,
-        weight: layerConfig.weight,
+        color: foundConfig.color,
+        weight: foundConfig.weight,
         opacity: 1,
-        fillColor: layerConfig.fillColor,
-        fillOpacity: layerConfig.fillOpacity,
+        fillColor: foundConfig.fillColor,
+        fillOpacity: foundConfig.fillOpacity,
       };
     }
 
@@ -585,52 +594,42 @@ const LiveMapPageImpl = () => {
   }, []); // renderError should not be a dependency here to avoid re-registering listeners unnecessarily
 
   useEffect(() => {
-    const loadKMZData = async () => {
+    const loadShapefileData = async () => {
       setLoading(true);
       setError(null);
-      const allGeojson = [];
+      
+      try {
+        console.log('Loading Dominica shapefiles...');
+        const loadedLayers = await loadAllShapefiles();
+        
+        // Convert to the format expected by the map
+        const allGeojson = loadedLayers
+          .filter(layer => layer.loaded && layer.data)
+          .map(layer => ({
+            name: layer.name,
+            data: layer.data,
+            config: layer
+          }));
 
-      for (const fileInfo of kmzFiles) {
-        try {
-          const response = await fetch(fileInfo.path);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch ${fileInfo.name}: ${response.statusText}`);
-          }
-          const blob = await response.blob();
-          const zip = await JSZip.loadAsync(blob);
-
-          // Find the .kml file within the .kmz
-          const kmlFile = Object.keys(zip.files).find(filename => filename.toLowerCase().endsWith('.kml'));
-
-          if (!kmlFile) {
-            console.warn(`No .kml file found in ${fileInfo.name}`);
-            continue;
-          }
-
-          const kmlContent = await zip.files[kmlFile].async('text');
-          const dom = new DOMParser().parseFromString(kmlContent, 'text/xml');
-          const geojson = kml(dom);
-
-          // Add a property to distinguish layers if needed, e.g., for styling or toggling
-          if (geojson.features) {
-            geojson.features.forEach(feature => {
-              feature.properties = { ...feature.properties, layerName: fileInfo.name };
-            });
-          }
-
-          allGeojson.push({ name: fileInfo.name, data: geojson });
-
-        } catch (err) {
-          console.error(`Error processing ${fileInfo.name}:`, err);
-          // Optionally, accumulate errors to display them
-          setError(prevError => prevError ? `${prevError}; ${err.message}` : err.message);
+        console.log(`Successfully loaded ${allGeojson.length} shapefile layers`);
+        setGeojsonData(allGeojson);
+        
+        // Show errors for failed layers
+        const failedLayers = loadedLayers.filter(layer => !layer.loaded);
+        if (failedLayers.length > 0) {
+          const errorMessage = `Failed to load: ${failedLayers.map(l => l.name).join(', ')}`;
+          setError(errorMessage);
         }
+        
+      } catch (err) {
+        console.error('Error loading shapefiles:', err);
+        setError(`Failed to load shapefile data: ${err.message}`);
       }
-      setGeojsonData(allGeojson);
+      
       setLoading(false);
     };
 
-    loadKMZData();
+    loadShapefileData();
 
     // Fetch environmental data
     fetchFloodRiskData();
@@ -965,14 +964,22 @@ const LiveMapPageImpl = () => {
                 />
               </LayersControl.BaseLayer>
 
-              {/* GeoJSON Layers - RE-ENABLING */}
+              {/* GeoJSON Layers - Now using actual Dominica shapefiles */}
               {geojsonData.map((layer, index) => (
                 layer.data && (
                   <LayersControl.Overlay key={`${layer.name}-${index}`} name={layer.name} checked>
                     <GeoJSON 
                       data={layer.data} 
-                      style={getLayerStyle}
-                      onEachFeature={onFeatureClick}
+                      style={(feature) => getLayerStyle(feature, layer.config)}
+                      onEachFeature={(feature, leafletLayer) => {
+                        onFeatureClick(feature, leafletLayer);
+                        
+                        // Add layer name to feature properties for identification
+                        if (feature.properties) {
+                          feature.properties.layerName = layer.name;
+                          feature.properties.description = layer.config?.description || `${layer.name} layer`;
+                        }
+                      }}
                     />
                   </LayersControl.Overlay>
                 )
