@@ -58,6 +58,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/service-requests/submit").permitAll()
                 .requestMatchers("/api/email/**").permitAll()
                 .requestMatchers("/api/password/**").permitAll()
+                .requestMatchers("/api/live-data/**").permitAll()
+                .requestMatchers("/api/banner/**").permitAll()
+                .requestMatchers("/api/predictions/**").permitAll()
                 .anyRequest().authenticated()
             );
 
@@ -94,7 +97,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://env-direct-frontend.onrender.com"));
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173", 
+            "http://localhost:3000",
+            "https://env-direct1.onrender.com",
+            "https://env-direct-frontend.onrender.com"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
