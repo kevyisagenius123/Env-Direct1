@@ -162,8 +162,13 @@ public class ArticleController {
         @RequestParam(required = false) String tagName,
         @RequestParam(required = false) String search) {
 
-        // Simplified response for debugging
-        return ResponseEntity.ok("Simple response from getAllArticles method");
+        try {
+            // Test the service call
+            Page<Article> articlePage = articleService.findArticlesWithFilters(search, categoryName, tagName, pageable);
+            return ResponseEntity.ok("Service call successful, found " + articlePage.getTotalElements() + " articles");
+        } catch (Exception e) {
+            return ResponseEntity.ok("Service call failed: " + e.getMessage());
+        }
     }
 
     // DEBUG: Simple test endpoint
