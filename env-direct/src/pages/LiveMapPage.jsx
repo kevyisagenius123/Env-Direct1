@@ -10,6 +10,9 @@ import { loadAllShapefiles, shapefileConfig, getShapefileStyle } from '../utils/
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+console.log('🚀 [LiveMapPage] API_URL environment variable:', API_URL);
+console.log('🚀 [LiveMapPage] All environment variables:', import.meta.env);
+
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -462,7 +465,6 @@ const LiveMapPageImpl = () => {
   const fetchFloodRiskData = async () => {
     try {
       setDataLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL;
       const response = await axios.get(`${API_URL}/api/predict/flood-risk/all`);
       if (response.data) {
         setFloodRiskData(response.data);
@@ -514,7 +516,6 @@ const LiveMapPageImpl = () => {
   const fetchEcoTourismData = async () => {
     try {
       setDataLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL;
       const response = await axios.get(`${API_URL}/api/predict/eco-tourism/pressure/all`);
       if (response.data) {
         setEcoTourismData(response.data);
@@ -576,7 +577,6 @@ const LiveMapPageImpl = () => {
   const fetchHistoricalComparison = async (id, type) => {
     try {
       setDataLoading(true);
-      const API_URL = import.meta.env.VITE_API_URL;
       const response = await axios.get(`${API_URL}/api/predict/historical-comparison?id=${id}&type=${type}`);
       if (response.data) {
         setSelectedFeature({ id, type, data: response.data });
