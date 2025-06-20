@@ -102,7 +102,11 @@ public class SecurityConfig {
             "http://localhost:5173", 
             "http://localhost:3000",
             "https://env-direct1.onrender.com",
-            "https://env-direct-frontend.onrender.com"
+            "https://env-direct-frontend.onrender.com",
+            "https://environment-direct-frontend-exwhx7zhv.vercel.app",
+            "https://environment-direct-frontend-rjy7mwjt3.vercel.app",
+            "https://environment-direct-frontend-3061klhsq.vercel.app",
+            "https://environment-direct-frontend-l8fvewjh0.vercel.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
