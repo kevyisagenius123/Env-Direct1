@@ -37,12 +37,6 @@ export default defineConfig({
         './node_modules/leaflet/dist/images'
       ],
     },
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:8080',
-        changeOrigin: true,
-      }
-    },
     port: 5173,
     host: true
   },

@@ -7,6 +7,12 @@ import L from 'leaflet';
 import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-oasis-37360-a29826a41f47.herokuapp.com';
+
+console.log('🚀 [LiveMapPage-Frontend] API_URL environment variable:', API_URL);
+console.log('🚀 [LiveMapPage-Frontend] All environment variables:', import.meta.env);
+console.log('🚀 [LiveMapPage-Frontend] Deployment timestamp:', new Date().toISOString());
+
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -364,7 +370,9 @@ const LiveMapPageImpl = () => {
   const fetchFloodRiskData = async () => {
     try {
       setDataLoading(true);
-      const response = await axios.get('/api/predict/flood-risk/all');
+      console.log('🚀 [fetchFloodRiskData-Frontend] API_URL:', API_URL);
+      console.log('🚀 [fetchFloodRiskData-Frontend] Full URL:', `${API_URL}/api/predict/flood-risk/all`);
+      const response = await axios.get(`${API_URL}/api/predict/flood-risk/all`);
       if (response.data) {
         setFloodRiskData(response.data);
       }
@@ -415,7 +423,9 @@ const LiveMapPageImpl = () => {
   const fetchEcoTourismData = async () => {
     try {
       setDataLoading(true);
-      const response = await axios.get('/api/predict/eco-tourism/pressure/all');
+      console.log('🚀 [fetchEcoTourismData-Frontend] API_URL:', API_URL);
+      console.log('🚀 [fetchEcoTourismData-Frontend] Full URL:', `${API_URL}/api/predict/eco-tourism/pressure/all`);
+      const response = await axios.get(`${API_URL}/api/predict/eco-tourism/pressure/all`);
       if (response.data) {
         setEcoTourismData(response.data);
       }
@@ -476,7 +486,7 @@ const LiveMapPageImpl = () => {
   const fetchHistoricalComparison = async (id, type) => {
     try {
       setDataLoading(true);
-      const response = await axios.get(`/api/predict/historical-comparison?id=${id}&type=${type}`);
+      const response = await axios.get(`${API_URL}/api/predict/historical-comparison?id=${id}&type=${type}`);
       if (response.data) {
         setSelectedFeature({ id, type, data: response.data });
       }
