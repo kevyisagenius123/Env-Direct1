@@ -8,10 +8,13 @@ import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
 import { loadAllShapefiles, shapefileConfig, getShapefileStyle } from '../utils/shapefileLoader';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-oasis-37360-a29826a41f47.herokuapp.com';
 
 console.log('🚀 [LiveMapPage] API_URL environment variable:', API_URL);
 console.log('🚀 [LiveMapPage] All environment variables:', import.meta.env);
+console.log('🚀 [LiveMapPage] Deployment timestamp:', new Date().toISOString());
+
+// Force fresh deployment - Updated at 2025-06-20T04:11:00Z
 
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
