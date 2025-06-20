@@ -465,6 +465,8 @@ const LiveMapPageImpl = () => {
   const fetchFloodRiskData = async () => {
     try {
       setDataLoading(true);
+      console.log('🚀 [fetchFloodRiskData] API_URL:', API_URL);
+      console.log('🚀 [fetchFloodRiskData] Full URL:', `${API_URL}/api/predict/flood-risk/all`);
       const response = await axios.get(`${API_URL}/api/predict/flood-risk/all`);
       if (response.data) {
         setFloodRiskData(response.data);
@@ -516,6 +518,8 @@ const LiveMapPageImpl = () => {
   const fetchEcoTourismData = async () => {
     try {
       setDataLoading(true);
+      console.log('🚀 [fetchEcoTourismData] API_URL:', API_URL);
+      console.log('🚀 [fetchEcoTourismData] Full URL:', `${API_URL}/api/predict/eco-tourism/pressure/all`);
       const response = await axios.get(`${API_URL}/api/predict/eco-tourism/pressure/all`);
       if (response.data) {
         setEcoTourismData(response.data);
