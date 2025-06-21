@@ -1,15 +1,19 @@
 package com.environmentdirect.config;
 
+import com.environmentdirect.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -23,13 +27,15 @@ import java.util.Arrays;
  */
 @Configuration
 @EnableWebSecurity
-// @EnableMethodSecurity  // Temporarily disabled
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     /**
@@ -44,26 +50,54 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // Use stateless session management
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints
                 .requestMatchers("/", "/health").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/articles", "/api/articles/**").permitAll()
-                .requestMatchers("/api/categories/**").permitAll()
-                .requestMatchers("/api/tags/**").permitAll()
-                .requestMatchers("/api/comments/**").permitAll()
-                .requestMatchers("/api/rankings/**").permitAll()
-                .requestMatchers("/api/projects/**").permitAll()
-                .requestMatchers("/api/training-courses/**").permitAll()
-                .requestMatchers("/api/reports/**").permitAll()
-                .requestMatchers("/api/service-requests/submit").permitAll()
-                .requestMatchers("/api/email/**").permitAll()
-                .requestMatchers("/api/password/**").permitAll()
-                .requestMatchers("/api/live-data/**").permitAll()
-                .requestMatchers("/api/banner/**").permitAll()
-                .requestMatchers("/api/predictions/**").permitAll()
-                .requestMatchers("/api/predict/**").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // OpenAPI endpoints
+
+                // Public read-only endpoints
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/articles/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/categories/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/tags/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/comments/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/rankings/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/training-courses/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/reports/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/live-data/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/banner/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/predictions/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/predict/**").permitAll()
+
+                // Endpoints that require authentication but no specific role
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/comments/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/service-requests/submit").authenticated()
+
+                // Admin-only endpoints
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/articles/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/articles/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/articles/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/tags/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/tags/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/tags/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/reports/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/reports/**").hasRole("ADMIN")
+
+                // Consultant-only endpoints
+                .requestMatchers("/api/external-data/**").hasRole("CONSULTANT")
+
+                // Any other request requires authentication
                 .anyRequest().authenticated()
             );
+
+        // Add JWT filter before UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -100,7 +134,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:5173", 
+            "http://localhost:5174",
             "http://localhost:3000",
+            "http://192.168.68.119:5174",
             "https://env-direct1.onrender.com",
             "https://env-direct-frontend.onrender.com",
             "https://environment-direct-frontend-exwhx7zhv.vercel.app",

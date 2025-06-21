@@ -11,15 +11,16 @@ public class ServiceRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "service_type", nullable = false)
     private String serviceName;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String userName;
 
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
     private String userEmail;
 
+    @Column(name = "phone")
     private String userPhone;
 
     @Lob

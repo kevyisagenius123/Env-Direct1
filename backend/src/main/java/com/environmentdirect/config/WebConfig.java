@@ -22,7 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://environment-direct-frontend-3061klhsq.vercel.app",
                     "https://environment-direct-frontend-l8fvewjh0.vercel.app",
                     "http://localhost:5173",
-                    "http://localhost:3000"
+                    "http://localhost:5174",
+                    "http://localhost:3000",
+                    "http://192.168.68.119:5174"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

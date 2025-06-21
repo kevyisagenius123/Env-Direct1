@@ -6,12 +6,13 @@ import { kml } from '@tmcw/togeojson';
 import L from 'leaflet';
 import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
+import logger from '../utils/logger';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-oasis-37360-a29826a41f47.herokuapp.com';
 
-console.log('🚀 [LiveMapPage-Frontend] API_URL environment variable:', API_URL);
-console.log('🚀 [LiveMapPage-Frontend] All environment variables:', import.meta.env);
-console.log('🚀 [LiveMapPage-Frontend] Deployment timestamp:', new Date().toISOString());
+logger.info('🚀 [LiveMapPage-Frontend] API_URL environment variable:', API_URL);
+logger.info('🚀 [LiveMapPage-Frontend] All environment variables:', import.meta.env);
+logger.info('🚀 [LiveMapPage-Frontend] Deployment timestamp:', new Date().toISOString());
 
 // Fix for default marker icons in Leaflet with webpack
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -234,7 +235,7 @@ const LiveMapPageImpl = () => {
   const [showHeatmaps, setShowHeatmaps] = useState(false);
   const [activeHeatmap, setActiveHeatmap] = useState('population'); // 'population', 'pollution', 'climate'
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  console.log('[LiveMapPage] isMobile:', isMobile); // Log isMobile status
+  logger.debug('[LiveMapPage] isMobile:', isMobile); // Log isMobile status
   const [mapInstance, setMapInstance] = useState(null);
 
   // Refs for height calculation
@@ -370,16 +371,16 @@ const LiveMapPageImpl = () => {
   const fetchFloodRiskData = async () => {
     try {
       setDataLoading(true);
-      console.log('🚀 [fetchFloodRiskData-Frontend] API_URL:', API_URL);
-      console.log('🚀 [fetchFloodRiskData-Frontend] Full URL:', `${API_URL}/api/predict/flood-risk/all`);
+      logger.debug('🚀 [fetchFloodRiskData-Frontend] API_URL:', API_URL);
+      logger.debug('🚀 [fetchFloodRiskData-Frontend] Full URL:', `${API_URL}/api/predict/flood-risk/all`);
       const response = await axios.get(`${API_URL}/api/predict/flood-risk/all`);
       if (response.data) {
         setFloodRiskData(response.data);
       }
     } catch (err) {
-      console.error('Error fetching flood risk data:', err);
+      logger.error('Error fetching flood risk data:', err);
       // Use mock data when API fails
-      console.log('Using mock flood risk data due to API failure');
+      logger.info('Using mock flood risk data due to API failure');
       setFloodRiskData(mockFloodRiskData);
       setError(prevError => prevError ? `${prevError}; Using mock flood risk data` : 'Using mock flood risk data');
     } finally {
@@ -423,16 +424,16 @@ const LiveMapPageImpl = () => {
   const fetchEcoTourismData = async () => {
     try {
       setDataLoading(true);
-      console.log('🚀 [fetchEcoTourismData-Frontend] API_URL:', API_URL);
-      console.log('🚀 [fetchEcoTourismData-Frontend] Full URL:', `${API_URL}/api/predict/eco-tourism/pressure/all`);
+      logger.debug('🚀 [fetchEcoTourismData-Frontend] API_URL:', API_URL);
+      logger.debug('🚀 [fetchEcoTourismData-Frontend] Full URL:', `${API_URL}/api/predict/eco-tourism/pressure/all`);
       const response = await axios.get(`${API_URL}/api/predict/eco-tourism/pressure/all`);
       if (response.data) {
         setEcoTourismData(response.data);
       }
     } catch (err) {
-      console.error('Error fetching eco-tourism data:', err);
+      logger.error('Error fetching eco-tourism data:', err);
       // Use mock data when API fails
-      console.log('Using mock eco-tourism data due to API failure');
+      logger.info('Using mock eco-tourism data due to API failure');
       setEcoTourismData(mockEcoTourismData);
       setError(prevError => prevError ? `${prevError}; Using mock eco-tourism data` : 'Using mock eco-tourism data');
     } finally {
@@ -491,9 +492,9 @@ const LiveMapPageImpl = () => {
         setSelectedFeature({ id, type, data: response.data });
       }
     } catch (err) {
-      console.error('Error fetching historical comparison:', err);
+      logger.error('Error fetching historical comparison:', err);
       // Use mock data when API fails
-      console.log(`Using mock historical comparison data for ${id} (${type}) due to API failure`);
+      logger.info(`Using mock historical comparison data for ${id} (${type}) due to API failure`);
       const mockData = getMockHistoricalComparison(id, type);
       setSelectedFeature({ id, type, data: mockData });
     } finally {
@@ -566,14 +567,14 @@ const LiveMapPageImpl = () => {
          (event.message && event.message.includes('scroll')) ||
          (event.message && event.message.includes('layout'))
        ) {
-         console.warn('Ignored non-critical warning:', event.error || event.message);
+         logger.warn('Ignored non-critical warning:', event.error || event.message);
          // Prevent these warnings from causing re-renders or state updates
          if (event.preventDefault) event.preventDefault(); // Check if preventDefault exists
          if (event.stopPropagation) event.stopPropagation(); // Check if stopPropagation exists
          return;
        }
 
-       console.error("LiveMapPage error:", event.error || event.message, event);
+       logger.error("LiveMapPage error:", event.error || event.message, event);
        setRenderError(event.error || new Error(event.message || 'Unknown error'));
     };
 
@@ -613,7 +614,7 @@ const LiveMapPageImpl = () => {
           const kmlFile = Object.keys(zip.files).find(filename => filename.toLowerCase().endsWith('.kml'));
 
           if (!kmlFile) {
-            console.warn(`No .kml file found in ${fileInfo.name}`);
+            logger.warn(`No .kml file found in ${fileInfo.name}`);
             continue;
           }
 
@@ -631,7 +632,7 @@ const LiveMapPageImpl = () => {
           allGeojson.push({ name: fileInfo.name, data: geojson });
 
         } catch (err) {
-          console.error(`Error processing ${fileInfo.name}:`, err);
+          logger.error(`Error processing ${fileInfo.name}:`, err);
           // Optionally, accumulate errors to display them
           setError(prevError => prevError ? `${prevError}; ${err.message}` : err.message);
         }
@@ -953,7 +954,7 @@ const LiveMapPageImpl = () => {
             className="rounded-lg"
             ref={mapRef}
             whenCreated={(map) => {
-              console.log('[LiveMapPage] MapContainer whenCreated fired. Map instance:', map);
+              logger.debug('[LiveMapPage] MapContainer whenCreated fired. Map instance:', map);
               setMapInstance(map);
             }}
           >
@@ -1129,7 +1130,7 @@ const LiveMapPageImpl = () => {
       </div>
     );
   } catch (error) {
-    console.error("Error rendering LiveMapPage:", error);
+    logger.error("Error rendering LiveMapPage:", error);
     setRenderError(error);
     return (
       <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
@@ -1149,9 +1150,9 @@ const LiveMapPageWrapper = () => {
   useEffect(() => {
     try {
       // This is just a test to see if basic initialization works
-      console.log("LiveMapPage wrapper initialized");
+      logger.debug("LiveMapPage wrapper initialized");
     } catch (error) {
-      console.error("Error initializing LiveMapPage wrapper:", error);
+      logger.error("Error initializing LiveMapPage wrapper:", error);
       setInitError(error);
     }
   }, []);

@@ -60,9 +60,9 @@ public class ReportService {
         Optional<Report> reportOptional = reportRepository.findById(id);
         if (reportOptional.isPresent()) {
             Report report = reportOptional.get();
-            report.setStatus(statusUpdateDto.getStatus());
+            report.setStatus(statusUpdateDto.status());
             // We could add a comment field to the Report entity and set it here
-            // report.setComment(statusUpdateDto.getComment());
+            // report.setComment(statusUpdateDto.comment());
             return Optional.of(reportRepository.save(report));
         }
         return Optional.empty();

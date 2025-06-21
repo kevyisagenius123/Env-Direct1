@@ -2,15 +2,12 @@ package com.environmentdirect.dto;
 
 import java.util.Set;
 
-// Using jakarta.validation if you added spring-boot-starter-validation
-// import jakarta.validation.constraints.NotBlank;
-// import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record ArticleRequestDto(
-    // @NotBlank String title,
-    // @NotBlank @Size(min = 10) String content,
-    String title,
-    String content,
+    @NotBlank String title,
+    @NotBlank @Size(min = 10) String content,
     String summary,
     String author,
     String imageUrl,

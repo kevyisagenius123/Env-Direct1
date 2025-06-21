@@ -32,8 +32,8 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Article not found with ID: " + articleId));
 
         Comment comment = new Comment();
-        comment.setAuthorName(commentRequestDto.getAuthorName());
-        comment.setContent(commentRequestDto.getContent());
+        comment.setAuthorName(commentRequestDto.authorName());
+        comment.setContent(commentRequestDto.content());
         comment.setArticle(article);
         // article.addComment(comment); // This would also work if Article manages the bidirectional relationship
 

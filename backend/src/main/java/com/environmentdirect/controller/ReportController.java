@@ -43,11 +43,11 @@ public class ReportController {
             @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) {
         try {
             Report report = new Report();
-            report.setLocation(reportDTO.getLocation());
-            report.setIssueType(reportDTO.getIssueType());
-            report.setDescription(reportDTO.getDescription());
-            report.setReportedBy(reportDTO.getReportedBy());
-            report.setContactEmail(reportDTO.getContactEmail());
+            report.setLocation(reportDTO.location());
+            report.setIssueType(reportDTO.issueType());
+            report.setDescription(reportDTO.description());
+            report.setReportedBy(reportDTO.reportedBy());
+            report.setContactEmail(reportDTO.contactEmail());
             report.setDateReported(LocalDateTime.now());
             report.setStatus("Pending Review"); // Default status
 
@@ -70,11 +70,11 @@ public class ReportController {
             @RequestPart(value = "image", required = false) MultipartFile imageFile) {
 
         Report report = new Report();
-        report.setLocation(reportDTO.getLocation());
-        report.setIssueType(reportDTO.getIssueType());
-        report.setDescription(reportDTO.getDescription());
-        report.setReportedBy(reportDTO.getReportedBy());
-        report.setContactEmail(reportDTO.getContactEmail());
+        report.setLocation(reportDTO.location());
+        report.setIssueType(reportDTO.issueType());
+        report.setDescription(reportDTO.description());
+        report.setReportedBy(reportDTO.reportedBy());
+        report.setContactEmail(reportDTO.contactEmail());
 
         Report createdReport = reportService.createReport(report, imageFile); // Service method needs to handle imageFile
         return new ResponseEntity<>(createdReport, HttpStatus.CREATED);

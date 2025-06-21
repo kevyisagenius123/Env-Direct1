@@ -4,6 +4,7 @@ import com.environmentdirect.dto.AuthResponseDto;
 import com.environmentdirect.dto.LoginRequestDto;
 import com.environmentdirect.dto.UserRegistrationDto;
 import com.environmentdirect.model.User;
+import com.environmentdirect.service.JwtService;
 import com.environmentdirect.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
 
     /**
      * Register a new user.
@@ -63,7 +67,7 @@ public class AuthController {
     /**
      * Authenticate a user and generate a JWT token.
      * 
-     * @param loginRequest the login credentials
+     * @param loginRequestDto the login credentials
      * @return ResponseEntity with JWT token and user information or error
      */
     @PostMapping("/login")
@@ -72,16 +76,18 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequestDto.username(), loginRequestDto.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         // Get user details from authentication
         org.springframework.security.core.userdetails.User userDetails = 
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        
+
         // Fetch the actual user entity from database
         User user = userService.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Since we've removed JWT, we'll just return a dummy token and user info.
-        return ResponseEntity.ok(new AuthResponseDto("dummy-token", user.getUsername(), user.getRoles()));
+        // Generate JWT token using JwtService
+        String jwt = jwtService.generateJwtToken(userDetails);
+
+        return ResponseEntity.ok(new AuthResponseDto(jwt, user.getUsername(), user.getRoles()));
     }
 }
