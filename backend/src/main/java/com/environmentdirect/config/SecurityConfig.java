@@ -145,6 +145,7 @@ public class SecurityConfig {
             "https://environment-direct-frontend-5oz7nwxmk.vercel.app",
             "https://environment-direct-frontend-dbbdpyoeo.vercel.app",
             "https://environment-direct-frontend-jsepw3wlu.vercel.app",
+            "https://environment-direct-frontend-7klzxwk4l.vercel.app",
             "https://env-direct1.onrender.com",
             "https://env-direct-frontend.onrender.com",
             "https://environment-direct-frontend-exwhx7zhv.vercel.app",
