@@ -71,6 +71,8 @@ public class SecurityConfig {
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/banner/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/predictions/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/predict/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/ncdc/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/external-data/**").permitAll()
 
                 // Endpoints that require authentication but no specific role
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/comments/**").authenticated()
@@ -135,11 +137,14 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:5173", 
             "http://localhost:5174",
+            "http://localhost:5175",
             "http://localhost:3000",
             "http://192.168.68.119:5174",
+            "http://192.168.68.119:5175",
             "https://environment-direct-frontend.vercel.app",
             "https://environment-direct-frontend-5oz7nwxmk.vercel.app",
             "https://environment-direct-frontend-dbbdpyoeo.vercel.app",
+            "https://environment-direct-frontend-jsepw3wlu.vercel.app",
             "https://env-direct1.onrender.com",
             "https://env-direct-frontend.onrender.com",
             "https://environment-direct-frontend-exwhx7zhv.vercel.app",
