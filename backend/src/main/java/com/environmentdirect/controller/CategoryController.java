@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/categories")
 @CrossOrigin(origins = {
     "http://localhost:5173",
+    "http://localhost:5174",
+    "https://environment-direct-frontend.vercel.app",
+    "https://environment-direct-frontend-5oz7nwxmk.vercel.app",
     "https://wonderful-boba-48e576.netlify.app"
 })
 public class CategoryController {
