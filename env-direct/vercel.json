@@ -7,11 +7,11 @@
   "installCommand": "npm install",
   "devCommand": "npm run dev",
   "env": {
-    "VITE_API_URL": "https://obscure-oasis-37360-a29826a41f47.herokuapp.com"
+    "VITE_API_URL": "https://env-backend-a73f7074660a.herokuapp.com"
   },
   "build": {
     "env": {
-      "VITE_API_URL": "https://obscure-oasis-37360-a29826a41f47.herokuapp.com"
+      "VITE_API_URL": "https://env-backend-a73f7074660a.herokuapp.com"
     }
   },
   "rewrites": [

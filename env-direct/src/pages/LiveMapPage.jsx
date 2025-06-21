@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
 import { loadAllShapefiles, shapefileConfig, getShapefileStyle } from '../utils/shapefileLoader';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-oasis-37360-a29826a41f47.herokuapp.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 console.log('🚀 [LiveMapPage] API_URL environment variable:', API_URL);
 console.log('🚀 [LiveMapPage] All environment variables:', import.meta.env);
