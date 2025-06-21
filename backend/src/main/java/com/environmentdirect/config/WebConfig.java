@@ -11,25 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(
-                    "https://environment-direct-frontend.vercel.app",
-                    "https://environment-direct-frontend-5oz7nwxmk.vercel.app",
-                    "https://env-direct1.onrender.com",
-                    "https://env-direct-frontend.onrender.com",
-                    "https://environment-direct-frontend-exwhx7zhv.vercel.app",
-                    "https://environment-direct-frontend-rjy7mwjt3.vercel.app",
-                    "https://environment-direct-frontend-3061klhsq.vercel.app",
-                    "https://environment-direct-frontend-l8fvewjh0.vercel.app",
-                    "http://localhost:5173",
-                    "http://localhost:5174",
-                    "http://localhost:3000",
-                    "http://192.168.68.119:5174"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
+    // CORS configuration has been moved to SecurityConfig to avoid conflicts
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     // CORS is now handled in SecurityConfig.corsConfigurationSource()
+    // }
 }
