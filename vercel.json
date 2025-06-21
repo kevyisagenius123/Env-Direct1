@@ -1,8 +1,8 @@
 {
-  "buildCommand": "cd env-direct-frontend && npm run build",
-  "outputDirectory": "env-direct-frontend/dist",
-  "devCommand": "cd env-direct-frontend && npm run dev",
-  "installCommand": "cd env-direct-frontend && npm install",
+  "buildCommand": "cd env-direct && npm run build",
+  "outputDirectory": "env-direct/dist",
+  "devCommand": "cd env-direct && npm run dev",
+  "installCommand": "cd env-direct && npm install",
   "framework": "vite",
   "rewrites": [
     {
