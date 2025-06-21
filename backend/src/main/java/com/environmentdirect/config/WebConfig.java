@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
+                    "https://environment-direct-frontend.vercel.app",
                     "https://env-direct1.onrender.com",
                     "https://env-direct-frontend.onrender.com",
                     "https://environment-direct-frontend-exwhx7zhv.vercel.app",
