@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
  */
 @RestController
 @RequestMapping("/api/ncdc")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://environment-direct-frontend-dbbdpyoeo.vercel.app", "https://environment-direct-frontend-jsepw3wlu.vercel.app"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://environment-direct-frontend-dbbdpyoeo.vercel.app", "https://environment-direct-frontend-jsepw3wlu.vercel.app", "https://environment-direct-frontend-7klzxwk4l.vercel.app"})
 public class NCDCClimateController {
 
     @Autowired
