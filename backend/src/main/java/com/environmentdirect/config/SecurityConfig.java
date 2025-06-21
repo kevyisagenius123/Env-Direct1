@@ -139,6 +139,7 @@ public class SecurityConfig {
             "http://192.168.68.119:5174",
             "https://environment-direct-frontend.vercel.app",
             "https://environment-direct-frontend-5oz7nwxmk.vercel.app",
+            "https://environment-direct-frontend-dbbdpyoeo.vercel.app",
             "https://env-direct1.onrender.com",
             "https://env-direct-frontend.onrender.com",
             "https://environment-direct-frontend-exwhx7zhv.vercel.app",
