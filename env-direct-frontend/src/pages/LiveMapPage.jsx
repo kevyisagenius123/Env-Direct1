@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useMediaQuery } from 'react-responsive';
 import logger from '../utils/logger';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://obscure-oasis-37360-a29826a41f47.herokuapp.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://env-backend-a73f7074660a.herokuapp.com';
 
 logger.info('🚀 [LiveMapPage-Frontend] API_URL environment variable:', API_URL);
 logger.info('🚀 [LiveMapPage-Frontend] All environment variables:', import.meta.env);
