@@ -16,6 +16,9 @@ import {
   AIIntelligenceDigest
 } from '../components/magazine/CompletedFeatures';
 
+// Import NCDC Intelligence Dashboard
+import NCDCIntelligenceDashboard from '../components/NCDCIntelligenceDashboard';
+
 const ClimateIntelligenceHub = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
@@ -37,7 +40,7 @@ const ClimateIntelligenceHub = () => {
     readersEngaged: '2.3M'
   });
 
-  // Fetch real articles data
+  // Fetch real articles data and NCDC intelligence
   useEffect(() => {
     const fetchArticles = async () => {
       try {
@@ -55,7 +58,25 @@ const ClimateIntelligenceHub = () => {
       }
     };
 
+    const fetchNCDCIntelligence = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/ncdc/intelligence-dashboard');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('NCDC Intelligence Data:', data);
+          // Update live metrics with real NCDC data
+          setLiveMetrics(prev => ({
+            ...prev,
+            ncdcData: data.intelligence_dashboard
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching NCDC intelligence:', error);
+      }
+    };
+
     fetchArticles();
+    fetchNCDCIntelligence();
   }, []);
 
   // Intelligence Feeds
@@ -264,6 +285,25 @@ The data is clear: Earth's climate system is entering a phase of rapid reorganiz
         activeDispatch={activeDispatch}
         setActiveDispatch={setActiveDispatch}
       />
+
+      {/* NCDC CLIMATE INTELLIGENCE DASHBOARD */}
+      <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+        <div className="max-w-7xl mx-auto px-8">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-5xl font-serif text-white mb-4">Real-Time Climate Intelligence</h2>
+            <p className="text-slate-400 text-lg max-w-3xl mx-auto">
+              Live data from NOAA NCDC providing authoritative climate intelligence for the Caribbean region
+            </p>
+          </motion.div>
+          <NCDCIntelligenceDashboard />
+        </div>
+      </section>
 
       {/* ADVANCED AI INTELLIGENCE DIGEST */}
       <AIIntelligenceDigest articles={articles} />
