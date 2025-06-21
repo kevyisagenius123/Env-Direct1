@@ -151,7 +151,7 @@ const getStatusConfig = (status) => {
 };
 
 // === COMPONENT: HEADER BAR ===
-const HeaderBar = ({ currentTime, activeSensors, totalSensors, threatLevel, systemStatus }) => {
+const HeaderBar = ({ currentTime, activeSensors, totalSensors, threatLevel, systemStatus, ncdcStatus, ncdcStations }) => {
   const threatColors = {
     GREEN: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     YELLOW: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
@@ -198,6 +198,19 @@ const HeaderBar = ({ currentTime, activeSensors, totalSensors, threatLevel, syst
             <div className="flex items-center gap-2 text-cyan-400">
               <Radio className="w-4 h-4" />
               <span className="text-sm font-mono">{activeSensors}/{totalSensors}</span>
+            </div>
+
+            {/* NCDC Status Indicator */}
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border ${
+              ncdcStatus === 'LIVE' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+              ncdcStatus === 'ERROR' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+              'bg-amber-500/20 text-amber-400 border-amber-500/30'
+            }`}>
+              <Satellite className="w-3 h-3" />
+              <span>NCDC {ncdcStatus}</span>
+              {ncdcStatus === 'LIVE' && ncdcStations > 0 && (
+                <span className="ml-1">({ncdcStations})</span>
+              )}
             </div>
             
             <div className="text-right">
@@ -263,19 +276,33 @@ const RiskBanner = ({ status }) => (
 );
 
 // === COMPONENT: AI SUMMARY ===
-const AISummary = ({ summary }) => (
-  <div className="max-w-[1440px] mx-auto px-8 py-4">
-    <div className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4">
-      <div className="flex items-start gap-3">
-        <Brain className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
-        <div>
-          <h3 className="text-sm font-semibold text-purple-400 mb-2">AI Intelligence Summary</h3>
-          <p className="text-sm text-slate-300 leading-relaxed">{summary}</p>
+const AISummary = ({ summary, ncdcStatus, ncdcStations }) => {
+  const enhancedSummary = ncdcStatus === 'LIVE' ? 
+    `${summary} NCDC Integration: Real-time climate data from ${ncdcStations} NOAA weather stations is now enhancing our intelligence analysis with government-verified environmental metrics.` :
+    summary;
+
+  return (
+    <div className="max-w-[1440px] mx-auto px-8 py-4">
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4">
+        <div className="flex items-start gap-3">
+          <Brain className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-purple-400">AI Intelligence Summary</h3>
+              {ncdcStatus === 'LIVE' && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30">
+                  <Satellite className="w-3 h-3" />
+                  <span className="text-xs font-semibold">NCDC ENHANCED</span>
+                </div>
+              )}
+            </div>
+            <p className="text-sm text-slate-300 leading-relaxed">{enhancedSummary}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // === COMPONENT: DASHBOARD TABS ===
 const DashboardTabs = ({ activeView, setActiveView }) => {
@@ -356,9 +383,17 @@ const MetricCard = ({ metric, index }) => {
       <p className="text-sm text-slate-400">{metric.description}</p>
       
       {/* Status indicator */}
-      <div className="mt-3 flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${config.color.replace('text-', 'bg-')}`}></div>
-        <span className={`text-xs font-medium ${config.color} capitalize`}>{metric.status}</span>
+      <div className="mt-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${config.color.replace('text-', 'bg-')}`}></div>
+          <span className={`text-xs font-medium ${config.color} capitalize`}>{metric.status}</span>
+        </div>
+        {metric.ncdcVerified && (
+          <div className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30">
+            <Satellite className="w-3 h-3" />
+            <span className="text-xs font-semibold">NCDC</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -441,6 +476,9 @@ const UnifiedIntelligencePlatform = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeSensors, setActiveSensors] = useState(42);
   const totalSensors = 48;
+  const [ncdcData, setNcdcData] = useState(null);
+  const [ncdcStatus, setNcdcStatus] = useState('CONNECTING');
+  const [enhancedMetrics, setEnhancedMetrics] = useState(environmentalData.metrics);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -458,6 +496,107 @@ const UnifiedIntelligencePlatform = () => {
     return () => clearInterval(interval);
   }, [totalSensors]);
 
+  // NCDC Data Integration
+  useEffect(() => {
+    const fetchNCDCData = async () => {
+      try {
+        setNcdcStatus('CONNECTING');
+        
+        const [dashboardRes, stationsRes, extremesRes] = await Promise.all([
+          fetch('https://env-backend-a73f7074660a.herokuapp.com/api/ncdc/intelligence-dashboard'),
+          fetch('https://env-backend-a73f7074660a.herokuapp.com/api/ncdc/stations'),
+          fetch('https://env-backend-a73f7074660a.herokuapp.com/api/ncdc/climate-extremes')
+        ]);
+
+        const ncdc = {};
+        
+        if (dashboardRes.ok) {
+          ncdc.dashboard = await dashboardRes.json();
+        }
+        
+        if (stationsRes.ok) {
+          ncdc.stations = await stationsRes.json();
+        }
+        
+        if (extremesRes.ok) {
+          ncdc.extremes = await extremesRes.json();
+        }
+
+        setNcdcData(ncdc);
+        setNcdcStatus('LIVE');
+
+        // Enhance metrics with NCDC data
+        if (ncdc.dashboard?.intelligence_dashboard?.current_climate) {
+          const climateData = ncdc.dashboard.intelligence_dashboard.current_climate;
+          const enhanced = enhanceMetricsWithNCDC(environmentalData.metrics, climateData, ncdc.stations);
+          setEnhancedMetrics(enhanced);
+        }
+
+        console.log('NCDC Data Integrated into Intelligence Platform:', ncdc);
+      } catch (error) {
+        console.error('NCDC Integration Error:', error);
+        setNcdcStatus('ERROR');
+      }
+    };
+
+    fetchNCDCData();
+    
+    // Refresh NCDC data every 5 minutes
+    const ncdcInterval = setInterval(fetchNCDCData, 5 * 60 * 1000);
+    return () => clearInterval(ncdcInterval);
+  }, []);
+
+  // Helper function to enhance metrics with NCDC data
+  const enhanceMetricsWithNCDC = (baseMetrics, climateData, stationsData) => {
+    const enhanced = [...baseMetrics];
+    
+    try {
+      // Extract temperature from NCDC data
+      if (typeof climateData === 'string') {
+        const parsed = JSON.parse(climateData);
+        if (parsed.results && parsed.results.length > 0) {
+          const tempData = parsed.results.find(item => 
+            item.datatype === 'TMAX' || item.datatype === 'TAVG' || item.datatype === 'TMIN'
+          );
+          
+          if (tempData && tempData.value) {
+            const tempCelsius = (tempData.value / 10); // NCDC temps are in tenths of degrees
+            const tempIndex = enhanced.findIndex(m => m.id === 'temperature');
+            if (tempIndex !== -1) {
+              enhanced[tempIndex] = {
+                ...enhanced[tempIndex],
+                value: tempCelsius,
+                ncdcVerified: true,
+                description: `NCDC verified temperature from ${tempData.station || 'Caribbean region'}`
+              };
+            }
+          }
+        }
+      }
+
+      // Add climate stations count if available
+      if (stationsData?.results) {
+        enhanced.push({
+          id: 'climate_stations',
+          name: 'Climate Stations',
+          value: stationsData.results.length,
+          unit: 'Active',
+          status: 'good',
+          trend: 'up',
+          location: 'Caribbean Network',
+          change: 'NCDC Live',
+          icon: Satellite,
+          description: 'NOAA NCDC monitoring stations',
+          ncdcVerified: true
+        });
+      }
+    } catch (error) {
+      console.error('Error enhancing metrics with NCDC data:', error);
+    }
+
+    return enhanced;
+  };
+
   return (
     <div className="min-h-screen bg-slate-950">
       {/* Header Bar - Fixed top navigation */}
@@ -467,6 +606,8 @@ const UnifiedIntelligencePlatform = () => {
         totalSensors={totalSensors}
         threatLevel={environmentalData.currentStatus.threatLevel}
         systemStatus={environmentalData.currentStatus.systemStatus}
+        ncdcStatus={ncdcStatus}
+        ncdcStations={ncdcData?.stations?.results?.length || 0}
       />
 
       {/* Live Ticker - Breaking news scroll */}
@@ -476,7 +617,11 @@ const UnifiedIntelligencePlatform = () => {
       <RiskBanner status={environmentalData.currentStatus} />
 
       {/* AI Summary - Intelligence briefing */}
-      <AISummary summary={environmentalData.currentStatus.aiSummary} />
+      <AISummary 
+        summary={environmentalData.currentStatus.aiSummary} 
+        ncdcStatus={ncdcStatus}
+        ncdcStations={ncdcData?.stations?.results?.length || 0}
+      />
 
       {/* Dashboard Tabs - Main navigation */}
       <DashboardTabs activeView={activeView} setActiveView={setActiveView} />
@@ -500,7 +645,7 @@ const UnifiedIntelligencePlatform = () => {
                   <p className="text-sm text-slate-400">Real-time monitoring of key environmental indicators</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {environmentalData.metrics.map((metric, index) => (
+                  {enhancedMetrics.map((metric, index) => (
                     <MetricCard key={metric.id} metric={metric} index={index} />
                   ))}
                 </div>
