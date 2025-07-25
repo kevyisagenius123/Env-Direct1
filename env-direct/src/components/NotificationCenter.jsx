@@ -11,6 +11,8 @@ import {
   Settings
 } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const NotificationCenter = ({ className = "" }) => {
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -28,7 +30,7 @@ const NotificationCenter = ({ className = "" }) => {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/notifications/recent');
+      const response = await fetch(`${API_URL}/api/notifications/recent`);
       if (response.ok) {
         const data = await response.json();
         setNotifications(data);
@@ -84,7 +86,7 @@ const NotificationCenter = ({ className = "" }) => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await fetch(`/api/notifications/${notificationId}/read`, {
+      await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
         method: 'PUT',
       });
       
@@ -111,7 +113,7 @@ const NotificationCenter = ({ className = "" }) => {
     const unreadIds = notifications.filter(n => !n.isRead).map(n => n.id);
     
     try {
-      await fetch('/api/notifications/read', {
+      await fetch(`${API_URL}/api/notifications/read`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(unreadIds)

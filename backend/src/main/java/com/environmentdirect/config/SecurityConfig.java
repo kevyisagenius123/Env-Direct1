@@ -153,6 +153,8 @@ public class SecurityConfig {
             "https://environment-direct-frontend-3061klhsq.vercel.app",
             "https://environment-direct-frontend-l8fvewjh0.vercel.app",
             "https://env-direct1-4iiyjcu8z-elijah-davids-projects.vercel.app",
+            "https://www.environmentdir.com",
+            "https://environmentdir.com",
             "https://*.vercel.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
