@@ -16,11 +16,36 @@
   },
   "rewrites": [
     {
-      "source": "/((?!api|geojson|img|fonts|models|cesium|_next|static).*)",
+      "source": "/geojson/(.*)",
+      "destination": "/geojson/$1"
+    },
+    {
+      "source": "/(.*)\\.geojson",
+      "destination": "/$1.geojson"
+    },
+    {
+      "source": "/((?!api|geojson|img|fonts|models|cesium|_next|static|\\.geojson|\\.json|\\.js|\\.css|\\.png|\\.jpg|\\.jpeg|\\.gif|\\.svg|\\.ico|\\.woff|\\.woff2|\\.ttf|\\.eot).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/(.*)\\.geojson",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
     {
       "source": "/geojson/(.*).geojson",
       "headers": [
@@ -31,6 +56,10 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     },
