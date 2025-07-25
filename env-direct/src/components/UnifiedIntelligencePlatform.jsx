@@ -769,7 +769,7 @@ const UnifiedIntelligencePlatform = () => {
               <section>
                 <div className="mb-6">
                   <h2 className="text-xl font-bold text-white mb-2">Interactive Map</h2>
-                  <p className="text-sm text-slate-400">3D visualization of Dominica's environmental monitoring network</p>
+                  <p className="text-sm text-slate-400">3D visualization of Dominica's environmental consulting network</p>
                 </div>
                 <div className="h-[600px] bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
                   <OpsCesiumViewer />

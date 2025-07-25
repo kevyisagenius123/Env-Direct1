@@ -58,8 +58,6 @@ const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage'));
 const ReportsListPage = lazy(() => import('./pages/ReportsListPage'));
 const LiveMapPage = lazy(() => import('./pages/LiveMapPage'));
   const GreenAtlasMagazinePage = lazy(() => import('./pages/GreenAtlasMagazinePage'));
-  const ClimateIntelligencePage = lazy(() => import('./pages/ClimateIntelligencePage'));
-const ClimateIntelligenceHub = lazy(() => import('./pages/ClimateIntelligenceHub'));
 const PlanetaryIntelligenceSystem = lazy(() => import('./pages/PlanetaryIntelligenceSystem'));
 const ArticleDetailPage = lazy(() => import('./pages/ArticleDetailPage'));
 const SubmitArticlePage = lazy(() => import('./pages/SubmitArticlePage'));
@@ -74,6 +72,14 @@ const GetInvolvedPage = lazy(() => import('./pages/GetInvolvedPage'));
 const RegisterCleanupPage = lazy(() => import('./pages/RegisterCleanupPage'));
 const RankingsDetailsPage = lazy(() => import('./pages/RankingsDetailsPage'));
 const ForecastsDetailsPage = lazy(() => import('./pages/ForecastsDetailsPage'));
+
+// Under Construction Pages
+const PublicationsPage = lazy(() => import('./pages/PublicationsPage'));
+const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage'));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
+const NewsPage = lazy(() => import('./pages/NewsPage'));
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'));
+const SatelliteDataPage = lazy(() => import('./pages/SatelliteDataPage'));
 
 // Unified Intelligence Platform - All-in-One Environmental Command Center
 const UnifiedIntelligencePlatform = lazy(() => import('./components/UnifiedIntelligencePlatform'));
@@ -142,8 +148,11 @@ function App() {
                                      <Route path="/green-atlas-magazine" element={<GreenAtlasMagazinePage />} />
                    <Route path="/magazine" element={<GreenAtlasMagazinePage />} />
                    <Route path="/green-atlas" element={<GreenAtlasMagazinePage />} />
-                  <Route path="/climate-intelligence" element={<ClimateIntelligencePage />} />
-                  <Route path="/planetary-intelligence" element={<ClimateIntelligenceHub />} />
+                  <Route path="/planetary-intelligence" element={
+                    <ErrorBoundary>
+                      <PlanetaryIntelligenceSystem />
+                    </ErrorBoundary>
+                  } />
                   <Route path="/planetary-intelligence-system" element={
                     <ErrorBoundary>
                       <PlanetaryIntelligenceSystem />
@@ -172,6 +181,14 @@ function App() {
                   <Route path="/register-cleanup" element={<RegisterCleanupPage />} />
                   <Route path="/dominica-rankings-details" element={<RankingsDetailsPage />} />
                   <Route path="/dominica-forecasts-details" element={<ForecastsDetailsPage />} />
+
+                  {/* Under Construction Pages */}
+                  <Route path="/publications" element={<PublicationsPage />} />
+                  <Route path="/case-studies" element={<CaseStudiesPage />} />
+                  <Route path="/analytics" element={<AnalyticsPage />} />
+                  <Route path="/news" element={<NewsPage />} />
+                  <Route path="/docs" element={<DocumentationPage />} />
+                  <Route path="/satellite" element={<SatelliteDataPage />} />
 
                   {/* Auth Routes */}
                   <Route path="/login" element={<LoginPage />} />

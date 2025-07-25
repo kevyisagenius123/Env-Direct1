@@ -1,10 +1,12 @@
 import React, { Suspense, lazy, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import ModernNavbar from './components/ModernNavbar';
 import Footer from './components/Footer';
 import Spinner from './components/Spinner';
 import EditorialAssistant from './components/AIChatbot';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider as AdminAuthProvider } from './context/AdminAuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -53,15 +55,22 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const EnvDashboardPage = lazy(() => import('./pages/EnvDashboardPage'));
 const PredictionDashboardPage = lazy(() => import('./pages/PredictionDashboardPage'));
 const AnalyticsDashboardPage = lazy(() => import('./pages/AnalyticsDashboardPage'));
+const UnderConstructionPage = lazy(() => import('./pages/UnderConstructionPage'));
+const UserLoginPage = lazy(() => import('./pages/UserLoginPage'));
+const UserDashboardPage = lazy(() => import('./pages/UserDashboardPage'));
+
+// 🔥 FAANG-GRADE COMPONENTS
+const MissionControlPage = lazy(() => import('./pages/MissionControlPage'));
+const EnterpriseFeaturesPage = lazy(() => import('./pages/EnterpriseFeaturesPage'));
+
 // const ClimateExplorerPage = lazy(() => import('./pages/ClimateExplorerPage'));
 const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage'));
 const ReportsListPage = lazy(() => import('./pages/ReportsListPage'));
 const LiveMapPage = lazy(() => import('./pages/LiveMapPage'));
-  const GreenAtlasMagazinePage = lazy(() => import('./pages/GreenAtlasMagazinePage'));
-  const ClimateIntelligencePage = lazy(() => import('./pages/ClimateIntelligencePage'));
-const ClimateIntelligenceHub = lazy(() => import('./pages/ClimateIntelligenceHub'));
+const GreenAtlasMagazine = lazy(() => import('./components/magazine/GreenAtlasMagazineSimple'));
 const PlanetaryIntelligenceSystem = lazy(() => import('./pages/PlanetaryIntelligenceSystem'));
 const ArticleDetailPage = lazy(() => import('./pages/ArticleDetailPage'));
+const ArticlesPage = lazy(() => import('./pages/ArticlesPage'));
 const SubmitArticlePage = lazy(() => import('./pages/SubmitArticlePage'));
 const TrainingPage = lazy(() => import('./pages/TrainingPage'));
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
@@ -74,6 +83,24 @@ const GetInvolvedPage = lazy(() => import('./pages/GetInvolvedPage'));
 const RegisterCleanupPage = lazy(() => import('./pages/RegisterCleanupPage'));
 const RankingsDetailsPage = lazy(() => import('./pages/RankingsDetailsPage'));
 const ForecastsDetailsPage = lazy(() => import('./pages/ForecastsDetailsPage'));
+
+// Admin Pages
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const CreateEditArticlePage = lazy(() => import('./pages/CreateEditArticlePage'));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+
+// Under Construction Pages
+const PublicationsPage = lazy(() => import('./pages/PublicationsPage'));
+const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage'));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
+const NewsPage = lazy(() => import('./pages/NewsPage'));
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'));
+const SatelliteDataPage = lazy(() => import('./pages/SatelliteDataPage'));
+
+// 3D Map Pages
+const Map3DPage = lazy(() => import('./pages/Map3DPage'));
+const City3DPage = lazy(() => import('./pages/City3DPage'));
+const DominicaCity3DPage = lazy(() => import('./pages/DominicaCity3DPage'));
 
 // Unified Intelligence Platform - All-in-One Environmental Command Center
 const UnifiedIntelligencePlatform = lazy(() => import('./components/UnifiedIntelligencePlatform'));
@@ -89,21 +116,50 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-mygreen-light dark:bg-mygreen-darker">
-          <Navbar />
-          <main className="flex flex-col flex-grow pt-16">
-            <Suspense fallback={<div className='flex justify-center items-center h-screen'><Spinner /></div>}>
-              <ErrorBoundary>
-                <Routes>
+        <AdminAuthProvider>
+          <ScrollToTop />
+          <div className="flex flex-col min-h-screen bg-mygreen-light dark:bg-mygreen-darker">
+            <ModernNavbar />
+            <main className="flex flex-col flex-grow pt-16">
+              <Suspense fallback={<div className='flex justify-center items-center h-screen'><Spinner /></div>}>
+                <ErrorBoundary>
+                  <Routes>
                   <Route path="/" element={<HomePage />} />
                   
-                  {/* UNIFIED INTELLIGENCE PLATFORM - All-in-One Environmental Command Center */}
+                  {/* Main Dashboard - Under Construction */}
                   <Route path="/dashboard" element={
                     <ErrorBoundary>
-                      <UnifiedIntelligencePlatform />
+                      <UnderConstructionPage />
                     </ErrorBoundary>
                   } />
+
+                  {/* User Authentication & Dashboard */}
+                  <Route path="/user/login" element={
+                    <ErrorBoundary>
+                      <UserLoginPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  <Route path="/user/dashboard" element={
+                    <ErrorBoundary>
+                      <UserDashboardPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 🔥 FAANG-GRADE MISSION CONTROL DASHBOARD */}
+                  <Route path="/mission-control-v2" element={
+                    <ErrorBoundary>
+                      <MissionControlPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 🔥 FAANG-GRADE ENTERPRISE FEATURES SHOWCASE - HIDDEN FOR PUBLIC */}
+                  {/* <Route path="/enterprise-features" element={
+                    <ErrorBoundary>
+                      <EnterpriseFeaturesPage />
+                    </ErrorBoundary>
+                  } /> */}
+                  
                   <Route path="/predictive-dashboard" element={
                     <ErrorBoundary>
                       <UnifiedIntelligencePlatform />
@@ -131,19 +187,66 @@ function App() {
                       <AILab />
                     </ErrorBoundary>
                   } />
-                  
-                  <Route path="/reports/:reportId" element={<ReportDetailPage />} />
-                  <Route path="/reports" element={<ReportsListPage />} />
                   <Route path="/live-map" element={
                     <ErrorBoundary>
                       <LiveMapPage />
                     </ErrorBoundary>
                   } />
-                                     <Route path="/green-atlas-magazine" element={<GreenAtlasMagazinePage />} />
-                   <Route path="/magazine" element={<GreenAtlasMagazinePage />} />
-                   <Route path="/green-atlas" element={<GreenAtlasMagazinePage />} />
-                  <Route path="/climate-intelligence" element={<ClimateIntelligencePage />} />
-                  <Route path="/planetary-intelligence" element={<ClimateIntelligenceHub />} />
+                  
+                  {/* 3D MAP - WebGL Environmental Visualization */}
+                  <Route path="/map-3d" element={
+                    <ErrorBoundary>
+                      <Map3DPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 3D CITY - Roseau Building Visualization */}
+                  <Route path="/city-3d" element={
+                    <ErrorBoundary>
+                      <City3DPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 3D DOMINICA - Full Island Terrain Visualization */}
+                  <Route path="/dominica-3d" element={
+                    <ErrorBoundary>
+                      <DominicaCity3DPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 3D MAP - WebGL+DeckGL Dominica Map */}
+                  <Route path="/3d-map" element={
+                    <ErrorBoundary>
+                      <DominicaCity3DPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* GREEN ATLAS MAGAZINE ROUTES */}
+                  <Route path="/green-atlas-magazine" element={
+                    <ErrorBoundary>
+                      <GreenAtlasMagazine />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/magazine" element={
+                    <ErrorBoundary>
+                      <GreenAtlasMagazine />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/green-atlas" element={
+                    <ErrorBoundary>
+                      <GreenAtlasMagazine />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/magazine/submissions" element={
+                    <ErrorBoundary>
+                      <GreenAtlasMagazine />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/planetary-intelligence" element={
+                    <ErrorBoundary>
+                      <PlanetaryIntelligenceSystem />
+                    </ErrorBoundary>
+                  } />
                   <Route path="/planetary-intelligence-system" element={
                     <ErrorBoundary>
                       <PlanetaryIntelligenceSystem />
@@ -159,7 +262,11 @@ function App() {
                       <PlanetaryIntelligenceSystem />
                     </ErrorBoundary>
                   } />
-                  <Route path="/magazine/article/:articleId" element={<ArticleDetailPage />} />
+                  <Route path="/magazine/article/:articleId" element={
+                    <ErrorBoundary>
+                      <ArticleDetailPage />
+                    </ErrorBoundary>
+                  } />
                   <Route path="/submit-article" element={<SubmitArticlePage />} />
                   <Route path="/training" element={<TrainingPage />} />
                   <Route path="/training/:courseId" element={<TrainingCourseDetailPage />} />
@@ -173,9 +280,91 @@ function App() {
                   <Route path="/dominica-rankings-details" element={<RankingsDetailsPage />} />
                   <Route path="/dominica-forecasts-details" element={<ForecastsDetailsPage />} />
 
+                  {/* Admin Routes */}
+                  <Route path="/admin/dashboard" element={
+                    <ErrorBoundary>
+                      <AdminDashboardPage />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/admin/articles/create" element={
+                    <ErrorBoundary>
+                      <CreateEditArticlePage />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/admin/articles/edit/:id" element={
+                    <ErrorBoundary>
+                      <CreateEditArticlePage />
+                    </ErrorBoundary>
+                  } />
+
+                  {/* Services Sub-routes */}
+                  <Route path="/services/eia" element={<UnderConstructionPage />} />
+                  <Route path="/services/sustainability" element={<UnderConstructionPage />} />
+                  <Route path="/services/climate-risk" element={<UnderConstructionPage />} />
+                  <Route path="/services/compliance" element={<UnderConstructionPage />} />
+                  <Route path="/services/green-building" element={<UnderConstructionPage />} />
+                  <Route path="/services/carbon-assessment" element={<UnderConstructionPage />} />
+                  
+                  {/* Projects Sub-routes */}
+                  <Route path="/projects/active" element={<UnderConstructionPage />} />
+                  <Route path="/projects/case-studies" element={<UnderConstructionPage />} />
+                  <Route path="/projects/success-stories" element={<UnderConstructionPage />} />
+                  <Route path="/projects/testimonials" element={<UnderConstructionPage />} />
+                  
+                  {/* About Sub-routes */}
+                  <Route path="/about/team" element={<UnderConstructionPage />} />
+                  <Route path="/about/history" element={<UnderConstructionPage />} />
+                  <Route path="/about/mission" element={<UnderConstructionPage />} />
+                  <Route path="/about/certifications" element={<UnderConstructionPage />} />
+                  
+                  {/* Resources Sub-routes */}
+                  <Route path="/resources/reports" element={<UnderConstructionPage />} />
+                  <Route path="/resources/whitepapers" element={<UnderConstructionPage />} />
+                  <Route path="/resources/blog" element={<UnderConstructionPage />} />
+                  <Route path="/resources/downloads" element={<UnderConstructionPage />} />
+                  
+                  {/* Other missing pages */}
+                  <Route path="/consultation" element={<UnderConstructionPage />} />
+                  <Route path="/client-portal" element={
+                    <ErrorBoundary>
+                      <UserLoginPage />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/settings" element={<UnderConstructionPage />} />
+                  <Route path="/articles" element={
+                    <ErrorBoundary>
+                      <ArticlesPage />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/articles/:id" element={
+                    <ErrorBoundary>
+                      <ArticleDetailPage />
+                    </ErrorBoundary>
+                  } />
+
+                  {/* Under Construction Pages */}
+                  <Route path="/publications" element={<PublicationsPage />} />
+                  <Route path="/case-studies" element={<CaseStudiesPage />} />
+                  <Route path="/analytics" element={<AnalyticsPage />} />
+                  <Route path="/news" element={<NewsPage />} />
+                  <Route path="/docs" element={<DocumentationPage />} />
+                  <Route path="/satellite" element={<SatelliteDataPage />} />
+
                   {/* Auth Routes */}
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
+                  
+                  {/* Admin Auth Routes */}
+                  <Route path="/admin-login" element={
+                    <ErrorBoundary>
+                      <AdminLoginPage />
+                    </ErrorBoundary>
+                  } />
+                  <Route path="/admin/login" element={
+                    <ErrorBoundary>
+                      <AdminLoginPage />
+                    </ErrorBoundary>
+                  } />
                 </Routes>
               </ErrorBoundary>
             </Suspense>
@@ -183,6 +372,7 @@ function App() {
           <Footer />
           <EditorialAssistant />
         </div>
+        </AdminAuthProvider>
       </AuthProvider>
     </Router>
   );

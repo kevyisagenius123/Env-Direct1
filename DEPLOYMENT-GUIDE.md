@@ -122,7 +122,7 @@ If you deploy a new backend, update the `VITE_API_URL` environment variable.
 The Green Atlas Magazine includes:
 
 ### Core Features
-- ✅ **Planetary Intelligence System** - Global environmental monitoring
+- ✅ **Planetary Intelligence System** - Global environmental consulting
 - ✅ **Climate Intelligence Hub** - Premium editorial content
 - ✅ **AI Assistant Concierge** - Intelligent content discovery
 - ✅ **Interactive Data Visualizations** - Real-time environmental metrics

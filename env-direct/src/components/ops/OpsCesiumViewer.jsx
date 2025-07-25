@@ -293,7 +293,7 @@ const OpsCesiumViewer = () => {
           {/* Dominica Label */}
           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center">
             <h3 className="text-lg font-bold text-white">DOMINICA</h3>
-            <p className="text-sm text-green-400">Environmental Monitoring Grid</p>
+            <p className="text-sm text-green-400">Environmental Consulting Grid</p>
           </div>
         </div>
       </div>

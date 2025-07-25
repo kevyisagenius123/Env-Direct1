@@ -50,11 +50,11 @@ const MissionControlLanding = () => {
     },
     {
       icon: Activity,
-      title: 'LIVE MONITORING',
-      description: 'Real-time sensor network & data streams',
+      title: 'INTERACTIVE MAP',
+      description: 'Real-time environmental data visualization & layers',
       link: '/live-map',
       color: 'from-green-600 to-teal-500',
-      features: ['48 sensor nodes', 'Live data feeds', 'Alert systems']
+      features: ['Geographic layers', 'Live data feeds', 'Alert systems']
     },
     {
       icon: TrendingUp,

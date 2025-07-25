@@ -51,7 +51,7 @@ const CallToActionSection = () => {
             to="/live-map"
             className="inline-block bg-mygreen-light hover:bg-mygreen text-mygreen-dark dark:bg-mygreen-lighter dark:hover:bg-mygreen dark:text-mygreen-dark font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg transform hover:scale-105"
           >
-            Explore Live Map
+            Explore Interactive Map
           </Link>
         </motion.div>
       </div>

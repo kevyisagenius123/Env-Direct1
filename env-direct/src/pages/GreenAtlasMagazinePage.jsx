@@ -36,7 +36,10 @@ import {
   StarIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  RadioIcon
+  RadioIcon,
+  BuildingOffice2Icon,
+  ChartBarIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 
 // Import enhanced magazine components
@@ -46,8 +49,89 @@ import ArticleGrid from '../components/magazine/ArticleGrid';
 import StoryMap from '../components/magazine/StoryMap';
 import ReferenceFooter from '../components/magazine/ReferenceFooter';
 
-// Import all completed features
-import {
+// 🏢 ENVIRONMENT DIRECT CONSULTING KNOWLEDGE BASE
+const consultingArticles = [
+  {
+    id: 1,
+    title: "Environmental Impact Assessment Excellence",
+    subtitle: "Streamlining EIA processes for development projects in the Caribbean",
+    category: "EIA Services",
+    readTime: "12 min read",
+    author: "Environment Direct Team",
+    date: "2025-01-15",
+    featured: true,
+    tags: ["EIA", "Caribbean", "Development", "Best Practices"],
+    image: "/images/eia-excellence.jpg",
+    excerpt: "Master the complexities of Environmental Impact Assessment with our proven methodologies and local expertise.",
+    content: "Environmental Impact Assessment in the Caribbean requires deep understanding of both regulatory frameworks and unique ecosystem dynamics..."
+  },
+  {
+    id: 2,
+    title: "Sustainable Tourism Development: Balancing Growth and Conservation",
+    subtitle: "Strategic approaches to eco-tourism development in Small Island Developing States",
+    category: "Sustainable Development",
+    readTime: "15 min read",
+    author: "Dr. Marcus Thompson",
+    date: "2025-01-10",
+    featured: true,
+    tags: ["Tourism", "SIDS", "Conservation", "Economic Development"],
+    image: "/images/sustainable-tourism.jpg",
+    excerpt: "Explore how Caribbean nations can develop tourism while preserving their natural heritage through strategic environmental planning.",
+    content: "Sustainable tourism development requires careful balance between economic opportunities and environmental protection..."
+  },
+  {
+    id: 3,
+    title: "Climate Resilience Planning for Caribbean Communities",
+    subtitle: "Building adaptive capacity in the face of climate change",
+    category: "Climate Adaptation",
+    readTime: "10 min read",
+    author: "Dr. Sophia Martinez",
+    date: "2025-01-08",
+    featured: true,
+    tags: ["Climate Change", "Resilience", "Community Planning", "Adaptation"],
+    image: "/images/climate-resilience.jpg",
+    excerpt: "Comprehensive strategies for building climate-resilient communities across the Caribbean region.",
+    content: "Climate resilience planning must integrate traditional knowledge with modern climate science..."
+  },
+  {
+    id: 4,
+    title: "Marine Protected Area Design and Management",
+    subtitle: "Evidence-based approaches to marine conservation in tropical waters",
+    category: "Marine Conservation",
+    readTime: "14 min read",
+    author: "Dr. James Richardson",
+    date: "2025-01-05",
+    featured: false,
+    tags: ["Marine Conservation", "Protected Areas", "Biodiversity", "Management"],
+    image: "/images/marine-protection.jpg",
+    excerpt: "Learn how to design and manage effective Marine Protected Areas that balance conservation with community needs.",
+    content: "Effective marine protected area design requires understanding of ocean currents, species migration patterns..."
+  },
+  {
+    id: 5,
+    title: "Renewable Energy Integration: Environmental Considerations",
+    subtitle: "Navigating environmental challenges in Caribbean renewable energy projects",
+    category: "Renewable Energy",
+    readTime: "11 min read",
+    author: "Elena Rodriguez",
+    date: "2025-01-03",
+    featured: false,
+    tags: ["Renewable Energy", "Environmental Assessment", "Grid Integration"],
+    image: "/images/renewable-energy.jpg",
+    excerpt: "Address environmental considerations in renewable energy development from planning to implementation.",
+    content: "Renewable energy projects in the Caribbean face unique environmental challenges including hurricane resilience..."
+  }
+];
+
+const categories = [
+  { id: 'all', name: 'All Insights', icon: BookOpenIcon },
+  { id: 'eia', name: 'EIA Services', icon: DocumentTextIcon },
+  { id: 'sustainability', name: 'Sustainable Development', icon: BuildingOffice2Icon },
+  { id: 'climate', name: 'Climate Adaptation', icon: CloudIcon },
+  { id: 'marine', name: 'Marine Conservation', icon: GlobeAltIcon },
+  { id: 'energy', name: 'Renewable Energy', icon: BeakerIcon },
+  { id: 'case-studies', name: 'Case Studies', icon: AcademicCapIcon }
+];
   VisualTimeline as CompletedVisualTimeline,
   FeatureStoryDeck as CompletedFeatureStoryDeck,
   AuthorSpotlight as CompletedAuthorSpotlight,
@@ -92,43 +176,61 @@ const GreenAtlasMagazinePage = () => {
     lastUpdate: 'Live'
   });
 
-  // Luxury Editorial Stories
+  // Consulting Case Studies & Featured Projects
   const [editorialStories] = useState([
     {
       id: 1,
-      category: 'FEATURE STORY',
-      type: 'luxury',
-      title: 'The Coral Requiem',
-      subtitle: 'A journey through the world\'s dying reefs reveals both devastation and unexpected hope',
-      location: 'Dominica Marine Reserve',
-      author: 'Dr. Elena Vasquez',
-      authorRole: 'Marine Biologist & Contributing Editor',
-      publishDate: 'December 2024',
-      lastUpdate: 'New Issue',
-      readTime: '18 min read',
-      excerpt: 'In the crystalline waters off Dominica, marine biologist Dr. Elena Vasquez documents the final symphony of coral ecosystems—a haunting beauty that speaks to both loss and resilience.',
-      mediaType: 'Photography & Field Recording',
-      status: 'CURRENT ISSUE',
-      backgroundVideo: '/videos/coral-beauty.mp4',
-      backgroundImage: '/img/editorial/coral-hero.jpg'
+      category: 'CASE STUDY',
+      type: 'consulting',
+      title: 'Transforming Dominica\'s Tourism Sector',
+      subtitle: 'How strategic EIA processes enabled sustainable tourism development while protecting World Heritage Sites',
+      location: 'Dominica, Caribbean',
+      author: 'Environment Direct Team',
+      authorRole: 'Lead Environmental Consultants',
+      publishDate: 'January 2025',
+      lastUpdate: 'Featured Project',
+      readTime: '15 min read',
+      excerpt: 'Discover how Environment Direct guided Dominica through a complex EIA process that balanced tourism development with the protection of its UNESCO World Heritage sites, resulting in a 40% increase in eco-tourism revenue.',
+      mediaType: 'Project Documentation & Impact Assessment',
+      status: 'FEATURED PROJECT',
+      backgroundVideo: '/videos/dominica-tourism.mp4',
+      backgroundImage: '/img/projects/dominica-hero.jpg'
     },
     {
       id: 2,
-      category: 'INVESTIGATION',
-      type: 'luxury',
-      title: 'The Amazon\'s Digital Guardians',
-      subtitle: 'How indigenous communities are using AI to protect ancestral lands',
-      location: 'Brazilian Amazon',
-      author: 'Carlos Mendoza',
-      authorRole: 'Environmental Technology Correspondent',
-      publishDate: 'November 2024',
-      lastUpdate: 'Featured',
+      category: 'SUCCESS STORY',
+      type: 'consulting',
+      title: 'Marine Protected Area Implementation Success',
+      subtitle: 'Evidence-based design and community engagement strategy delivers conservation wins',
+      location: 'Eastern Caribbean',
+      author: 'Dr. Marcus Thompson',
+      authorRole: 'Senior Marine Conservation Consultant',
+      publishDate: 'December 2024',
+      lastUpdate: 'Client Spotlight',
       readTime: '12 min read',
-      excerpt: 'Deep in the Brazilian rainforest, Kayapo elders collaborate with MIT researchers to create an early warning system that blends ancient wisdom with cutting-edge technology.',
-      mediaType: 'Documentary Photography',
-      status: 'EDITOR\'S CHOICE',
-      backgroundVideo: '/videos/amazon-tech.mp4',
-      backgroundImage: '/img/editorial/amazon-hero.jpg'
+      excerpt: 'Learn how our comprehensive approach to marine protected area design resulted in a 65% increase in fish populations and strengthened community support for conservation initiatives.',
+      mediaType: 'Scientific Monitoring & Community Documentation',
+      status: 'CLIENT SUCCESS',
+      backgroundVideo: '/videos/marine-protection.mp4',
+      backgroundImage: '/img/projects/marine-hero.jpg'
+    },
+    {
+      id: 3,
+      category: 'INNOVATION',
+      type: 'consulting',
+      title: 'Climate Resilience Planning Revolution',
+      subtitle: 'Integrating traditional knowledge with climate science for adaptive community planning',
+      location: 'Multiple Caribbean Islands',
+      author: 'Dr. Sophia Martinez',
+      authorRole: 'Climate Adaptation Specialist',
+      publishDate: 'November 2024',
+      lastUpdate: 'Best Practice',
+      readTime: '18 min read',
+      excerpt: 'Explore our innovative approach to climate resilience planning that combines cutting-edge climate modeling with traditional ecological knowledge, creating robust adaptation strategies for vulnerable communities.',
+      mediaType: 'Climate Data Analysis & Community Workshops',
+      status: 'METHODOLOGY BREAKTHROUGH',
+      backgroundVideo: '/videos/climate-resilience.mp4',
+      backgroundImage: '/img/projects/resilience-hero.jpg'
     }
   ]);
 
@@ -330,8 +432,8 @@ Every story in this edition has been verified through multiple sources, cross-re
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           />
-          <h2 className="font-serif text-4xl font-bold text-white mb-4">Green Atlas</h2>
-          <p className="text-emerald-300 text-lg font-light">Environmental Intelligence Magazine</p>
+          <h2 className="font-serif text-4xl font-bold text-white mb-4">Environment Direct</h2>
+          <p className="text-emerald-300 text-lg font-light">Knowledge Base & Insights</p>
           <div className="mt-8 text-slate-400 text-sm">
             Loading real articles from the backend...
           </div>

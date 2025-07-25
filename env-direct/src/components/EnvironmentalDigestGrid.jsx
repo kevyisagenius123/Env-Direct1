@@ -101,7 +101,7 @@ const IntelligenceBriefings = () => {
             Environmental Intelligence Overview
           </h2>
           <p className="text-lg text-white/80 max-w-3xl mx-auto">
-            Real-time environmental monitoring briefings and parish resilience assessments. 
+            Real-time environmental consulting briefings and parish resilience assessments. 
             Updated continuously by our sensor network and satellite intelligence systems.
           </p>
           

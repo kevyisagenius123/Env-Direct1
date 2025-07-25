@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 const ProfessionalServicesSection = () => {
   const services = [
     {
-      id: 'monitoring',
-      title: 'Environmental Monitoring',
-      tagline: 'Real-Time Intelligence Network',
-      description: 'Comprehensive 24/7 monitoring of air quality, water systems, forest coverage, and climate indicators across Dominica using our network of advanced sensors and satellite data.',
-      features: ['156 Active Sensors', 'Satellite Integration', 'Real-Time Alerts', 'Historical Analysis'],
+      id: 'consulting',
+      title: 'Environmental Consulting',
+      tagline: 'Expert Advisory Services',
+      description: 'Comprehensive environmental consulting including impact assessments, compliance support, strategic planning, and expert analysis across Dominica using our expertise and advanced analytics.',
+      features: ['Impact Assessments', 'Compliance Support', 'Strategic Planning', 'Expert Analysis'],
       link: '/climate-intelligence',
       icon: (
         <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@ const ProfessionalServicesSection = () => {
       id: 'training',
       title: 'Professional Training',
       tagline: 'Capacity Development',
-      description: 'Training programs for government officials, environmental professionals, and community leaders on environmental monitoring, data analysis, and sustainable practices.',
+      description: 'Training programs for government officials, environmental professionals, and community leaders on environmental consulting, advisory services, and sustainable practices.',
       features: ['Executive Training', 'Technical Workshops', 'Certification Programs', 'Knowledge Transfer'],
       link: '/training',
       icon: (

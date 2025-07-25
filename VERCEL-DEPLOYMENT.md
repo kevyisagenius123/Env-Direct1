@@ -276,7 +276,7 @@ Your deployed platform includes:
 
 ### 🤖 **Autonomous AI Assistant**
 - Independent web search simulation
-- Real-time environmental monitoring
+- Real-time environmental consulting
 - Natural language processing
 - Intelligence gathering capabilities
 

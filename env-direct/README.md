@@ -1,6 +1,6 @@
 # Environment Direct - Frontend
 
-A modern React application for environmental monitoring and awareness in Dominica.
+A modern React application for environmental consulting and advisory services in Dominica.
 
 ## Features
 

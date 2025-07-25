@@ -138,7 +138,7 @@ VITE_API_URL=https://your-backend-url.up.railway.app
 - **Intelligence Digest**: AI-powered content analysis
 
 ### 📊 **Interactive Dashboards**
-- **Live Climate Data**: Real-time environmental monitoring
+- **Live Climate Data**: Real-time environmental consulting
 - **Regional Rankings**: Comparative environmental performance
 - **Prediction Models**: AI-powered climate forecasting
 - **Visual Analytics**: Charts, graphs, and data visualization

@@ -72,7 +72,7 @@ const Navbar = () => {
         { name: 'Intelligence Platform', href: '/dashboard' },
         { name: 'Environmental Lab', href: '/ai-lab' },
         { name: 'Reports', href: '/reports' },
-        { name: 'Live Map', href: '/live-map' },
+        { name: 'Interactive Map', href: '/live-map' },
       ]
     },
     {
@@ -82,7 +82,7 @@ const Navbar = () => {
         { name: 'Training', href: '/training' },
       ]
     },
-    { name: 'Magazine', href: '/green-atlas-magazine', type: 'link' },
+    { name: 'Green Atlas 2.0', href: '/green-atlas-magazine', type: 'link' },
     { name: 'INTELLIGENCE CENTER', href: '/dashboard', type: 'link', isSpecial: true }, 
     { name: 'Contact', href: '/contact', type: 'link' },
   ];

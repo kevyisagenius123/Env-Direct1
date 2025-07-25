@@ -37,7 +37,7 @@ const ReferenceFooter = () => {
             <div className="space-y-2 text-sm text-skyAsh-300">
               <div>AI-Powered Content Analysis</div>
               <div>Satellite Imagery Processing</div>
-              <div>Real-time Environmental Monitoring</div>
+              <div>Real-time Environmental Consulting</div>
             </div>
           </div>
         </div>

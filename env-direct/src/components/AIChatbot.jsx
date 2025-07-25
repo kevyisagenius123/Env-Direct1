@@ -235,7 +235,7 @@ const EditorialAssistant = () => {
   const [messages, setMessages] = useState([
     { 
       id: 1, 
-      text: 'Editorial Intelligence System activated. I have autonomous web search capabilities and am continuously monitoring environmental developments. How may I assist your editorial journey today?', 
+      text: 'Welcome to Environment Direct\'s editorial assistant! This is a demonstration system showcasing our environmental consulting expertise. I can help answer questions about our services, sustainability practices, and environmental compliance. Please note: This is a demo version with simulated responses.', 
       sender: 'assistant',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       type: 'greeting'
@@ -391,31 +391,31 @@ const EditorialAssistant = () => {
     // Simulate web search delay
     await new Promise(resolve => setTimeout(resolve, 3000));
 
-    // Mock search results
-    const mockResults = [
+    // Demonstration results - in production this would connect to real search APIs
+    const demoResults = [
       {
-        title: `Latest research on ${query} - Nature Climate Change`,
-        snippet: `Recent findings reveal significant developments in ${query} research with implications for global environmental policy...`,
-        source: 'nature.com',
+        title: `Environmental consulting insights on ${query}`,
+        snippet: `Our consulting team provides expert analysis on ${query} and its implications for sustainable development...`,
+        source: 'Environment Direct Knowledge Base',
         timestamp: 'Just now'
       },
       {
-        title: `${query} monitoring data - NOAA Environmental`,
-        snippet: `Real-time monitoring shows concerning trends in ${query} patterns across multiple geographic regions...`,
-        source: 'noaa.gov',
+        title: `Best practices for ${query} management`,
+        snippet: `Industry-leading approaches to address ${query} challenges in environmental consulting projects...`,
+        source: 'Environmental Consulting Guidelines',
         timestamp: '2 min ago'
       },
       {
-        title: `Policy implications of ${query} - Environmental Policy Institute`,
-        snippet: `New policy frameworks needed to address accelerating ${query} challenges facing global ecosystems...`,
-        source: 'envpolicy.org',
+        title: `${query} case studies and solutions`,
+        snippet: `Real-world examples of successful ${query} implementations in environmental consulting engagements...`,
+        source: 'Client Success Stories',
         timestamp: '5 min ago'
       }
     ];
 
     setIsSearching(false);
     setWebSearchActive(false);
-    return mockResults;
+    return demoResults;
   };
 
   const performWebSearch = async (searchTerm) => {
@@ -438,6 +438,31 @@ const EditorialAssistant = () => {
       }
     } catch (error) {
       console.error('Error fetching articles:', error);
+      // Provide mock data when backend is unavailable
+      const mockArticles = [
+        {
+          id: 1,
+          title: "Climate Change Adaptation Strategies",
+          content: "Strategies for adapting to climate change in island nations...",
+          author: "Jane Smith",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 2,
+          title: "Renewable Energy Transitions",
+          content: "How countries are transitioning to renewable energy sources...",
+          author: "John Doe",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 3,
+          title: "Marine Conservation Efforts",
+          content: "Recent developments in marine protected areas and conservation...",
+          author: "Maria Rodriguez",
+          createdAt: new Date().toISOString()
+        }
+      ];
+      setArticles(mockArticles);
     }
   };
 
@@ -464,14 +489,15 @@ const EditorialAssistant = () => {
   };
 
   const analyzeCurrentPage = () => {
-    const mockAnalysis = {
+    // Note: This is a demonstration feature - would connect to actual content analysis in production
+    const demoAnalysis = {
       readingTime: '8 min',
       complexity: 'Advanced',
-      topics: ['Climate', 'Coral', 'Conservation'],
+      topics: ['Environmental Consulting', 'Sustainability', 'Compliance'],
       sentiment: 'Informative',
       keyPoints: 3
     };
-    return mockAnalysis;
+    return demoAnalysis;
   };
 
   const getEnvironmentalInsights = () => {
@@ -506,7 +532,7 @@ const EditorialAssistant = () => {
       case 'monitorTrends':
         setAnalysisType('monitoring');
         await new Promise(resolve => setTimeout(resolve, 2500));
-        responseText = `Continuous monitoring activated. I'm tracking environmental trends across multiple data sources and will alert you to significant developments.`;
+        responseText = `Continuous consulting analysis activated. I'm tracking environmental trends across multiple data sources and will alert you to significant developments.`;
         additionalComponent = <AutonomousIntelligenceFeed activities={autonomousActivities} />;
         break;
 
@@ -549,13 +575,13 @@ I'll proactively notify you when these conditions are met.`;
       
       case 'showEnvironmentalData':
         setAnalysisType('environmental');
-        const envResults = await performWebSearch('global environmental monitoring data');
+        const envResults = await performWebSearch('global environmental consulting data');
         const insights = getEnvironmentalInsights();
         responseText = `Here's the latest environmental intelligence enhanced with real-time web data:`;
         additionalComponent = (
           <div>
             <EnvironmentalDataWidget data={insights.data} />
-            <WebSearchResults results={envResults.slice(0, 2)} query="environmental monitoring" />
+            <WebSearchResults results={envResults.slice(0, 2)} query="environmental consulting" />
           </div>
         );
         break;

@@ -5,12 +5,12 @@ import { motion } from 'framer-motion';
 const ProfessionalServicesSection = () => {
   const services = [
     {
-      id: 'monitoring',
-      title: 'Environmental Monitoring',
-      tagline: 'Real-Time Intelligence Network',
-      description: 'Comprehensive 24/7 monitoring of air quality, water systems, forest coverage, and climate indicators across Dominica using our network of advanced sensors and satellite data.',
-      features: ['156 Active Sensors', 'Satellite Integration', 'Real-Time Alerts', 'Historical Analysis'],
-      link: '/climate-intelligence',
+      id: 'consulting',
+      title: 'Environmental Consulting',
+      tagline: 'Expert Environmental Advisory',
+      description: 'Environmental consulting and advisory services across Dominica including impact assessments, compliance support, and strategic planning.',
+      features: ['Impact Assessments', 'Compliance Support', 'Strategic Planning', 'Expert Analysis'],
+      link: '/dashboard',
       icon: (
         <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -19,10 +19,10 @@ const ProfessionalServicesSection = () => {
     },
     {
       id: 'reporting',
-      title: 'Policy & Reporting',
-      tagline: 'Ministry-Grade Analysis',
-      description: 'Executive briefings, environmental impact assessments, and policy recommendations tailored for government decision-makers and international organizations.',
-      features: ['Government Reports', 'Impact Assessments', 'Policy Briefs', 'Compliance Tracking'],
+      title: 'Environmental Reports',
+      tagline: 'Research & Documentation',
+      description: 'Environmental reporting and documentation for research, policy development, and community awareness initiatives.',
+      features: ['Research Reports', 'Documentation', 'Data Summaries', 'Public Information'],
       link: '/reports',
       icon: (
         <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,12 +31,12 @@ const ProfessionalServicesSection = () => {
       )
     },
     {
-      id: 'intelligence',
-      title: 'Satellite Intelligence',
-      tagline: 'Advanced Earth Observation',
-      description: 'High-resolution satellite imagery analysis for deforestation tracking, urban planning, disaster response, and infrastructure development planning.',
-      features: ['Satellite Imagery', 'Change Detection', 'Predictive Modeling', 'Risk Assessment'],
-      link: '/satellite-intelligence',
+      id: 'mapping',
+      title: 'Interactive Mapping',
+      tagline: 'Geographic Data Visualization',
+      description: 'Interactive maps and geographic data visualization tools for exploring environmental data across Dominica.',
+      features: ['Interactive Maps', 'Geographic Data', 'Data Visualization', 'Location Analysis'],
+      link: '/interactive-map',
       icon: (
         <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -44,24 +44,11 @@ const ProfessionalServicesSection = () => {
       )
     },
     {
-      id: 'consulting',
-      title: 'Strategic Consulting',
-      tagline: 'Environmental Leadership',
-      description: 'Expert consultation for sustainable development projects, climate adaptation strategies, and environmental compliance for government agencies and private sector.',
-      features: ['Strategic Planning', 'Project Management', 'Compliance Support', 'Capacity Building'],
-      link: '/consulting',
-      icon: (
-        <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      )
-    },
-    {
-      id: 'training',
-      title: 'Professional Training',
-      tagline: 'Capacity Development',
-      description: 'Training programs for government officials, environmental professionals, and community leaders on environmental monitoring, data analysis, and sustainable practices.',
-      features: ['Executive Training', 'Technical Workshops', 'Certification Programs', 'Knowledge Transfer'],
+      id: 'education',
+      title: 'Environmental Education',
+      tagline: 'Community Awareness',
+      description: 'Educational resources and community outreach programs to promote environmental awareness and sustainability practices.',
+      features: ['Educational Content', 'Community Programs', 'Awareness Campaigns', 'Resource Sharing'],
       link: '/training',
       icon: (
         <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,19 +56,6 @@ const ProfessionalServicesSection = () => {
         </svg>
       )
     },
-    {
-      id: 'emergency',
-      title: 'Emergency Response',
-      tagline: 'Crisis Management',
-      description: 'Rapid environmental assessment and response coordination for natural disasters, environmental emergencies, and climate-related incidents.',
-      features: ['24/7 Response', 'Risk Coordination', 'Impact Assessment', 'Recovery Planning'],
-      link: '/emergency-response',
-      icon: (
-        <svg className="w-8 h-8 text-envGreen-600 dark:text-envGreen-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      )
-    }
   ];
 
   return (
@@ -100,8 +74,7 @@ const ProfessionalServicesSection = () => {
             Our Services
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            Comprehensive environmental intelligence and consulting services designed for government agencies, 
-            international organizations, and private sector clients committed to sustainable development.
+            Environmental consulting and advisory services for Dominica's environmental protection and sustainable development.
           </p>
         </motion.div>
 

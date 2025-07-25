@@ -15,7 +15,7 @@ const PrestigeQuoteBar = () => {
       accent: "border-envGreen-400 dark:border-envGreen-300"
     },
     {
-      text: "The sophistication of their climate intelligence platform rivals any government environmental monitoring system I've encountered.",
+      text: "The sophistication of their climate intelligence platform rivals any government environmental consulting system I've encountered.",
       author: "Professor James Mitchell",
       title: "Director, Caribbean Climate Institute",
       organization: "University of the West Indies",

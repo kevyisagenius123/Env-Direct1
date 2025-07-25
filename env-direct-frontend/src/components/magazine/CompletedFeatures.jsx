@@ -29,7 +29,7 @@ export const VisualTimeline = ({ articles = [] }) => {
       {
         year: currentYear - 2,
         title: 'Climate Intelligence Initiative',
-        description: 'Launched global environmental monitoring network',
+        description: 'Launched global environmental consulting network',
         impact: 'Established 47 field stations worldwide',
         color: 'emerald',
         articles: 12

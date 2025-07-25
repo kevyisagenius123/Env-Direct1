@@ -506,7 +506,7 @@ const EditorialAssistant = () => {
       case 'monitorTrends':
         setAnalysisType('monitoring');
         await new Promise(resolve => setTimeout(resolve, 2500));
-        responseText = `Continuous monitoring activated. I'm tracking environmental trends across multiple data sources and will alert you to significant developments.`;
+        responseText = `Continuous consulting analysis activated. I'm tracking environmental trends across multiple data sources and will alert you to significant developments.`;
         additionalComponent = <AutonomousIntelligenceFeed activities={autonomousActivities} />;
         break;
 
@@ -549,13 +549,13 @@ I'll proactively notify you when these conditions are met.`;
       
       case 'showEnvironmentalData':
         setAnalysisType('environmental');
-        const envResults = await performWebSearch('global environmental monitoring data');
+        const envResults = await performWebSearch('global environmental consulting data');
         const insights = getEnvironmentalInsights();
         responseText = `Here's the latest environmental intelligence enhanced with real-time web data:`;
         additionalComponent = (
           <div>
             <EnvironmentalDataWidget data={insights.data} />
-            <WebSearchResults results={envResults.slice(0, 2)} query="environmental monitoring" />
+            <WebSearchResults results={envResults.slice(0, 2)} query="environmental consulting" />
           </div>
         );
         break;

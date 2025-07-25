@@ -72,7 +72,7 @@ const Navbar = () => {
         { name: 'Intelligence Platform', href: '/dashboard' },
         { name: 'Environmental Lab', href: '/ai-lab' },
         { name: 'Reports', href: '/reports' },
-        { name: 'Live Map', href: '/live-map' },
+        { name: 'Interactive Map', href: '/live-map' },
       ]
     },
     {

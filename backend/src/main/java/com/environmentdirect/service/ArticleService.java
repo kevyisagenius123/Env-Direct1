@@ -26,12 +26,17 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CategoryService categoryService; // To create/get categories
     private final TagService tagService;           // To create/get tags
+    private final NotificationService notificationService; // For article notifications
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, CategoryService categoryService, TagService tagService) {
+    public ArticleService(ArticleRepository articleRepository, 
+                         CategoryService categoryService, 
+                         TagService tagService,
+                         NotificationService notificationService) {
         this.articleRepository = articleRepository;
         this.categoryService = categoryService;
         this.tagService = tagService;
+        this.notificationService = notificationService;
     }
 
     @Transactional(readOnly = true)
@@ -215,5 +220,138 @@ public class ArticleService {
             tagIds,
             PageRequest.of(0, count)
         );
+    }
+
+    /**
+     * Find all articles without pagination (for admin)
+     */
+    @Transactional(readOnly = true)
+    public List<Article> findAllArticles() {
+        return articleRepository.findAll();
+    }
+
+    /**
+     * Find article by ID
+     */
+    @Transactional(readOnly = true)
+    public Optional<Article> findById(Long id) {
+        return articleRepository.findById(id);
+    }
+
+    /**
+     * Delete article by ID
+     */
+    @Transactional
+    public void deleteById(Long id) {
+        articleRepository.deleteById(id);
+    }
+
+    /**
+     * Approve article and trigger notification
+     */
+    @Transactional
+    public Article approveArticle(Long articleId) {
+        Optional<Article> articleOpt = articleRepository.findById(articleId);
+        if (articleOpt.isPresent()) {
+            Article article = articleOpt.get();
+            ApprovalStatus previousStatus = article.getApprovalStatus();
+            
+            // Update approval status
+            article.setApprovalStatus(ApprovalStatus.APPROVED);
+            Article savedArticle = articleRepository.save(article);
+            
+            // Trigger notification if status changed from pending to approved
+            if (previousStatus == ApprovalStatus.PENDING_APPROVAL) {
+                try {
+                    notificationService.createArticlePublishedNotification(
+                        article.getTitle(), 
+                        article.getId()
+                    );
+                } catch (Exception e) {
+                    // Log error but don't fail the approval
+                    System.err.println("Failed to create notification for article: " + articleId);
+                    e.printStackTrace();
+                }
+            }
+            
+            return savedArticle;
+        }
+        throw new RuntimeException("Article not found with id: " + articleId);
+    }
+
+    /**
+     * Reject article
+     */
+    @Transactional
+    public Article rejectArticle(Long articleId) {
+        Optional<Article> articleOpt = articleRepository.findById(articleId);
+        if (articleOpt.isPresent()) {
+            Article article = articleOpt.get();
+            article.setApprovalStatus(ApprovalStatus.REJECTED);
+            return articleRepository.save(article);
+        }
+        throw new RuntimeException("Article not found with id: " + articleId);
+    }
+
+    /**
+     * Publish article directly (sets to approved and triggers notification)
+     */
+    @Transactional
+    public Article publishArticle(Long articleId) {
+        return approveArticle(articleId);
+    }
+
+    /**
+     * Set article status to pending approval
+     */
+    @Transactional
+    public Article setArticlePending(Long articleId) {
+        Optional<Article> articleOpt = articleRepository.findById(articleId);
+        if (articleOpt.isPresent()) {
+            Article article = articleOpt.get();
+            article.setApprovalStatus(ApprovalStatus.PENDING_APPROVAL);
+            return articleRepository.save(article);
+        }
+        throw new RuntimeException("Article not found with id: " + articleId);
+    }
+
+    /**
+     * Get articles by approval status
+     */
+    @Transactional(readOnly = true)
+    public List<Article> getArticlesByStatus(ApprovalStatus status) {
+        return articleRepository.findByApprovalStatus(status, PageRequest.of(0, Integer.MAX_VALUE)).getContent();
+    }
+
+    /**
+     * Get pending articles for admin review
+     */
+    @Transactional(readOnly = true)
+    public List<Article> getPendingArticles() {
+        return getArticlesByStatus(ApprovalStatus.PENDING_APPROVAL);
+    }
+
+    /**
+     * Create article and trigger notification if immediately approved
+     */
+    @Transactional
+    public Article createArticleWithNotification(Article article, Set<String> categoryNames, Set<String> tagNames) {
+        // By default, articles created through this method are APPROVED (for backward compatibility)
+        article.setApprovalStatus(ApprovalStatus.APPROVED);
+        Article savedArticle = createArticleWithStatus(article, categoryNames, tagNames, null);
+        
+        // Trigger notification for newly created and approved article
+        try {
+            notificationService.createArticlePublishedNotification(
+                savedArticle.getTitle(), 
+                savedArticle.getId()
+            );
+        } catch (Exception e) {
+            // Log error but don't fail the creation
+            System.err.println("Failed to create notification for new article: " + savedArticle.getId());
+            e.printStackTrace();
+        }
+        
+        return savedArticle;
     }
 }
