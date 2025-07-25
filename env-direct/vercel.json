@@ -14,19 +14,49 @@
       "VITE_API_URL": "https://env-backend-a73f7074660a.herokuapp.com"
     }
   },
+  "routes": [
+    {
+      "src": "/geojson/(.*)",
+      "dest": "/geojson/$1",
+      "headers": {
+        "Content-Type": "application/geo+json"
+      }
+    }
+  ],
   "rewrites": [
     {
-      "source": "/((?!api|_next|static|.*\\..*).*)",
+      "source": "/geojson/(.*)",
+      "destination": "/geojson/$1"
+    },
+    {
+      "source": "/((?!api|_next|static|geojson|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
+      "source": "/geojson/(.*)\\.geojson",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/geo+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
       "source": "/(.*)\\.geojson",
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/json"
+          "value": "application/geo+json"
         },
         {
           "key": "Cache-Control",
