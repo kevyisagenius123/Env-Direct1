@@ -361,6 +361,13 @@ const DominicaCombined3D = () => {
               return [key, null];
             }
             
+            // Check if we're getting HTML instead of JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && !contentType.includes('application/json')) {
+              console.error(`[Combined3D] Error loading ${key}: Expected JSON but got ${contentType}`);
+              return [key, null];
+            }
+            
             const rawData = await response.json();
             const validatedData = validateAndCleanGeoJSON(rawData, key);
             return [key, validatedData];
@@ -398,6 +405,12 @@ const DominicaCombined3D = () => {
         const response = await fetch('/geojson/export.geojson');
         if (!response.ok) {
           throw new Error(`Failed to load building data: ${response.statusText}`);
+        }
+        
+        // Check if we're getting HTML instead of JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && !contentType.includes('application/json')) {
+          throw new Error(`Expected JSON but got ${contentType}. This usually means the file is being served as HTML instead of JSON.`);
         }
         
         const data = await response.json();
