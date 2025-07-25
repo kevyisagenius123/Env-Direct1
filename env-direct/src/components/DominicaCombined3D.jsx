@@ -376,6 +376,17 @@ const DominicaCombined3D = () => {
             return [key, validatedData];
           } catch (err) {
             console.error(`[Combined3D] Error loading ${key}:`, err);
+            // Debug: Log what we actually received
+            if (err instanceof SyntaxError && err.message.includes('Unexpected token')) {
+              try {
+                const debugResponse = await fetch(path);
+                const debugText = await debugResponse.text();
+                console.error(`[Combined3D] Debug - ${key} response content:`, debugText.substring(0, 200));
+                console.error(`[Combined3D] Debug - ${key} content-type:`, debugResponse.headers.get('content-type'));
+              } catch (debugErr) {
+                console.error(`[Combined3D] Debug failed for ${key}:`, debugErr);
+              }
+            }
             return [key, null];
           }
         };
@@ -440,6 +451,17 @@ const DominicaCombined3D = () => {
         
       } catch (err) {
         console.error('[Combined3D] Error loading building data:', err);
+        // Debug: Log what we actually received if it's a JSON parsing error
+        if (err instanceof SyntaxError && err.message.includes('Unexpected token')) {
+          try {
+            const debugResponse = await fetch('/geojson/export.geojson');
+            const debugText = await debugResponse.text();
+            console.error('[Combined3D] Debug - building data response content:', debugText.substring(0, 200));
+            console.error('[Combined3D] Debug - building data content-type:', debugResponse.headers.get('content-type'));
+          } catch (debugErr) {
+            console.error('[Combined3D] Debug failed for building data:', debugErr);
+          }
+        }
         setError(err.message);
       } finally {
         setLoading(false);
