@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const UnderConstructionPage = ({ 
   title = "Dashboard Under Construction", 
   subtitle = "We're building something amazing for our consulting clients",
-  estimatedCompletion = "Coming Q3 2025",
+  estimatedCompletion = "Coming Q4 2025",
   showContactOption = true
 }) => {
 
@@ -15,25 +15,25 @@ const UnderConstructionPage = ({
       icon: BarChart3,
       title: 'Project Analytics',
       description: 'Real-time tracking of your consulting projects',
-      eta: 'Q3 2025'
+      eta: 'Q4 2025'
     },
     {
       icon: Building,
       title: 'Client Portal',
       description: 'Dedicated space for project documents and communication',
-      eta: 'Q4 2025'
+      eta: 'Q1 2026'
     },
     {
       icon: Leaf,
       title: 'Impact Reports',
       description: 'Automated environmental impact assessments',
-      eta: 'Q1 2026'
+      eta: 'Q2 2026'
     },
     {
       icon: Bell,
       title: 'Smart Notifications',
       description: 'Compliance alerts and project updates',
-      eta: 'Q2 2026'
+      eta: 'Q3 2026'
     }
   ];
 
@@ -70,12 +70,12 @@ const UnderConstructionPage = ({
             <div className="mb-6">
               <div className="flex justify-between text-sm text-gray-600 mb-2">
                 <span>Development Progress</span>
-                <span>65%</span>
+                <span>85%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: '65%' }}
+                  animate={{ width: '85%' }}
                   transition={{ duration: 2, delay: 0.5 }}
                   className="bg-gradient-to-r from-envGreen-500 to-envGreen-600 h-3 rounded-full"
                 />
