@@ -207,12 +207,14 @@ const UnderConstructionPage = ({
         )}
       </div>
     </div>
-        <motion.div
-          className="flex justify-center mb-8"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring", stiffness: 150 }}
-        >
+
+    {/* Loading Animation */}
+    <motion.div
+      className="flex justify-center mb-8"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 0.3, type: "spring", stiffness: 150 }}
+    >
           <div className="relative">
             <motion.div
               animate={{ rotate: 360 }}
