@@ -16,11 +16,24 @@
   },
   "rewrites": [
     {
-      "source": "/((?!api).*)",
+      "source": "/((?!api|geojson|img|fonts|models|cesium|_next|static).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/geojson/(.*).geojson",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
