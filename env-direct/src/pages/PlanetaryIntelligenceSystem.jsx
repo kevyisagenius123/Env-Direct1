@@ -20,6 +20,8 @@ import {
   AIIntelligenceDigest
 } from '../components/magazine/CompletedFeatures';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const PlanetaryIntelligenceSystem = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
@@ -42,7 +44,7 @@ const PlanetaryIntelligenceSystem = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/articles');
+        const response = await fetch(`${API_URL}/api/articles`);
         if (response.ok) {
           const data = await response.json();
           const approvedArticles = data.filter(article => article.approvalStatus === 'APPROVED');
