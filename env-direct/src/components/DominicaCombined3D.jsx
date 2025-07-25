@@ -5,6 +5,9 @@ import { FlyToInterpolator } from '@deck.gl/core';
 import { LightingEffect, AmbientLight, _SunLight as SunLight } from '@deck.gl/core';
 import proj4 from 'proj4';
 
+// Base URL for static assets - empty string means use relative URLs
+const BASE_URL = '';
+
 // Dominica's center coordinates with enhanced 3D view
 const DOMINICA_CENTER = {
   longitude: -61.371,
@@ -71,8 +74,8 @@ const DominicaCombined3D = () => {
 
   // Parish boundary file paths
   const parishFiles = {
-    adm0: '/geojson/geoBoundaries-DMA-ADM0.geojson', // Country boundary
-    adm1: '/geojson/geoBoundaries-DMA-ADM1.geojson'  // Administrative level 1 (parishes)
+    adm0: `${BASE_URL}/geojson/geoBoundaries-DMA-ADM0.geojson`, // Country boundary
+    adm1: `${BASE_URL}/geojson/geoBoundaries-DMA-ADM1.geojson`  // Administrative level 1 (parishes)
   };
 
   // Building type to color mapping
@@ -361,10 +364,10 @@ const DominicaCombined3D = () => {
               return [key, null];
             }
             
-            // Check if we're getting HTML instead of JSON
+            // Check if we're getting HTML instead of JSON/GeoJSON
             const contentType = response.headers.get('content-type');
-            if (contentType && !contentType.includes('application/json')) {
-              console.error(`[Combined3D] Error loading ${key}: Expected JSON but got ${contentType}`);
+            if (contentType && !contentType.includes('application/json') && !contentType.includes('application/geo+json')) {
+              console.error(`[Combined3D] Error loading ${key}: Expected JSON/GeoJSON but got ${contentType}`);
               return [key, null];
             }
             
@@ -402,15 +405,15 @@ const DominicaCombined3D = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('/geojson/export.geojson');
+        const response = await fetch(`${BASE_URL}/geojson/export.geojson`);
         if (!response.ok) {
           throw new Error(`Failed to load building data: ${response.statusText}`);
         }
         
-        // Check if we're getting HTML instead of JSON
+        // Check if we're getting HTML instead of JSON/GeoJSON
         const contentType = response.headers.get('content-type');
-        if (contentType && !contentType.includes('application/json')) {
-          throw new Error(`Expected JSON but got ${contentType}. This usually means the file is being served as HTML instead of JSON.`);
+        if (contentType && !contentType.includes('application/json') && !contentType.includes('application/geo+json')) {
+          throw new Error(`Expected JSON/GeoJSON but got ${contentType}. This usually means the file is being served as HTML instead of JSON.`);
         }
         
         const data = await response.json();
