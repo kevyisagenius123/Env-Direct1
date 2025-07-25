@@ -16,15 +16,7 @@
   },
   "rewrites": [
     {
-      "source": "/geojson/(.*)",
-      "destination": "/geojson/$1"
-    },
-    {
-      "source": "/(.*)\\.geojson",
-      "destination": "/$1.geojson"
-    },
-    {
-      "source": "/((?!api|geojson|img|fonts|models|cesium|_next|static|\\.geojson|\\.json|\\.js|\\.css|\\.png|\\.jpg|\\.jpeg|\\.gif|\\.svg|\\.ico|\\.woff|\\.woff2|\\.ttf|\\.eot).*)",
+      "source": "/((?!api|_next|static|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],
