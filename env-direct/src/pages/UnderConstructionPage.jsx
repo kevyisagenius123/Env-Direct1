@@ -4,36 +4,36 @@ import { Construction, AlertTriangle, Wrench, Clock, ArrowLeft, Mail, BarChart3,
 import { Link } from 'react-router-dom';
 
 const UnderConstructionPage = ({ 
-  title = "Dashboard Under Construction", 
-  subtitle = "We're building something amazing for our consulting clients",
-  estimatedCompletion = "Coming Q4 2025",
+  title = "Feature Coming Soon", 
+  subtitle = "We're enhancing our platform to better serve your environmental consulting needs",
+  estimatedCompletion = "Q4 2025",
   showContactOption = true
 }) => {
 
   const upcomingFeatures = [
     {
       icon: BarChart3,
-      title: 'Project Analytics',
-      description: 'Real-time tracking of your consulting projects',
-      eta: 'Q4 2025'
+      title: 'Project Dashboard',
+      description: 'Client portal for tracking project progress and deliverables',
+      eta: 'October 2025'
     },
     {
       icon: Building,
-      title: 'Client Portal',
-      description: 'Dedicated space for project documents and communication',
-      eta: 'Q1 2026'
+      title: 'Document Library',
+      description: 'Centralized access to environmental reports and documentation',
+      eta: 'November 2025'
     },
     {
       icon: Leaf,
-      title: 'Impact Reports',
-      description: 'Automated environmental impact assessments',
-      eta: 'Q2 2026'
+      title: 'Impact Analytics',
+      description: 'Detailed environmental impact assessments and metrics',
+      eta: 'December 2025'
     },
     {
       icon: Bell,
-      title: 'Smart Notifications',
-      description: 'Compliance alerts and project updates',
-      eta: 'Q3 2026'
+      title: 'Project Updates',
+      description: 'Real-time notifications for project milestones and deliverables',
+      eta: 'January 2026'
     }
   ];
 
@@ -70,12 +70,12 @@ const UnderConstructionPage = ({
             <div className="mb-6">
               <div className="flex justify-between text-sm text-gray-600 mb-2">
                 <span>Development Progress</span>
-                <span>85%</span>
+                <span>25%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: '85%' }}
+                  animate={{ width: '25%' }}
                   transition={{ duration: 2, delay: 0.5 }}
                   className="bg-gradient-to-r from-envGreen-500 to-envGreen-600 h-3 rounded-full"
                 />
@@ -115,7 +115,7 @@ const UnderConstructionPage = ({
         >
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">What We're Building</h2>
-            <p className="text-lg text-gray-600">Advanced features for environmental consulting</p>
+            <p className="text-lg text-gray-600">Enhanced features for our environmental consulting platform</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -158,10 +158,10 @@ const UnderConstructionPage = ({
           className="bg-white rounded-2xl shadow-xl p-8 text-center"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Get Early Access
+            Stay Updated
           </h2>
           <p className="text-gray-600 mb-6">
-            Be the first to experience our comprehensive consulting dashboard
+            Get notified when new features become available
           </p>
           
           <div className="max-w-md mx-auto">
@@ -172,11 +172,11 @@ const UnderConstructionPage = ({
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-envGreen-500 focus:border-envGreen-500"
               />
               <button className="px-6 py-3 bg-envGreen-600 text-white font-medium rounded-lg hover:bg-envGreen-700 transition-colors">
-                Notify Me
+                Subscribe
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              Stay updated on development progress and get exclusive early access.
+              We'll keep you informed about platform updates and new features.
             </p>
           </div>
         </motion.div>
@@ -191,10 +191,10 @@ const UnderConstructionPage = ({
           >
             <div className="bg-envGreen-100 border border-envGreen-200 rounded-lg p-6 max-w-2xl mx-auto">
               <h3 className="text-lg font-semibold text-envGreen-800 mb-2">
-                Need Consulting Services Now?
+                Need Our Services Now?
               </h3>
               <p className="text-envGreen-700 mb-4">
-                While we build the dashboard, our full consulting services are available
+                Our full range of environmental consulting services are available while we enhance the platform
               </p>
               <Link
                 to="/contact"

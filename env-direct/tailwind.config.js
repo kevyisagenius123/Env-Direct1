@@ -8,23 +8,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Environment Direct Brand Colors
-        brandGreen: "#006f4f",      // Dark professional green
-        brandLightGreen: "#b7e2cd", // Light mint variant
-        brandAccent: "#2d5a3d",     // Medium green for accents
-        brandText: "#1a2e23",       // Dark green for text
-        brandGray: "#f8faf9",       // Light background
-        brandBorder: "#d4e6d9",     // Subtle borders
-        
-        // Legacy colors for backward compatibility
-        envGreen: "#006f4f",
-        lavaGrey: "#2c2c2c",
-        skyAsh: "#f5f5f5",
-        coralRed: "#ff6b6b",
-        sandGold: "#ffd93d",
-        mygreen: "#006f4f",
-        'mygreen-light': "#b7e2cd",
-        'mygreen-dark': "#004d37",
+        // Environment Direct Legacy Colors (for backwards compatibility)
+        mygreen: {
+          light: '#dcfce7',    // Light green background for light mode
+          DEFAULT: '#22c55e',  // Default green
+          dark: '#15803d',     // Dark green text
+          darker: '#14532d',   // Darker green for dark mode backgrounds
+          lighter: '#bbf7d0',  // Lighter variant
+        },
         // Environment Direct 2.0 Brand Colors
         envGreen: {
           50: '#f0fdf4',
@@ -113,8 +104,7 @@ export default {
         neutral: '#6b7280',
       },
       fontFamily: {
-        'serif': ['Georgia', 'Times New Roman', 'serif'],
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
@@ -174,10 +164,6 @@ export default {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'dominica-hero': 'linear-gradient(135deg, rgba(20, 83, 45, 0.9), rgba(2, 119, 189, 0.8))',
         'newsroom-dark': 'linear-gradient(180deg, rgba(39, 39, 42, 0.95), rgba(24, 24, 27, 0.98))',
-        'grid-pattern': `
-          linear-gradient(rgba(0, 111, 79, 0.1) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 111, 79, 0.1) 1px, transparent 1px)
-        `,
       },
       backdropBlur: {
         'xs': '2px',
@@ -194,4 +180,4 @@ export default {
   plugins: [
     require('@tailwindcss/line-clamp'),
   ],
-} 
+}

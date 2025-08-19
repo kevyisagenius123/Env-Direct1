@@ -86,4 +86,4 @@ const DarkModeToggle = ({ isScrolled }) => {
   );
 };
 
-export default DarkModeToggle; 
+export default DarkModeToggle;

@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, BitmapLayer } from '@deck.gl/layers';
+import { TileLayer } from '@deck.gl/geo-layers';
 import { FlyToInterpolator } from '@deck.gl/core';
 import { LightingEffect, AmbientLight, _SunLight as SunLight } from '@deck.gl/core';
 import proj4 from 'proj4';
-
-// Base URL for static assets - empty string means use relative URLs
-const BASE_URL = '';
 
 // Dominica's center coordinates with enhanced 3D view
 const DOMINICA_CENTER = {
@@ -56,8 +54,8 @@ const DominicaCombined3D = () => {
   // Parish boundary data (basemap)
   const [parishData, setParishData] = useState({});
   const [selectedLayers, setSelectedLayers] = useState({
-    adm0: true, // Country boundary
-    adm1: true  // Administrative divisions (parishes)
+    adm0: false, // Country boundary - disabled (no data)
+    adm1: false  // Administrative divisions (parishes) - disabled (no data)
   });
   
   // Building data
@@ -72,10 +70,10 @@ const DominicaCombined3D = () => {
   const [hoveredBuilding, setHoveredBuilding] = useState(null);
   const [colorMode, setColorMode] = useState('building_type');
 
-  // Parish boundary file paths
+  // Parish boundary file paths - disabled since using real data only
   const parishFiles = {
-    adm0: `${BASE_URL}/geojson/geoBoundaries-DMA-ADM0.geojson`, // Country boundary
-    adm1: `${BASE_URL}/geojson/geoBoundaries-DMA-ADM1.geojson`  // Administrative level 1 (parishes)
+    // adm0: '/geojson/geoBoundaries-DMA-ADM0.geojson', // Country boundary
+    // adm1: '/geojson/geoBoundaries-DMA-ADM1.geojson'  // Administrative level 1 (parishes)
   };
 
   // Building type to color mapping
@@ -364,29 +362,11 @@ const DominicaCombined3D = () => {
               return [key, null];
             }
             
-            // Check if we're getting HTML instead of JSON/GeoJSON
-            const contentType = response.headers.get('content-type');
-            if (contentType && !contentType.includes('application/json') && !contentType.includes('application/geo+json')) {
-              console.error(`[Combined3D] Error loading ${key}: Expected JSON/GeoJSON but got ${contentType}`);
-              return [key, null];
-            }
-            
             const rawData = await response.json();
             const validatedData = validateAndCleanGeoJSON(rawData, key);
             return [key, validatedData];
           } catch (err) {
             console.error(`[Combined3D] Error loading ${key}:`, err);
-            // Debug: Log what we actually received
-            if (err instanceof SyntaxError && err.message.includes('Unexpected token')) {
-              try {
-                const debugResponse = await fetch(path);
-                const debugText = await debugResponse.text();
-                console.error(`[Combined3D] Debug - ${key} response content:`, debugText.substring(0, 200));
-                console.error(`[Combined3D] Debug - ${key} content-type:`, debugResponse.headers.get('content-type'));
-              } catch (debugErr) {
-                console.error(`[Combined3D] Debug failed for ${key}:`, debugErr);
-              }
-            }
             return [key, null];
           }
         };
@@ -416,15 +396,9 @@ const DominicaCombined3D = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch(`${BASE_URL}/geojson/export.geojson`);
+        const response = await fetch('/geojson/export.geojson');
         if (!response.ok) {
           throw new Error(`Failed to load building data: ${response.statusText}`);
-        }
-        
-        // Check if we're getting HTML instead of JSON/GeoJSON
-        const contentType = response.headers.get('content-type');
-        if (contentType && !contentType.includes('application/json') && !contentType.includes('application/geo+json')) {
-          throw new Error(`Expected JSON/GeoJSON but got ${contentType}. This usually means the file is being served as HTML instead of JSON.`);
         }
         
         const data = await response.json();
@@ -451,17 +425,6 @@ const DominicaCombined3D = () => {
         
       } catch (err) {
         console.error('[Combined3D] Error loading building data:', err);
-        // Debug: Log what we actually received if it's a JSON parsing error
-        if (err instanceof SyntaxError && err.message.includes('Unexpected token')) {
-          try {
-            const debugResponse = await fetch('/geojson/export.geojson');
-            const debugText = await debugResponse.text();
-            console.error('[Combined3D] Debug - building data response content:', debugText.substring(0, 200));
-            console.error('[Combined3D] Debug - building data content-type:', debugResponse.headers.get('content-type'));
-          } catch (debugErr) {
-            console.error('[Combined3D] Debug failed for building data:', debugErr);
-          }
-        }
         setError(err.message);
       } finally {
         setLoading(false);
@@ -471,10 +434,32 @@ const DominicaCombined3D = () => {
     loadBuildingData();
   }, []);
 
-  // Create combined layers (parishes + buildings)
+  // Create combined layers (OSM basemap + parishes + buildings)
   const layers = useMemo(() => {
     console.log('[Combined3D] Creating layers...');
     const deckLayers = [];
+
+    // Add OpenStreetMap basemap layer
+    deckLayers.push(
+      new TileLayer({
+        id: 'osm-basemap',
+        data: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        minZoom: 0,
+        maxZoom: 19,
+        tileSize: 256,
+        renderSubLayers: props => {
+          const {
+            bbox: { west, south, east, north }
+          } = props.tile;
+
+          return new BitmapLayer(props, {
+            data: null,
+            image: props.data,
+            bounds: [west, south, east, north]
+          });
+        }
+      })
+    );
 
     // Add parish boundary layers (basemap)
     Object.entries(parishData).forEach(([key, data]) => {

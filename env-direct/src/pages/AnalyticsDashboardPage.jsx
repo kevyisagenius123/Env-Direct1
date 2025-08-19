@@ -1,484 +1,242 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Spinner from '../components/Spinner';
-import axios from 'axios';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  BarChart3, 
+  PieChart, 
+  LineChart,
+  Activity,
+  TrendingUp,
+  Download,
+  Calendar,
+  Filter
+} from 'lucide-react';
 
 const AnalyticsDashboardPage = () => {
-  const [historicalData, setHistoricalData] = useState({});
-  const [selectedRegion, setSelectedRegion] = useState('Portsmouth');
-  const [selectedSite, setSelectedSite] = useState('boiling-lake');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('floodRisk'); // 'floodRisk' or 'ecoTourism'
-
-  // Fetch historical data for the selected region and site
-  useEffect(() => {
-    const fetchHistoricalData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        // Fetch flood risk historical data for the selected region
-        const floodRiskResponse = await axios.get(`/api/predict/historical-comparison?id=${selectedRegion}&type=flood-risk`);
-
-        // Fetch eco-tourism historical data for the selected site
-        const ecoTourismResponse = await axios.get(`/api/predict/historical-comparison?id=${selectedSite}&type=eco-tourism`);
-
-        setHistoricalData({
-          floodRisk: floodRiskResponse.data,
-          ecoTourism: ecoTourismResponse.data
-        });
-      } catch (err) {
-        console.error('Error fetching historical data:', err);
-        setError('Failed to load historical data. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchHistoricalData();
-  }, [selectedRegion, selectedSite]);
-
-  // Handle region selection change
-  const handleRegionChange = (event) => {
-    setSelectedRegion(event.target.value);
-  };
-
-  // Handle site selection change
-  const handleSiteChange = (event) => {
-    setSelectedSite(event.target.value);
-  };
-
-  // Handle tab change
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-
-  // Loading and error states
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-env-gray-darker p-4">
-        <Spinner color="border-mygreen" />
-        <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">Loading analytics data...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-env-gray-darker p-4">
-        <p className="text-2xl text-red-600 dark:text-red-400">{error}</p>
-      </div>
-    );
-  }
-
-  // Prepare data for time-series visualization
-  const prepareTimeSeriesData = (data, type) => {
-    if (!data || !data.historicalData || !Array.isArray(data.historicalData)) return [];
-
-    return data.historicalData.map(item => {
-      if (type === 'floodRisk') {
-        return {
-          date: item.date,
-          riskLevel: getRiskLevelValue(item.floodRiskLevel),
-          riskLevelLabel: item.floodRiskLevel,
-          confidence: item.confidenceScore
-        };
-      } else {
-        return {
-          date: item.date,
-          visitorLoad: getLoadLevelValue(item.expectedVisitorLoad),
-          visitorLoadLabel: item.expectedVisitorLoad,
-          confidence: item.confidenceScore
-        };
-      }
-    });
-  };
-
-  // Helper function to convert risk level to numeric value
-  const getRiskLevelValue = (level) => {
-    switch (level) {
-      case 'Very High': return 4;
-      case 'High': return 3;
-      case 'Moderate': return 2;
-      case 'Low': return 1;
-      default: return 0;
+  const analyticsData = [
+    {
+      title: "Total Data Points",
+      value: "2.4M",
+      change: "+12.3%",
+      icon: <Activity className="w-6 h-6" />,
+      color: "bg-blue-500"
+    },
+    {
+      title: "Active Monitoring Sites",
+      value: "47",
+      change: "+3 sites",
+      icon: <BarChart3 className="w-6 h-6" />,
+      color: "bg-green-500"
+    },
+    {
+      title: "Analysis Reports",
+      value: "156",
+      change: "+28 this month",
+      icon: <PieChart className="w-6 h-6" />,
+      color: "bg-purple-500"
+    },
+    {
+      title: "Trend Accuracy",
+      value: "94.7%",
+      change: "+2.1%",
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: "bg-orange-500"
     }
-  };
+  ];
 
-  // Helper function to convert visitor load to numeric value
-  const getLoadLevelValue = (load) => {
-    switch (load) {
-      case 'Very High': return 4;
-      case 'High': return 3;
-      case 'Moderate': return 2;
-      case 'Low': return 1;
-      default: return 0;
+  const analyticsCategories = [
+    {
+      title: "Climate Analysis",
+      description: "Temperature, humidity, and weather pattern analytics",
+      reports: 42,
+      lastUpdate: "2 hours ago",
+      trend: "rising"
+    },
+    {
+      title: "Water Quality",
+      description: "pH levels, pollution indicators, and water safety metrics",
+      reports: 38,
+      lastUpdate: "4 hours ago",
+      trend: "stable"
+    },
+    {
+      title: "Air Quality",
+      description: "Pollution levels, air composition, and breathing safety index",
+      reports: 31,
+      lastUpdate: "1 hour ago",
+      trend: "improving"
+    },
+    {
+      title: "Biodiversity",
+      description: "Species tracking, habitat analysis, and ecosystem health",
+      reports: 25,
+      lastUpdate: "6 hours ago",
+      trend: "stable"
     }
-  };
-
-  // Prepare data for time-series charts
-  const floodRiskTimeSeriesData = prepareTimeSeriesData(historicalData.floodRisk, 'floodRisk');
-  const ecoTourismTimeSeriesData = prepareTimeSeriesData(historicalData.ecoTourism, 'ecoTourism');
+  ];
 
   return (
-    <div className="bg-gray-100 dark:bg-env-gray-darker p-4 sm:p-6 lg:p-8 overflow-x-hidden">
-      <header className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white tracking-tight">
-          Advanced Analytics Dashboard
-        </h1>
-        <p className="mt-3 text-lg text-gray-600 dark:text-gray-300">
-          Comprehensive data analysis and visualization for environmental insights
-        </p>
-      </header>
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Analytics Dashboard
+          </h1>
+          <p className="text-gray-600">
+            Advanced environmental data analysis and insights for Dominica
+          </p>
+        </div>
 
-      {/* Tab Navigation */}
-      <div className="mb-8">
-        <div className="flex border-b border-gray-200 dark:border-gray-700">
-          <button
-            className={`py-2 px-4 font-medium text-sm focus:outline-none ${
-              activeTab === 'floodRisk'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
-            onClick={() => handleTabChange('floodRisk')}
+        {/* Analytics Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {analyticsData.map((stat, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-lg ${stat.color} text-white`}>
+                  {stat.icon}
+                </div>
+                <span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                  Live
+                </span>
+              </div>
+              <h3 className="text-gray-600 text-sm font-medium mb-1">{stat.title}</h3>
+              <div className="flex items-baseline">
+                <span className="text-2xl font-bold text-gray-900">{stat.value}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                <span className="text-sm text-green-600">{stat.change}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Analytics Chart */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Environmental Trends Analysis</h2>
+                <div className="flex items-center space-x-2">
+                  <button className="flex items-center px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-md hover:bg-gray-200">
+                    <Filter className="w-4 h-4 mr-1" />
+                    Filter
+                  </button>
+                  <button className="flex items-center px-3 py-1 bg-envGreen-600 text-white text-sm rounded-md hover:bg-envGreen-700">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    Range
+                  </button>
+                </div>
+              </div>
+              
+              {/* Placeholder for analytics chart */}
+              <div className="h-80 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg flex items-center justify-center">
+                <div className="text-center">
+                  <LineChart className="w-16 h-16 text-envGreen-600 mx-auto mb-4" />
+                  <p className="text-gray-600 text-lg mb-2">Advanced Analytics Engine</p>
+                  <p className="text-sm text-gray-500 mb-4">Multi-dimensional analysis of environmental data patterns</p>
+                  <div className="grid grid-cols-3 gap-4 max-w-md">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-2 mx-auto">
+                        <BarChart3 className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Correlation Analysis</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2 mx-auto">
+                        <PieChart className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Statistical Modeling</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-2 mx-auto">
+                        <TrendingUp className="w-6 h-6 text-green-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Predictive Insights</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Analytics Categories */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Analysis Categories</h2>
+                <Activity className="w-5 h-5 text-gray-400" />
+              </div>
+              
+              <div className="space-y-4">
+                {analyticsCategories.map((category, index) => (
+                  <div key={index} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium text-gray-900">{category.title}</h3>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        category.trend === 'rising' ? 'bg-orange-100 text-orange-600' :
+                        category.trend === 'improving' ? 'bg-green-100 text-green-600' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {category.trend}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+                    <div className="flex justify-between items-center text-xs text-gray-500">
+                      <span>{category.reports} reports</span>
+                      <span>{category.lastUpdate}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <button className="w-full mt-4 px-4 py-2 bg-envGreen-600 text-white text-sm font-medium rounded-lg hover:bg-envGreen-700 transition-colors flex items-center justify-center">
+                <Download className="w-4 h-4 mr-2" />
+                Export Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Analytics Actions */}
+        <div className="mt-8 grid md:grid-cols-4 gap-6">
+          <Link
+            to="/dashboard"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
           >
-            Flood Risk Analysis
-          </button>
-          <button
-            className={`py-2 px-4 font-medium text-sm focus:outline-none ${
-              activeTab === 'ecoTourism'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
-            onClick={() => handleTabChange('ecoTourism')}
+            <Activity className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Live Dashboard</h3>
+            <p className="text-gray-600 text-sm">Real-time environmental monitoring</p>
+          </Link>
+
+          <Link
+            to="/predictions"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
           >
-            Eco-Tourism Analysis
-          </button>
+            <TrendingUp className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Predictions</h3>
+            <p className="text-gray-600 text-sm">AI-powered forecasting models</p>
+          </Link>
+
+          <Link
+            to="/reports"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+          >
+            <BarChart3 className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Reports</h3>
+            <p className="text-gray-600 text-sm">Detailed analysis reports</p>
+          </Link>
+
+          <Link
+            to="/live-map"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+          >
+            <PieChart className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Data Visualization</h3>
+            <p className="text-gray-600 text-sm">Interactive data visualization</p>
+          </Link>
         </div>
       </div>
-
-      {/* Flood Risk Analysis Tab */}
-      {activeTab === 'floodRisk' && (
-        <div>
-          <div className="mb-6">
-            <label htmlFor="region-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Select Region:
-            </label>
-            <select
-              id="region-select"
-              value={selectedRegion}
-              onChange={handleRegionChange}
-              className="block w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            >
-              <option value="Portsmouth">Portsmouth</option>
-              <option value="RoseauSouth">Roseau South</option>
-              <option value="LayouValley">Layou Valley</option>
-              <option value="MarigotArea">Marigot Area</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Time-Series Chart */}
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Flood Risk Time-Series Analysis
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={floodRiskTimeSeriesData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
-                  <XAxis dataKey="date" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: 'none', borderRadius: '0.5rem' }}
-                    itemStyle={{ color: '#E5E7EB' }}
-                    formatter={(value, name) => {
-                      if (name === 'riskLevel') {
-                        const labels = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'];
-                        return [labels[value], 'Risk Level'];
-                      }
-                      return [value, name];
-                    }}
-                    labelFormatter={(label) => `Date: ${label}`}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="riskLevel"
-                    stroke="#EF4444"
-                    activeDot={{ r: 8 }}
-                    name="Risk Level"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="confidence"
-                    stroke="#8884d8"
-                    name="Confidence Score"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Area Chart for Risk Distribution */}
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Risk Level Distribution Over Time
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={floodRiskTimeSeriesData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
-                  <XAxis dataKey="date" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: 'none', borderRadius: '0.5rem' }}
-                    itemStyle={{ color: '#E5E7EB' }}
-                    formatter={(value, name) => {
-                      if (name === 'riskLevel') {
-                        const labels = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'];
-                        return [labels[value], 'Risk Level'];
-                      }
-                      return [value, name];
-                    }}
-                    labelFormatter={(label) => `Date: ${label}`}
-                  />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="riskLevel"
-                    stroke="#EF4444"
-                    fill="#EF4444"
-                    fillOpacity={0.3}
-                    name="Risk Level"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Trend Information */}
-          {historicalData.floodRisk && historicalData.floodRisk.trendInfo && 
-           historicalData.floodRisk.trendInfo.direction && 
-           historicalData.floodRisk.trendInfo.magnitude !== undefined && 
-           historicalData.floodRisk.trendInfo.description && (
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg mb-8">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Trend Analysis
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Trend Direction</h4>
-                  <p className={`text-2xl font-bold ${
-                    historicalData.floodRisk.trendInfo.direction === 'improving'
-                      ? 'text-green-600 dark:text-green-400'
-                      : historicalData.floodRisk.trendInfo.direction === 'stable'
-                      ? 'text-yellow-600 dark:text-yellow-400'
-                      : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {historicalData.floodRisk.trendInfo.direction.charAt(0).toUpperCase() + 
-                     historicalData.floodRisk.trendInfo.direction.slice(1)}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Trend Magnitude</h4>
-                  <p className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                    {historicalData.floodRisk.trendInfo.magnitude.toFixed(2)}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h4>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {historicalData.floodRisk.trendInfo.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Eco-Tourism Analysis Tab */}
-      {activeTab === 'ecoTourism' && (
-        <div>
-          <div className="mb-6">
-            <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Select Tourism Site:
-            </label>
-            <select
-              id="site-select"
-              value={selectedSite}
-              onChange={handleSiteChange}
-              className="block w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            >
-              <option value="boiling-lake">Boiling Lake Trail</option>
-              <option value="trafalgar-falls">Trafalgar Falls</option>
-              <option value="middleham-falls">Middleham Falls</option>
-              <option value="emerald-pool">Emerald Pool</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Time-Series Chart */}
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Visitor Load Time-Series Analysis
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={ecoTourismTimeSeriesData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
-                  <XAxis dataKey="date" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: 'none', borderRadius: '0.5rem' }}
-                    itemStyle={{ color: '#E5E7EB' }}
-                    formatter={(value, name) => {
-                      if (name === 'visitorLoad') {
-                        const labels = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'];
-                        return [labels[value], 'Visitor Load'];
-                      }
-                      return [value, name];
-                    }}
-                    labelFormatter={(label) => `Date: ${label}`}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="visitorLoad"
-                    stroke="#3B82F6"
-                    activeDot={{ r: 8 }}
-                    name="Visitor Load"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="confidence"
-                    stroke="#8884d8"
-                    name="Confidence Score"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Bar Chart for Visitor Load Distribution */}
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Visitor Load Distribution
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={ecoTourismTimeSeriesData} margin={{ top: 5, right: 20, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
-                  <XAxis dataKey="date" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" domain={[0, 4]} ticks={[0, 1, 2, 3, 4]} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: 'none', borderRadius: '0.5rem' }}
-                    itemStyle={{ color: '#E5E7EB' }}
-                    formatter={(value, name) => {
-                      if (name === 'visitorLoad') {
-                        const labels = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'];
-                        return [labels[value], 'Visitor Load'];
-                      }
-                      return [value, name];
-                    }}
-                    labelFormatter={(label) => `Date: ${label}`}
-                  />
-                  <Legend />
-                  <Bar dataKey="visitorLoad" fill="#3B82F6" name="Visitor Load" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Trend Information */}
-          {historicalData.ecoTourism && historicalData.ecoTourism.trendInfo && 
-           historicalData.ecoTourism.trendInfo.direction && 
-           historicalData.ecoTourism.trendInfo.magnitude !== undefined && 
-           historicalData.ecoTourism.trendInfo.description && (
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg mb-8">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Trend Analysis
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Trend Direction</h4>
-                  <p className={`text-2xl font-bold ${
-                    historicalData.ecoTourism.trendInfo.direction === 'decreasing'
-                      ? 'text-green-600 dark:text-green-400'
-                      : historicalData.ecoTourism.trendInfo.direction === 'stable'
-                      ? 'text-yellow-600 dark:text-yellow-400'
-                      : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    {historicalData.ecoTourism.trendInfo.direction.charAt(0).toUpperCase() + 
-                     historicalData.ecoTourism.trendInfo.direction.slice(1)}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Trend Magnitude</h4>
-                  <p className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                    {historicalData.ecoTourism.trendInfo.magnitude.toFixed(2)}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h4>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {historicalData.ecoTourism.trendInfo.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Current Prediction */}
-          {historicalData.ecoTourism && historicalData.ecoTourism.currentPrediction && 
-           historicalData.ecoTourism.currentPrediction.siteName && 
-           historicalData.ecoTourism.currentPrediction.predictionDate && 
-           historicalData.ecoTourism.currentPrediction.expectedVisitorLoad && (
-            <div className="bg-white dark:bg-env-gray-dark p-6 rounded-lg shadow-lg mb-8">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                Current Prediction
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Site Information</h4>
-                  <p className="mb-1"><span className="font-medium">Site Name:</span> {historicalData.ecoTourism.currentPrediction.siteName}</p>
-                  <p className="mb-1"><span className="font-medium">Prediction Date:</span> {new Date(historicalData.ecoTourism.currentPrediction.predictionDate).toLocaleDateString()}</p>
-                  <p className="mb-1">
-                    <span className="font-medium">Expected Visitor Load:</span> 
-                    <span className={`ml-2 font-bold ${
-                      historicalData.ecoTourism.currentPrediction.expectedVisitorLoad === 'High' || 
-                      historicalData.ecoTourism.currentPrediction.expectedVisitorLoad === 'Very High'
-                        ? 'text-red-600 dark:text-red-400'
-                        : historicalData.ecoTourism.currentPrediction.expectedVisitorLoad === 'Moderate'
-                        ? 'text-yellow-600 dark:text-yellow-400'
-                        : 'text-green-600 dark:text-green-400'
-                    }`}>
-                      {historicalData.ecoTourism.currentPrediction.expectedVisitorLoad}
-                    </span>
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Recommendation</h4>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {historicalData.ecoTourism.currentPrediction.recommendation || 'No recommendation available'}
-                  </p>
-                  <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300 mt-4 mb-2">Contributing Factors</h4>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-400">
-                    {historicalData.ecoTourism.currentPrediction.contributingFactors && 
-                     Array.isArray(historicalData.ecoTourism.currentPrediction.contributingFactors) ? 
-                      historicalData.ecoTourism.currentPrediction.contributingFactors.map((factor, index) => (
-                        <li key={index}>{factor}</li>
-                      )) : 
-                      <li>No contributing factors available</li>
-                    }
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

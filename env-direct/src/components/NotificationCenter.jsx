@@ -11,8 +11,6 @@ import {
   Settings
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-
 const NotificationCenter = ({ className = "" }) => {
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -30,55 +28,18 @@ const NotificationCenter = ({ className = "" }) => {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/api/notifications/recent`);
+      const response = await fetch('/api/notifications/recent');
       if (response.ok) {
         const data = await response.json();
         setNotifications(data);
       } else {
-        // Fallback with sample notifications if backend is unavailable
-        setNotifications([
-          {
-            id: 1,
-            title: "New Article Published",
-            message: "Climate Change Adaptation Strategies for Caribbean SIDS",
-            type: "ARTICLE_PUBLISHED",
-            createdAt: new Date().toISOString(),
-            isRead: false,
-            articleId: 1
-          },
-          {
-            id: 2,
-            title: "Magazine Issue Released",
-            message: "Green Atlas Magazine July 2025 edition is now available",
-            type: "MAGAZINE_RELEASED",
-            createdAt: new Date(Date.now() - 3600000).toISOString(),
-            isRead: false
-          },
-          {
-            id: 3,
-            title: "New Article Published",
-            message: "Marine Protected Areas in Eastern Caribbean",
-            type: "ARTICLE_PUBLISHED",
-            createdAt: new Date(Date.now() - 7200000).toISOString(),
-            isRead: true,
-            articleId: 2
-          }
-        ]);
+        // Fallback with no fake notifications if backend is unavailable
+        setNotifications([]);
       }
     } catch (error) {
-      console.log('Using sample notifications - backend unavailable');
-      // Sample notifications for demo
-      setNotifications([
-        {
-          id: 1,
-          title: "New Article Published",
-          message: "Renewable Energy Transition in Small Island States",
-          type: "ARTICLE_PUBLISHED",
-          createdAt: new Date().toISOString(),
-          isRead: false,
-          articleId: 3
-        }
-      ]);
+      console.log('Using empty notifications - backend unavailable');
+      // No sample notifications for demo
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -86,7 +47,7 @@ const NotificationCenter = ({ className = "" }) => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
+      await fetch(`/api/notifications/${notificationId}/read`, {
         method: 'PUT',
       });
       
@@ -113,7 +74,7 @@ const NotificationCenter = ({ className = "" }) => {
     const unreadIds = notifications.filter(n => !n.isRead).map(n => n.id);
     
     try {
-      await fetch(`${API_URL}/api/notifications/read`, {
+      await fetch('/api/notifications/read', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(unreadIds)

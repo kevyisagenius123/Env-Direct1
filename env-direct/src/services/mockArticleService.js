@@ -1,14 +1,90 @@
-import { sampleArticleWithInteractiveContent } from '../utils/mockInteractiveData';
-
 /**
- * Mock Article Service
+ * Mock Article Service - DISABLED
  * 
- * This service provides mock implementations of article-related API calls
- * for testing and development purposes.
+ * This service has been disabled to remove all fake articles.
+ * All methods now return empty data.
  */
 class MockArticleService {
-  // Mock data for categories
-  #categories = [
+  // All mock data disabled
+  #categories = [];
+  #tags = [];
+  #articles = [];
+  #comments = [];
+
+  // Return empty data for all methods
+  async getCategories() {
+    return [];
+  }
+
+  async getTags() {
+    return [];
+  }
+
+  async getArticles() {
+    return {
+      content: [],
+      totalElements: 0,
+      totalPages: 0,
+      size: 10,
+      number: 0,
+      first: true,
+      last: true
+    };
+  }
+
+  async getArticle(id) {
+    return null;
+  }
+
+  async getComments(articleId) {
+    return [];
+  }
+
+  async addComment(articleId, commentData) {
+    return null;
+  }
+
+  async getRelatedArticles(articleId, count = 3) {
+    return [];
+  }
+
+  async getFeaturedArticles() {
+    return [];
+  }
+
+  async getEditorsPickArticles() {
+    return [];
+  }
+
+  async getAnalytics() {
+    return {
+      totalArticles: 0,
+      totalViews: 0,
+      totalComments: 0,
+      articlesPublishedThisMonth: 0,
+      topCategories: [],
+      viewsOverTime: [],
+      engagementStats: {
+        avgCommentsPerArticle: 0,
+        avgViewsPerArticle: 0,
+        totalShares: 0
+      }
+    };
+  }
+
+  async getAIDigest() {
+    return {
+      digest: "No articles available for analysis.",
+      keyTopics: [],
+      sentiment: "neutral",
+      generatedAt: new Date().toISOString()
+    };
+  }
+
+  async getQuotes() {
+    return [];
+  }
+}
     { id: 1, name: 'Climate Change' },
     { id: 2, name: 'Conservation' },
     { id: 3, name: 'Renewable Energy' },

@@ -15,6 +15,7 @@ import {
   Share2,
   Eye
 } from 'lucide-react';
+import Footer from '../components/Footer';
 
 const ArticlesPage = () => {
   const [articles, setArticles] = useState([]);
@@ -24,110 +25,7 @@ const ArticlesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Sample articles data - in production this would come from an API
-  const sampleArticles = [
-    {
-      id: 1,
-      title: "Climate Change Adaptation Strategies for Caribbean Small Island States",
-      excerpt: "Exploring innovative adaptation measures for climate resilience in the Caribbean region, focusing on sustainable infrastructure and community-based solutions.",
-      content: "Climate change poses unprecedented challenges to Caribbean Small Island Developing States (SIDS). This comprehensive analysis examines successful adaptation strategies being implemented across the region...",
-      author: "Dr. Sarah Johnson",
-      authorBio: "Climate Adaptation Specialist",
-      publishDate: "2024-07-20",
-      readTime: "8 min read",
-      category: "Climate Change",
-      tags: ["adaptation", "caribbean", "resilience", "sustainability"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 45,
-      comments: 12,
-      views: 1250,
-      status: "published"
-    },
-    {
-      id: 2,
-      title: "Sustainable Tourism Development in Dominica: Balancing Growth and Conservation",
-      excerpt: "An analysis of sustainable tourism practices in Dominica and their impact on biodiversity conservation and local economic development.",
-      content: "Dominica's unique position as the 'Nature Island of the Caribbean' presents both opportunities and challenges for sustainable tourism development...",
-      author: "Michael Chen",
-      authorBio: "Sustainable Tourism Consultant",
-      publishDate: "2024-07-18",
-      readTime: "6 min read",
-      category: "Sustainable Development",
-      tags: ["tourism", "conservation", "dominica", "biodiversity"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 32,
-      comments: 8,
-      views: 890,
-      status: "published"
-    },
-    {
-      id: 3,
-      title: "Marine Protected Areas: Success Stories from the Eastern Caribbean",
-      excerpt: "Examining effective marine conservation strategies and their socio-economic benefits across Eastern Caribbean nations.",
-      content: "Marine Protected Areas (MPAs) have emerged as crucial tools for marine biodiversity conservation in the Eastern Caribbean...",
-      author: "Dr. Emily Rodriguez",
-      authorBio: "Marine Conservation Biologist",
-      publishDate: "2024-07-15",
-      readTime: "10 min read",
-      category: "Marine Conservation",
-      tags: ["marine", "conservation", "caribbean", "biodiversity"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 67,
-      comments: 15,
-      views: 1580,
-      status: "published"
-    },
-    {
-      id: 4,
-      title: "Renewable Energy Transition in Small Island States: Lessons from Dominica",
-      excerpt: "Analyzing Dominica's journey toward renewable energy independence and the challenges faced by small island developing states.",
-      content: "Dominica's commitment to becoming the world's first climate-resilient nation includes an ambitious transition to renewable energy...",
-      author: "James Williams",
-      authorBio: "Renewable Energy Policy Analyst",
-      publishDate: "2024-07-12",
-      readTime: "7 min read",
-      category: "Renewable Energy",
-      tags: ["renewable", "energy", "policy", "dominica"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 28,
-      comments: 6,
-      views: 720,
-      status: "published"
-    },
-    {
-      id: 5,
-      title: "Community-Based Forest Management: Indigenous Practices and Modern Conservation",
-      excerpt: "Exploring the integration of indigenous knowledge with contemporary forest management practices in Caribbean communities.",
-      content: "Indigenous communities in the Caribbean have practiced sustainable forest management for centuries...",
-      author: "Maria Santos",
-      authorBio: "Community Conservation Specialist",
-      publishDate: "2024-07-10",
-      readTime: "9 min read",
-      category: "Conservation",
-      tags: ["forest", "indigenous", "community", "conservation"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 41,
-      comments: 9,
-      views: 1100,
-      status: "published"
-    },
-    {
-      id: 6,
-      title: "Green Building Standards for Tropical Climates: A Caribbean Perspective",
-      excerpt: "Examining sustainable building practices adapted for tropical environments and their role in climate adaptation.",
-      content: "Sustainable building design in tropical climates requires unique considerations for climate, materials, and local conditions...",
-      author: "Robert Taylor",
-      authorBio: "Sustainable Architecture Consultant",
-      publishDate: "2024-07-08",
-      readTime: "5 min read",
-      category: "Green Building",
-      tags: ["architecture", "sustainability", "tropical", "green building"],
-      featuredImage: "/api/placeholder/800/400",
-      likes: 23,
-      comments: 4,
-      views: 650,
-      status: "published"
-    }
-  ];
+  const sampleArticles = [];
 
   const categories = [
     'all',
@@ -140,7 +38,7 @@ const ArticlesPage = () => {
   ];
 
   useEffect(() => {
-    // Simulate loading
+    // Simulate loading with no fake data
     setTimeout(() => {
       setArticles(sampleArticles);
       setFilteredArticles(sampleArticles);
@@ -420,51 +318,7 @@ const ArticlesPage = () => {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-envGreen-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">ED</span>
-                </div>
-                <span className="text-lg font-semibold">Environment Direct</span>
-              </div>
-              <p className="text-gray-400">
-                Leading environmental consulting services in the Caribbean, 
-                promoting sustainable development and conservation.
-              </p>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <div className="space-y-2">
-                <Link to="/services" className="block text-gray-400 hover:text-white transition-colors">
-                  Our Services
-                </Link>
-                <Link to="/green-atlas-magazine" className="block text-gray-400 hover:text-white transition-colors">
-                  Green Atlas Magazine
-                </Link>
-                <Link to="/contact" className="block text-gray-400 hover:text-white transition-colors">
-                  Contact Us
-                </Link>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Connect</h3>
-              <p className="text-gray-400">
-                Email: info@environmentdir.com
-              </p>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Environment Direct Consulting Inc. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

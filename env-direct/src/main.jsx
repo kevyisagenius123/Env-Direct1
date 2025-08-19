@@ -10,20 +10,19 @@ import App from './App.jsx'
 // --- END REMOVED CESIUM BASE URL ---
 
 // --- REMOVED CESIUM ION ACCESS TOKEN --- 
-// Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyOThjODQ4ZC1jZDdhLTQyM2MtYWVmZi0yOTY3OGNmMDA0NTQiLCJpZCI6MzA3MzExLCJpYXQiOjE3NDg0ODcwNDJ9.1iQdp5HfxTbEMVfaSgBVMX8NJPKchsBhYerMJubxq-s';
+// Cesium.Ion.defaultAccessToken = 'your_cesium_ion_access_token_here';
 // --- END REMOVED CESIUM ION ACCESS TOKEN ---
 
-// Helper function to remove the initial loader
-const removeInitialLoader = () => {
-  const loader = document.getElementById('initial-loader');
-  if (loader) {
-    loader.remove();
-  }
-};
-
+// Remove initial loader when React app starts
 const RootApp = () => {
   useEffect(() => {
-    removeInitialLoader();
+    const loader = document.getElementById('initial-loader');
+    if (loader) {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.remove();
+      }, 500);
+    }
   }, []);
 
   return (

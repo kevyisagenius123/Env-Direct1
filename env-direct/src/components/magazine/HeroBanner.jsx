@@ -45,7 +45,7 @@ const HeroBanner = ({ featuredArticles, onSearch, searchQuery, setSearchQuery })
           muted 
           loop 
           className="w-full h-full object-cover opacity-30"
-          poster="/img/earth-hero-poster.jpg"
+          poster="/img/Picture12.jpg"
         >
           <source src="/videos/earth-observatory.mp4" type="video/mp4" />
         </video>

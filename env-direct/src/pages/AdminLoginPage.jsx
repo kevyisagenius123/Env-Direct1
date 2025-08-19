@@ -64,7 +64,7 @@ const AdminLoginPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-envGreen-800 to-envGreen-600 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-600 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
           <p className="mt-4 text-white">Loading...</p>
@@ -74,7 +74,7 @@ const AdminLoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-envGreen-800 to-envGreen-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

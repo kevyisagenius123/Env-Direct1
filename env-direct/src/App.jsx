@@ -52,6 +52,7 @@ class ErrorBoundary extends Component {
 
 // Import Page Components
 const HomePage = lazy(() => import('./pages/HomePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 const EnvDashboardPage = lazy(() => import('./pages/EnvDashboardPage'));
 const PredictionDashboardPage = lazy(() => import('./pages/PredictionDashboardPage'));
 const AnalyticsDashboardPage = lazy(() => import('./pages/AnalyticsDashboardPage'));
@@ -67,7 +68,7 @@ const EnterpriseFeaturesPage = lazy(() => import('./pages/EnterpriseFeaturesPage
 const ReportDetailPage = lazy(() => import('./pages/ReportDetailPage'));
 const ReportsListPage = lazy(() => import('./pages/ReportsListPage'));
 const LiveMapPage = lazy(() => import('./pages/LiveMapPage'));
-const GreenAtlasMagazine = lazy(() => import('./components/magazine/GreenAtlasMagazineSimple'));
+const GreenAtlasMagazine = lazy(() => import('./pages/GreenAtlasMagazinePage'));
 const PlanetaryIntelligenceSystem = lazy(() => import('./pages/PlanetaryIntelligenceSystem'));
 const ArticleDetailPage = lazy(() => import('./pages/ArticleDetailPage'));
 const ArticlesPage = lazy(() => import('./pages/ArticlesPage'));
@@ -101,6 +102,7 @@ const SatelliteDataPage = lazy(() => import('./pages/SatelliteDataPage'));
 const Map3DPage = lazy(() => import('./pages/Map3DPage'));
 const City3DPage = lazy(() => import('./pages/City3DPage'));
 const DominicaCity3DPage = lazy(() => import('./pages/DominicaCity3DPage'));
+const DominicaECharts3D = lazy(() => import('./components/DominicaSmartCity3D'));
 
 // Unified Intelligence Platform - All-in-One Environmental Command Center
 const UnifiedIntelligencePlatform = lazy(() => import('./components/UnifiedIntelligencePlatform'));
@@ -125,6 +127,11 @@ function App() {
                 <ErrorBoundary>
                   <Routes>
                   <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={
+                    <ErrorBoundary>
+                      <AboutPage />
+                    </ErrorBoundary>
+                  } />
                   
                   {/* Main Dashboard - Under Construction */}
                   <Route path="/dashboard" element={
@@ -143,6 +150,12 @@ function App() {
                   <Route path="/user/dashboard" element={
                     <ErrorBoundary>
                       <UserDashboardPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  <Route path="/user/profile" element={
+                    <ErrorBoundary>
+                      <UnderConstructionPage />
                     </ErrorBoundary>
                   } />
                   
@@ -218,6 +231,25 @@ function App() {
                   <Route path="/3d-map" element={
                     <ErrorBoundary>
                       <DominicaCity3DPage />
+                    </ErrorBoundary>
+                  } />
+                  
+                  {/* 3D DOMINICA - ECharts GL Visualization */}
+                  <Route path="/dominica-echarts-3d" element={
+                    <ErrorBoundary>
+                      <DominicaECharts3D />
+                    </ErrorBoundary>
+                  } />
+                  
+                  <Route path="/echarts-3d" element={
+                    <ErrorBoundary>
+                      <DominicaECharts3D />
+                    </ErrorBoundary>
+                  } />
+                  
+                  <Route path="/terrain-3d" element={
+                    <ErrorBoundary>
+                      <DominicaECharts3D />
                     </ErrorBoundary>
                   } />
                   
@@ -297,25 +329,11 @@ function App() {
                     </ErrorBoundary>
                   } />
 
-                  {/* Services Sub-routes */}
-                  <Route path="/services/eia" element={<UnderConstructionPage />} />
-                  <Route path="/services/sustainability" element={<UnderConstructionPage />} />
-                  <Route path="/services/climate-risk" element={<UnderConstructionPage />} />
-                  <Route path="/services/compliance" element={<UnderConstructionPage />} />
-                  <Route path="/services/green-building" element={<UnderConstructionPage />} />
-                  <Route path="/services/carbon-assessment" element={<UnderConstructionPage />} />
-                  
                   {/* Projects Sub-routes */}
                   <Route path="/projects/active" element={<UnderConstructionPage />} />
                   <Route path="/projects/case-studies" element={<UnderConstructionPage />} />
                   <Route path="/projects/success-stories" element={<UnderConstructionPage />} />
                   <Route path="/projects/testimonials" element={<UnderConstructionPage />} />
-                  
-                  {/* About Sub-routes */}
-                  <Route path="/about/team" element={<UnderConstructionPage />} />
-                  <Route path="/about/history" element={<UnderConstructionPage />} />
-                  <Route path="/about/mission" element={<UnderConstructionPage />} />
-                  <Route path="/about/certifications" element={<UnderConstructionPage />} />
                   
                   {/* Resources Sub-routes */}
                   <Route path="/resources/reports" element={<UnderConstructionPage />} />
@@ -349,6 +367,10 @@ function App() {
                   <Route path="/news" element={<NewsPage />} />
                   <Route path="/docs" element={<DocumentationPage />} />
                   <Route path="/satellite" element={<SatelliteDataPage />} />
+                  
+                  {/* Missing Visualization Routes */}
+                  <Route path="/climate-dashboard" element={<UnderConstructionPage />} />
+                  <Route path="/maps" element={<UnderConstructionPage />} />
 
                   {/* Auth Routes */}
                   <Route path="/login" element={<LoginPage />} />

@@ -1,35 +1,36 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import authService from '../services/authService'; // Corrected path
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // To check initial auth status
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadUserFromToken = useCallback(() => {
-    const token = authService.getCurrentUserToken();
+    const token = localStorage.getItem('token');
     if (token) {
-      const userDataFromToken = authService.parseJwt(token);
-      if (userDataFromToken) {
-        // Check if token is expired (optional but recommended)
-        const nowInSeconds = Date.now() / 1000;
-        if (userDataFromToken.exp && userDataFromToken.exp < nowInSeconds) {
-          console.log("Token expired, logging out.");
-          authService.logout(); // Clear expired token
-          setCurrentUser(null);
+      try {
+        const userDataFromToken = JSON.parse(atob(token.split('.')[1]));
+        if (userDataFromToken) {
+          const nowInSeconds = Date.now() / 1000;
+          if (userDataFromToken.exp && userDataFromToken.exp < nowInSeconds) {
+            console.log("Token expired, logging out.");
+            localStorage.removeItem('token');
+            setCurrentUser(null);
+          } else {
+            setCurrentUser({
+              username: userDataFromToken.sub,
+              roles: userDataFromToken.roles || [],
+              token: token,
+            });
+          }
         } else {
-          // Set user with token and parsed data (e.g., username, roles)
-          // Adjust structure based on what your JWT payload contains (sub = username, roles = roles array)
-          setCurrentUser({
-            username: userDataFromToken.sub, // Assuming 'sub' claim is username
-            roles: userDataFromToken.roles || [], // Assuming 'roles' claim is an array
-            token: token,
-          });
+          localStorage.removeItem('token');
+          setCurrentUser(null);
         }
-      } else {
-        // Token is invalid or parsing failed
-        authService.logout();
+      } catch (error) {
+        console.error('Failed to parse token:', error);
+        localStorage.removeItem('token');
         setCurrentUser(null);
       }
     } else {
@@ -44,42 +45,43 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const data = await authService.login(username, password);
-      // After successful login, token is stored by authService. Now update context.
-      loadUserFromToken(); // Reload user from the new token
-      return data; // Return full response data if needed by caller
+      // Simulate login - replace with actual API call
+      const mockToken = btoa(JSON.stringify({
+        sub: username,
+        roles: ['USER'],
+        exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour expiry
+      }));
+      
+      localStorage.setItem('token', mockToken);
+      loadUserFromToken();
+      return { success: true };
     } catch (error) {
       console.error("Login failed in context:", error);
-      setCurrentUser(null); // Ensure user is cleared on failed login
-      throw error; // Re-throw to be caught by UI
+      setCurrentUser(null);
+      throw error;
     }
   };
 
   const register = async (username, email, password) => {
     try {
-      // authService.register will throw an error if it fails
-      const data = await authService.register(username, email, password);
-      // Optionally, log the user in automatically after successful registration
-      // Or redirect them to the login page
-      // For now, just return the response (e.g., success message)
-      return data;
+      // Simulate registration - replace with actual API call
+      console.log('Registering user:', { username, email });
+      return { success: true, message: 'Registration successful' };
     } catch (error) {
       console.error("Registration failed in context:", error);
-      throw error; // Re-throw to be caught by UI
+      throw error;
     }
   };
 
   const logout = () => {
-    authService.logout();
+    localStorage.removeItem('token');
     setCurrentUser(null);
-    // Here you might want to redirect the user to the login page or homepage
-    // e.g., window.location.href = '/login'; (or use react-router navigate)
   };
 
   const value = {
     currentUser,
-    isAuthenticated: !!currentUser, // Boolean: true if currentUser is not null
-    isLoading, // For initial auth check
+    isAuthenticated: !!currentUser,
+    isLoading,
     login,
     register,
     logout,
@@ -88,7 +90,6 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Custom hook to use the AuthContext
 export const useAuth = () => {
   return useContext(AuthContext);
-}; 
+};

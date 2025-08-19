@@ -139,9 +139,9 @@ const ContactPage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative bg-gradient-to-br from-envGreen-600 via-envGreen-700 to-envGreen-800 text-white py-20"
+        className="relative bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white py-20"
       >
-        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -155,7 +155,7 @@ const ContactPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl md:text-2xl text-envGreen-100 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed"
           >
             Ready to make an environmental impact? Let's start a conversation about how we can work together.
           </motion.p>

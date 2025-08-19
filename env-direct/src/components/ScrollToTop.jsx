@@ -5,17 +5,11 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log('[ScrollToTop] Pathname:', pathname, 'Is LiveMap:', pathname === '/live-map');
-    // Only scroll to top if not on the live map page
-    if (pathname !== '/live-map') {
-      console.log('[ScrollToTop] Scrolling to top for path:', pathname);
-      window.scrollTo(0, 0);
-    } else {
-      console.log('[ScrollToTop] Not scrolling for /live-map');
-    }
+    // Scroll to top when the route changes
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   return null;
 };
 
-export default ScrollToTop; 
+export default ScrollToTop;

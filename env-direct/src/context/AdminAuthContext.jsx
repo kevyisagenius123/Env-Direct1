@@ -10,6 +10,15 @@ export const useAuth = () => {
   return context;
 };
 
+// Also export as useAdminAuth for compatibility
+export const useAdminAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAdminAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

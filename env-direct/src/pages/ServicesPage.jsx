@@ -4,12 +4,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const services = [
-    { title: 'Environmental Impact Assessments (EIA)', description: 'Comprehensive EIAs for new projects and developments.' },
-    { title: 'Air Quality Monitoring & Management', description: 'Real-time air quality testing, analysis, and mitigation strategies.' },
-    { title: 'Water Quality Testing & Remediation', description: 'Solutions for contaminated water bodies and drinking water safety.' },
-    { title: 'Soil Contamination Assessment', description: 'Identifying and managing soil pollutants for land redevelopment.' },
-    { title: 'Ecological Surveys & Biodiversity Plans', description: 'Protecting and enhancing natural habitats and wildlife.' },
-    { title: 'Sustainability & ESG Consulting', description: 'Helping organizations integrate ESG principles into their operations.' }
+    { 
+        title: 'Environmental Consulting', 
+        description: 'We provide Environmental Impact Assessments (EIAs), Environmental and Social Management Plans (ESMPs), and site assessments tailored to Caribbean regulatory frameworks and global standards.',
+        icon: '🌿',
+        features: ['Environmental Impact Assessments', 'Environmental & Social Management Plans', 'Site Assessments', 'Regulatory Compliance']
+    },
+    { 
+        title: 'GIS & Spatial Analysis', 
+        description: 'Our GIS experts support land use mapping, hazard and vulnerability assessments, ecological modelling, and custom dashboards to empower data-driven decisions.',
+        icon: '🗺️',
+        features: ['Land Use Mapping', 'Hazard & Vulnerability Assessments', 'Ecological Modelling', 'Custom GIS Dashboards']
+    },
+    { 
+        title: 'Climate Resilience & Adaptation', 
+        description: 'We design nature-based solutions, support climate policy, and implement resilience planning for coastal communities and SIDS (Small Island Developing States).',
+        icon: '🌊',
+        features: ['Nature-Based Solutions', 'Climate Policy Support', 'Resilience Planning', 'SIDS Adaptation Strategies']
+    },
+    { 
+        title: 'Training & Capacity Building', 
+        description: 'We offer in-person and online training in GIS, EIA procedures, proposal writing, environmental education, and community mapping.',
+        icon: '🎓',
+        features: ['GIS Training', 'EIA Procedures', 'Proposal Writing', 'Environmental Education']
+    },
+    { 
+        title: 'Technical Writing & Reporting', 
+        description: 'From project proposals and policy briefs to donor reports and stakeholder presentations, we ensure clear, persuasive, and impactful documentation.',
+        icon: '📝',
+        features: ['Project Proposals', 'Policy Briefs', 'Donor Reports', 'Stakeholder Presentations']
+    },
+    { 
+        title: 'Stakeholder Engagement & Public Outreach', 
+        description: 'We facilitate inclusive community consultations, workshops, and participatory planning processes that strengthen local ownership and project success.',
+        icon: '🤝',
+        features: ['Community Consultations', 'Participatory Workshops', 'Public Engagement', 'Stakeholder Mapping']
+    }
 ];
 
 const ServiceRequestModal = ({ service, onClose, onSubmit }) => {
@@ -99,9 +129,29 @@ const ServicesPage = () => {
     return (
         <div className="p-8">
             <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">Our Environmental Services</h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-                We provide a wide range of environmental consulting and field services to help businesses and communities achieve their sustainability goals.
+            <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+                Environment Direct Consulting Inc. provides comprehensive environmental and geospatial 
+                consulting services tailored to the Caribbean region. Our expertise spans over 20 years 
+                in environmental science, GIS, project management, and stakeholder engagement. We deliver 
+                practical, innovative solutions that strengthen climate resilience and promote sustainable 
+                development across Small Island Developing States.
             </p>
+
+            {/* Company Highlights */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">20+</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Years of Experience</div>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">Caribbean</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Regional Focus</div>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">SIDS</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">Specialized in Small Island States</div>
+                </div>
+            </div>
 
             <AnimatePresence>
                 {notification.show && (
@@ -116,19 +166,34 @@ const ServicesPage = () => {
                 )}
             </AnimatePresence>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.map((service, index) => (
-                    <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                        <h2 className="text-xl font-semibold text-green-700 dark:text-green-400 mb-2">{service.title}</h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{service.description}</p>
-                        <button onClick={() => handleOpenModal(service)} className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200 font-medium">
-                            Request Service &rarr;
-                        </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+                <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center mb-4">
+                        <span className="text-3xl mr-3">{service.icon}</span>
+                        <h2 className="text-xl font-semibold text-green-700 dark:text-green-400">{service.title}</h2>
                     </div>
-                ))}
-            </div>
-
-            <AnimatePresence>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{service.description}</p>
+                    
+                    {/* Service Features */}
+                    <div className="mb-4">
+                        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Key Services:</h4>
+                        <ul className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                            {service.features.map((feature, featureIndex) => (
+                                <li key={featureIndex} className="flex items-center">
+                                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    {feature}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    <button onClick={() => handleOpenModal(service)} className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded font-medium transition-colors">
+                        Request Service →
+                    </button>
+                </div>
+            ))}
+        </div>            <AnimatePresence>
                 {isModalOpen && selectedService && (
                     <ServiceRequestModal
                         service={selectedService}

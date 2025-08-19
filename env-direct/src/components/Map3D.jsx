@@ -217,13 +217,6 @@ const Map3D = () => {
               console.error(`[Map3D] Failed to load ${key}: ${response.status} ${response.statusText}`);
               return [key, null];
             }
-
-            // Check if response is actually JSON
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-              console.error(`[Map3D] Expected JSON but got ${contentType} for ${key}`);
-              return [key, null];
-            }
             
             const rawData = await response.json();
             console.log(`[Map3D] Raw data for ${key}:`, rawData?.features?.length, 'features');

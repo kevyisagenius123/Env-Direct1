@@ -46,25 +46,25 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       description: 'Main homepage'
     },
     { 
+      name: 'About', 
+      href: '/about', 
+      icon: FaUser,
+      type: 'link',
+      description: 'About Environment Direct'
+    },
+    { 
       name: 'Dashboard', 
       href: '/dashboard', 
       icon: FaChartBar,
       type: 'link',
       description: 'Under construction'
     },
-    {
-      name: 'Our Services',
+    { 
+      name: 'Services', 
+      href: '/services', 
       icon: FaBuilding,
-      type: 'dropdown',
-      description: 'Environmental consulting services',
-      items: [
-        { name: 'Environmental Impact Assessments', href: '/services/eia', icon: FaLeaf },
-        { name: 'Sustainability Consulting', href: '/services/sustainability', icon: FaGlobe },
-        { name: 'Climate Risk Analysis', href: '/services/climate-risk', icon: FaCloudSun },
-        { name: 'Environmental Compliance', href: '/services/compliance', icon: FaFileAlt },
-        { name: 'Green Building Certification', href: '/services/green-building', icon: FaBuilding },
-        { name: 'Carbon Footprint Assessment', href: '/services/carbon-assessment', icon: FaLeaf },
-      ]
+      type: 'link',
+      description: 'Environmental consulting services'
     },
     {
       name: 'Projects',
@@ -79,28 +79,38 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       ]
     },
     {
-      name: 'About Us',
-      icon: FaUser,
+      name: 'Green Atlas Magazine',
+      icon: FaNewspaper,
       type: 'dropdown',
-      description: 'Learn about Environment Direct',
+      description: 'Environmental publishing platform',
       items: [
-        { name: 'Our Team', href: '/about/team', icon: FaUser },
-        { name: 'Company History', href: '/about/history', icon: FaFileAlt },
-        { name: 'Mission & Vision', href: '/about/mission', icon: FaGlobe },
-        { name: 'Certifications', href: '/about/certifications', icon: FaNewspaper },
+        { name: 'Magazine Home', href: '/green-atlas-magazine', icon: FaNewspaper },
+        { name: 'Articles', href: '/articles', icon: FaFileAlt },
+        { name: 'Submit Article', href: '/submit-article', icon: FaLeaf },
+        { name: 'Submission Guidelines', href: '/green-atlas-magazine?tab=guidelines', icon: FaDatabase },
       ]
     },
     {
       name: 'Resources',
-      icon: FaNewspaper,
+      icon: FaDatabase,
       type: 'dropdown',
       description: 'Knowledge & insights',
       items: [
-        { name: 'Green Atlas Magazine', href: '/green-atlas-magazine', icon: FaNewspaper },
         { name: 'Industry Reports', href: '/resources/reports', icon: FaFileAlt },
         { name: 'White Papers', href: '/resources/whitepapers', icon: FaDatabase },
         { name: 'Blog & News', href: '/resources/blog', icon: FaNewspaper },
         { name: 'Downloads', href: '/resources/downloads', icon: FaFileAlt },
+      ]
+    },
+    {
+      name: 'Visualizations',
+      icon: FaGlobe,
+      type: 'dropdown',
+      description: 'Interactive data visualizations',
+      items: [
+        { name: 'ECharts 3D Dominica', href: '/dominica-echarts-3d', icon: FaMountain },
+        { name: 'Climate Data', href: '/climate-dashboard', icon: FaCloudSun },
+        { name: 'Environmental Maps', href: '/maps', icon: FaSatellite },
       ]
     },
     {
@@ -114,7 +124,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   const quickActions = [
     { name: 'Request Consultation', href: '/consultation', icon: FaPhone },
-    { name: 'Client Portal', href: '/client-portal', icon: FaUser },
     { name: 'Settings', href: '/settings', icon: FaCog },
   ];
 
@@ -319,9 +328,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               </div>
               
               <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 bg-white/10 text-white text-xs rounded-lg hover:bg-white/20 transition-colors">
+                <Link 
+                  to="/dashboard"
+                  className="flex-1 px-3 py-2 bg-white/10 text-white text-xs rounded-lg hover:bg-white/20 transition-colors text-center"
+                  onClick={() => setIsOpen(false)}
+                >
                   Schedule Call
-                </button>
+                </Link>
                 <button className="px-3 py-2 bg-red-500/20 text-red-300 text-xs rounded-lg hover:bg-red-500/30 transition-colors">
                   <FaSignOutAlt className="w-3 h-3" />
                 </button>

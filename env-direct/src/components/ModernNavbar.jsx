@@ -108,59 +108,6 @@ const ModernNavbar = () => {
 
                 {/* Notifications */}
                 <NotificationCenter />
-
-                {/* User Menu */}
-                <div className="relative">
-                  {user ? (
-                    <div>
-                      <button
-                        onClick={() => setUserMenuOpen(!userMenuOpen)}
-                        className="flex items-center space-x-2 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                      >
-                        <FaUserCircle className="w-5 h-5" />
-                        <span className="text-sm font-medium">{user.name}</span>
-                      </button>
-
-                      {/* User Dropdown Menu */}
-                      {userMenuOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                          <Link
-                            to="/user/dashboard"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setUserMenuOpen(false)}
-                          >
-                            <FaUser className="w-4 h-4 mr-3" />
-                            Dashboard
-                          </Link>
-                          <Link
-                            to="/user/profile"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setUserMenuOpen(false)}
-                          >
-                            <FaCog className="w-4 h-4 mr-3" />
-                            Profile Settings
-                          </Link>
-                          <hr className="my-1" />
-                          <button
-                            onClick={handleUserLogout}
-                            className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                          >
-                            <FaSignOutAlt className="w-4 h-4 mr-3" />
-                            Sign Out
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleUserLogin}
-                      className="flex items-center space-x-2 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      <FaUserCircle className="w-5 h-5" />
-                      <span className="text-sm font-medium">Sign In</span>
-                    </button>
-                  )}
-                </div>
               </div>
             </div>
           </div>

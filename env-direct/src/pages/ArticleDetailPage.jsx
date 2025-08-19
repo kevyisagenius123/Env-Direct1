@@ -10,7 +10,7 @@ import {
 import { useAuth } from '../context/AuthContext.jsx';
 import authService from '../services/authService';
 import ArticleEnhancer from '../components/interactive/ArticleEnhancer';
-import mockArticleService from '../services/mockArticleService';
+import Footer from '../components/Footer';
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Helper to format date (optional)
@@ -62,27 +62,17 @@ const ArticleDetailPage = () => {
     setRelatedError(null);
 
     try {
-      // Use environment variable to determine whether to use mock data
-      const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true' || true; // Default to true for now
+      // Always use real API for production (no mock data)
+      const useMockData = false; // Disabled mock data
 
       if (useMockData) {
-        // Use mock service for development/testing
-        console.log('[ArticleDetailPage] Using mock article service');
-
-        // Fetch main article
-        const articleData = await mockArticleService.getArticle(articleId);
-        setArticle(articleData);
-        setIsLoading(false); // Article loaded
-
-        // Fetch comments for the loaded article
-        const commentsData = await mockArticleService.getComments(articleId);
-        setComments(commentsData);
-        setIsCommentsLoading(false); // Comments loaded
-
-        // Fetch related articles for the loaded article
-        const relatedData = await mockArticleService.getRelatedArticles(articleId, 3);
-        setRelatedArticles(relatedData || []);
-        setIsRelatedLoading(false); // Related articles loaded
+        // Mock service disabled - no fake articles
+        setArticle(null);
+        setComments([]);
+        setRelatedArticles([]);
+        setIsLoading(false);
+        setIsCommentsLoading(false);
+        setIsRelatedLoading(false);
       } else {
         // Use real API for production
         // Fetch main article
@@ -430,6 +420,8 @@ const ArticleDetailPage = () => {
       {!isRelatedLoading && relatedError && articleId && (
          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 py-8 text-center"><p className="text-red-600"><span className="font-semibold">Could not load related articles:</span> {relatedError}</p></div>
       )}
+      
+      <Footer />
     </div>
   );
 };

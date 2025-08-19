@@ -1,113 +1,219 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Spinner from '../components/Spinner';
-import EcoSitePressureCard from '../components/EcoSitePressureCard';
-import FloodRiskCard from '../components/FloodRiskCard';
-const API_URL = import.meta.env.VITE_API_URL;
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  TrendingUp, 
+  BarChart3, 
+  PieChart, 
+  Activity,
+  Globe,
+  Calendar,
+  Users,
+  Download
+} from 'lucide-react';
 
 const PredictionDashboardPage = () => {
-  const [ecoTourismPredictions, setEcoTourismPredictions] = useState([]);
-  const [floodRiskPredictions, setFloodRiskPredictions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const predictions = [
+    {
+      title: "Climate Forecast",
+      subtitle: "Next 30 days",
+      value: "26.5°C",
+      change: "+2.1°C",
+      confidence: "94%",
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: "bg-blue-500"
+    },
+    {
+      title: "Rainfall Prediction",
+      subtitle: "Weekly forecast",
+      value: "152mm",
+      change: "+15%",
+      confidence: "87%",
+      icon: <Activity className="w-6 h-6" />,
+      color: "bg-cyan-500"
+    },
+    {
+      title: "Air Quality Index",
+      subtitle: "Tomorrow",
+      value: "Good",
+      change: "Stable",
+      confidence: "91%",
+      icon: <BarChart3 className="w-6 h-6" />,
+      color: "bg-green-500"
+    },
+    {
+      title: "Hurricane Risk",
+      subtitle: "Seasonal outlook",
+      value: "Low",
+      change: "-12%",
+      confidence: "85%",
+      icon: <Globe className="w-6 h-6" />,
+      color: "bg-orange-500"
+    }
+  ];
 
-  const pageRef = useRef(null);
-  const headerRef = useRef(null);
-  const ecoTourismSectionRef = useRef(null);
-  const ecoTourismGridRef = useRef(null);
-  const floodRiskSectionRef = useRef(null);
-  const floodRiskGridRef = useRef(null);
+  const modelPerformance = [
+    { model: "Climate ML Model", accuracy: "94.2%", lastUpdate: "2 hours ago" },
+    { model: "Weather Prediction", accuracy: "91.8%", lastUpdate: "1 hour ago" },
+    { model: "Air Quality Forecast", accuracy: "89.3%", lastUpdate: "3 hours ago" },
+    { model: "Disaster Risk Assessment", accuracy: "96.1%", lastUpdate: "30 minutes ago" }
+  ];
 
-  useEffect(() => {
-    const fetchAllPredictions = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const [ecoTourismResponse, floodRiskResponse] = await Promise.all([
-          fetch(`${API_URL}/api/predict/eco-tourism/pressure/all`),
-          fetch(`${API_URL}/api/predict/flood-risk/all`)
-        ]);
-
-        if (!ecoTourismResponse.ok) {
-          throw new Error(`Eco-tourism API error! status: ${ecoTourismResponse.status}`);
-        }
-        if (!floodRiskResponse.ok) {
-          throw new Error(`Flood risk API error! status: ${floodRiskResponse.status}`);
-        }
-
-        const ecoTourismData = await ecoTourismResponse.json();
-        const floodRiskData = await floodRiskResponse.json();
-
-        setEcoTourismPredictions(ecoTourismData || []);
-        setFloodRiskPredictions(floodRiskData || []);
-
-      } catch (e) {
-        console.error("Failed to fetch prediction data:", e);
-        setError(e.message || "Failed to load prediction data. Please try again later.");
-      }
-      setIsLoading(false);
-    };
-
-    fetchAllPredictions();
-    // Optional: set up an interval to refresh data
-    // const intervalId = setInterval(fetchAllPredictions, 300000); // every 5 minutes
-    // return () => clearInterval(intervalId);
-  }, []);
-
-  if (isLoading) return <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-env-gray-darker p-4"><Spinner color="border-mygreen" /> <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">Loading predictions...</p></div>;
-  if (error) return <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 dark:bg-env-gray-darker p-4"><p className="text-2xl text-red-600 dark:text-red-400">Error: {error}</p></div>;
-  
   return (
-    <div ref={pageRef} className="bg-gray-100 dark:bg-env-gray-darker p-4 sm:p-6 lg:p-8 overflow-x-hidden">
-      <header ref={headerRef} className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white tracking-tight">
-          Dominica: Predictive Environmental Insights
-        </h1>
-        <p className="mt-3 text-lg text-gray-600 dark:text-gray-300">
-          Forecasts and risk assessments for key environmental factors.
-        </p>
-      </header>
-      
-      {(!isLoading && !error && ecoTourismPredictions.length === 0 && floodRiskPredictions.length === 0) && (
-          <div className="text-center py-10">
-              <p className="text-xl text-gray-500 dark:text-gray-400">No prediction data available at the moment.</p>
-          </div>
-      )}
-
-      {(!isLoading && !error && (ecoTourismPredictions.length > 0 || floodRiskPredictions.length > 0)) && (
-        <div className="space-y-12">
-          {ecoTourismPredictions.length > 0 && (
-            <section ref={ecoTourismSectionRef} id="eco-tourism-predictions">
-              <h2 className="text-3xl font-semibold text-gray-700 dark:text-gray-200 mb-6">
-                Eco-Tourism Hotspot Pressure
-              </h2>
-              <div ref={ecoTourismGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {ecoTourismPredictions.map((prediction) => (
-                  <div key={prediction.siteId || prediction.siteName}>
-                    <EcoSitePressureCard prediction={prediction} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {floodRiskPredictions.length > 0 && (
-            <section ref={floodRiskSectionRef} id="flood-risk-predictions">
-              <h2 className="text-3xl font-semibold text-gray-700 dark:text-gray-200 mb-6">
-                Flood Risk Forecasts
-              </h2>
-              <div ref={floodRiskGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {floodRiskPredictions.map((prediction) => (
-                  <div key={prediction.regionName}>
-                    <FloodRiskCard prediction={prediction} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Prediction Dashboard
+          </h1>
+          <p className="text-gray-600">
+            AI-powered environmental predictions and forecasting for Dominica
+          </p>
         </div>
-      )}
+
+        {/* Prediction Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {predictions.map((prediction, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-lg ${prediction.color} text-white`}>
+                  {prediction.icon}
+                </div>
+                <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                  {prediction.confidence}
+                </span>
+              </div>
+              <h3 className="text-gray-900 font-semibold mb-1">{prediction.title}</h3>
+              <p className="text-gray-500 text-sm mb-3">{prediction.subtitle}</p>
+              <div className="flex items-baseline">
+                <span className="text-2xl font-bold text-gray-900">{prediction.value}</span>
+                <span className={`text-sm ml-2 ${
+                  prediction.change.includes('+') ? 'text-orange-600' : 
+                  prediction.change.includes('-') ? 'text-green-600' : 'text-gray-600'
+                }`}>
+                  {prediction.change}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Prediction Chart */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">7-Day Environmental Forecast</h2>
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-5 h-5 text-gray-400" />
+                  <select className="text-sm border border-gray-300 rounded-md px-3 py-1">
+                    <option>Temperature</option>
+                    <option>Rainfall</option>
+                    <option>Air Quality</option>
+                    <option>Wind Speed</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Placeholder for prediction chart */}
+              <div className="h-80 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg flex items-center justify-center">
+                <div className="text-center">
+                  <TrendingUp className="w-16 h-16 text-envGreen-600 mx-auto mb-4" />
+                  <p className="text-gray-600 text-lg mb-2">AI Prediction Models</p>
+                  <p className="text-sm text-gray-500 mb-4">Advanced machine learning algorithms analyze environmental patterns</p>
+                  <div className="flex justify-center space-x-4">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-2">
+                        <BarChart3 className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Historical Data</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-2">
+                        <Activity className="w-6 h-6 text-green-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Real-time Analysis</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-2">
+                        <PieChart className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <p className="text-xs text-gray-600">Future Predictions</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Model Performance */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Model Performance</h2>
+                <Users className="w-5 h-5 text-gray-400" />
+              </div>
+              
+              <div className="space-y-4">
+                {modelPerformance.map((model, index) => (
+                  <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium text-gray-900">{model.model}</h3>
+                      <span className="text-sm font-semibold text-green-600">{model.accuracy}</span>
+                    </div>
+                    <p className="text-xs text-gray-500">{model.lastUpdate}</p>
+                    <div className="mt-2">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-envGreen-600 h-2 rounded-full" 
+                          style={{ width: model.accuracy }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <button className="w-full mt-4 px-4 py-2 bg-envGreen-600 text-white text-sm font-medium rounded-lg hover:bg-envGreen-700 transition-colors flex items-center justify-center">
+                <Download className="w-4 h-4 mr-2" />
+                Export Predictions
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 grid md:grid-cols-3 gap-6">
+          <Link
+            to="/dashboard"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+          >
+            <BarChart3 className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Environmental Dashboard</h3>
+            <p className="text-gray-600 text-sm">View current environmental conditions and real-time data</p>
+          </Link>
+
+          <Link
+            to="/analytics"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+          >
+            <PieChart className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Analytics Dashboard</h3>
+            <p className="text-gray-600 text-sm">Deep dive into environmental trends and patterns</p>
+          </Link>
+
+          <Link
+            to="/live-map"
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+          >
+            <Globe className="w-8 h-8 text-envGreen-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Live Map</h3>
+            <p className="text-gray-600 text-sm">Interactive map with prediction overlays and forecasts</p>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default PredictionDashboardPage; 
+export default PredictionDashboardPage;

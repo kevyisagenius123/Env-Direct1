@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   Calendar, 
   Clock, 
@@ -18,7 +18,16 @@ import {
 } from 'lucide-react';
 
 const GreenAtlasMagazine = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('about');
+
+  // Handle URL parameters for direct navigation to tabs
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['about', 'submit', 'guidelines'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   const submissionTypes = [
     {
@@ -89,6 +98,12 @@ const GreenAtlasMagazine = () => {
               >
                 About
               </button>
+              <Link
+                to="/articles"
+                className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-envGreen-600 transition-colors"
+              >
+                Articles
+              </Link>
               <button
                 onClick={() => setActiveTab('submit')}
                 className={`px-3 py-2 text-sm font-medium transition-colors ${
@@ -181,27 +196,27 @@ const GreenAtlasMagazine = () => {
                     showcase the Caribbean's brilliance, boldness, and resilience in environmental stewardship.
                   </p>
 
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold text-gray-900">Our Mission</h3>
-                    <ul className="space-y-2 text-gray-600">
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        Amplify Caribbean environmental voices
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        Share innovative sustainability solutions
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        Foster environmental awareness and action
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                        Connect communities through shared environmental goals
-                      </li>
-                    </ul>
-                  </div>
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold text-gray-900">Our Mission</h3>
+                      <ul className="space-y-2 text-gray-600">
+                        <li className="flex items-start">
+                          <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          Amplify Caribbean environmental voices
+                        </li>
+                        <li className="flex items-start">
+                          <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          Share innovative sustainability solutions
+                        </li>
+                        <li className="flex items-start">
+                          <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          Foster environmental awareness and action
+                        </li>
+                        <li className="flex items-start">
+                          <span className="w-2 h-2 bg-envGreen-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                          Connect communities through shared environmental goals
+                        </li>
+                      </ul>
+                    </div>
                 </div>
 
                 <div className="space-y-6">
@@ -369,31 +384,31 @@ const GreenAtlasMagazine = () => {
                   <div className="space-y-4">
                     <div className="border-l-4 border-envGreen-500 pl-4">
                       <h4 className="font-semibold text-gray-900">Articles & Features</h4>
-                      <ul className="text-gray-600 mt-2 space-y-1">
-                        <li>• Abstract submission only (150-300 words)</li>
-                        <li>• Focus on environmental consulting, sustainability, or conservation</li>
-                        <li>• Include key findings or recommendations</li>
-                        <li>• Provide author credentials and contact information</li>
+                      <ul className="text-gray-600 mt-2 space-y-1 list-disc list-inside">
+                        <li>Abstract submission only (150-300 words)</li>
+                        <li>Focus on environmental consulting, sustainability, or conservation</li>
+                        <li>Include key findings or recommendations</li>
+                        <li>Provide author credentials and contact information</li>
                       </ul>
                     </div>
 
                     <div className="border-l-4 border-envGreen-500 pl-4">
                       <h4 className="font-semibold text-gray-900">Creative Submissions</h4>
-                      <ul className="text-gray-600 mt-2 space-y-1">
-                        <li>• High-resolution images (minimum 300 DPI)</li>
-                        <li>• Nature-inspired themes preferred</li>
-                        <li>• Include brief description or artist statement</li>
-                        <li>• Original work only</li>
+                      <ul className="text-gray-600 mt-2 space-y-1 list-disc list-inside">
+                        <li>High-resolution images (minimum 300 DPI)</li>
+                        <li>Nature-inspired themes preferred</li>
+                        <li>Include brief description or artist statement</li>
+                        <li>Original work only</li>
                       </ul>
                     </div>
 
                     <div className="border-l-4 border-envGreen-500 pl-4">
                       <h4 className="font-semibold text-gray-900">Technical Content</h4>
-                      <ul className="text-gray-600 mt-2 space-y-1">
-                        <li>• Include methodology and data sources</li>
-                        <li>• Provide visual examples or screenshots</li>
-                        <li>• Focus on practical applications</li>
-                        <li>• Include contact for follow-up questions</li>
+                      <ul className="text-gray-600 mt-2 space-y-1 list-disc list-inside">
+                        <li>Include methodology and data sources</li>
+                        <li>Provide visual examples or screenshots</li>
+                        <li>Focus on practical applications</li>
+                        <li>Include contact for follow-up questions</li>
                       </ul>
                     </div>
                   </div>
@@ -421,12 +436,12 @@ const GreenAtlasMagazine = () => {
 
                 <div className="bg-envGreen-50 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Important Notes</h3>
-                  <ul className="text-gray-700 space-y-2">
-                    <li>• All submissions must be original work</li>
-                    <li>• Authors retain copyright but grant publication rights</li>
-                    <li>• Selected contributors will be contacted for full submissions</li>
-                    <li>• Publication is planned for July 1, 2025</li>
-                    <li>• Digital and print formats will be available</li>
+                  <ul className="text-gray-700 space-y-2 list-disc list-inside">
+                    <li>All submissions must be original work</li>
+                    <li>Authors retain copyright but grant publication rights</li>
+                    <li>Selected contributors will be contacted for full submissions</li>
+                    <li>Publication is planned for July 1, 2025</li>
+                    <li>Digital and print formats will be available</li>
                   </ul>
                 </div>
               </div>
